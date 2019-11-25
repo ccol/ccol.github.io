@@ -1,0 +1,653 @@
+/*! normalize.css v4.1.1 | MIT License | github.com/necolas/normalize.css */html{font-family:sans-serif;-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%}
+body{margin:0}
+article,aside,details,figcaption,figure,footer,header,main,menu,nav,section,summary{display:block}
+audio,canvas,progress,video{display:inline-block}
+audio:not([controls]){display:none;height:0}
+progress{vertical-align:baseline}
+template,[hidden]{display:none}
+a{background-color:transparent;-webkit-text-decoration-skip:objects}
+a:active,a:hover{outline-width:0}
+abbr[title]{border-bottom:0;text-decoration:underline;text-decoration:underline dotted}
+b,strong{font-weight:inherit}
+b,strong{font-weight:bolder}
+dfn{font-style:italic}
+h1{font-size:2em;margin:.67em 0}
+mark{background-color:#ff0;color:#000}
+small{font-size:80%}
+sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}
+sub{bottom:-0.25em}
+sup{top:-0.5em}
+img{border-style:none}
+svg:not(:root){overflow:hidden}
+code,kbd,pre,samp{font-family:monospace,monospace;font-size:1em}
+figure{margin:1em 40px}
+hr{box-sizing:content-box;height:0;overflow:visible}
+button,input,select,textarea{font:inherit;margin:0}
+optgroup{font-weight:bold}
+button,input{overflow:visible}
+button,select{text-transform:none}
+button,html [type="button"],[type="reset"],[type="submit"]{-webkit-appearance:button}
+button::-moz-focus-inner,[type="button"]::-moz-focus-inner,[type="reset"]::-moz-focus-inner,[type="submit"]::-moz-focus-inner{border-style:none;padding:0}
+button:-moz-focusring,[type="button"]:-moz-focusring,[type="reset"]:-moz-focusring,[type="submit"]:-moz-focusring{outline:1px dotted ButtonText}
+fieldset{border:1px solid silver;margin:0 2px;padding:.35em .625em .75em}
+legend{box-sizing:border-box;color:inherit;display:table;max-width:100%;padding:0;white-space:normal}
+textarea{overflow:auto}
+[type="checkbox"],[type="radio"]{box-sizing:border-box;padding:0}
+[type="number"]::-webkit-inner-spin-button,[type="number"]::-webkit-outer-spin-button{height:auto}
+[type="search"]{-webkit-appearance:textfield;outline-offset:-2px}
+[type="search"]::-webkit-search-cancel-button,[type="search"]::-webkit-search-decoration{-webkit-appearance:none}
+::-webkit-input-placeholder{color:inherit;opacity:.54}
+::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}
+.myriad-pro-regular{font-family:"myriad-pro","arial",sans-serif;font-weight:normal}
+.myriad-pro-bold{font-family:"myriad-pro","arial",sans-serif;font-weight:normal;font-weight:bold}
+.myriad-pro-light{font-family:"myriad-pro","arial",sans-serif;font-weight:normal;font-weight:lighter}
+*{box-sizing:border-box;margin:0;padding:0}
+*:focus{outline:0}
+select{border-radius:0}
+input:focus,select:focus,textarea:focus,button:focus,a:focus{box-shadow:0 0 10px rgba(0,125,186,0.6)}
+html{font-size:16px;line-height:1.375rem;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;font-family:"myriad-pro","arial",sans-serif;font-weight:normal}
+body{padding:0;margin:0;color:#494949;background-color:#f2f2f2;min-width:320px;word-wrap:break-word;-webkit-transition:all .25s ease-out;-moz-transition:all .25s ease-out;transition:all .25s ease-out}
+a{cursor:pointer}
+b,strong{font-family:"myriad-pro","arial",sans-serif;font-weight:normal;font-weight:bold}
+.frame{width:100%;margin:0 auto}
+@media only screen and (min-width:768px){.frame{max-width:90%}
+}
+@media only screen and (min-width:1164px){.frame{max-width:1134px}
+}
+input{border:1px solid #bcb8b8}
+.left{float:left}
+.right{float:right}
+.clearfix{clear:both}
+.clearfix:after{content:"";display:table;clear:both}
+.inline{display:inline}
+.inline-block{display:inline-block}
+.hidden{display:none}
+.border-right{border-right:2px solid #ccc}
+main{color:#494949}
+@media only screen and (min-width:768px){main{background-color:transparent}
+}
+select,input{color:#494949}
+.background{display:none;width:0;height:0}
+@media only screen and (min-width:768px){.background{position:fixed;display:block;width:100%;height:100%;background-size:cover;background-image:url('https://propertyprofilereport.anz.com.au/etc/designs/ppr/images/bg.jpg');top:0;left:0;z-index:-2}
+}
+.overlay{position:fixed;top:0;left:0;width:100%;height:100%;z-index:-10}
+@media only screen and (min-width:960px){.overlay{display:none}
+}
+fieldset{border:0;margin:0;padding:0}
+#lpButtonDiv{position:fixed;bottom:24px;right:50px;z-index:100}
+#lpButtonDiv .clear{clear:both}
+.no--cursor{cursor:default}
+.ipad{width:100%;height:100%;background:url('https://propertyprofilereport.anz.com.au/etc/designs/ppr/images/bg.jpg') no-repeat;position:absolute}
+.message__wrapper{position:fixed;width:100%;height:100%;top:0;left:0;z-index:9999;background-color:white}
+.message__wrapper .message__box{background-color:#fef0e3;border:1px solid #e7cab2;padding:20px 20px 20px 65px;position:fixed;width:90%;left:5%;top:100px;color:#494949}
+.message__wrapper .message__box:before{content:"";display:"block";position:absolute;left:20px;top:18px;width:26px;height:26px}
+.message__wrapper .message__box.warning:before{background:url('https://propertyprofilereport.anz.com.au/etc/designs/ppr/images/alert-icon.png') no-repeat center}
+.clearfix:after{content:'';display:block;clear:both}
+.fhb-show{display:none}
+.fhb .fhb-hidden{display:none}
+.fhb .fhb-show{display:block}
+.long .long-form-hidden{display:none}
+.short .short-form-hidden{display:none}
+.short-form-with-contactus .short-form-hidden{display:none}
+.short-form-with-contactus .short-form-with-contactus--hidden{display:none}
+.short-form-with-contactus .short-form-with-contactus--show{display:block}
+.short-form-with-question .short-form-hidden{display:none}
+.short-form-with-question .property__block .short-form-hidden{display:block}
+.short-form-with-question .short-form-with-question--hidden{display:none}
+.short-form-with-question .short-form-with-question--show{display:block}
+.cp-form-wrapper{margin-bottom:20px}
+@media only screen and (min-width:768px){.cp-form-wrapper{margin-bottom:80px}
+}
+.form__component{width:100%;padding:8px;font-size:16px;font-size:1rem}
+@media only screen and (min-width:768px){.form__component{max-width:400px}
+}
+.required__star{position:absolute;content:"*";padding-left:3px;color:#d53d39}
+@media only screen and (min-width:768px){.required__star{right:38px}
+}
+.form__wrapper{position:relative;z-index:10;border-radius:3px;background-color:rgba(255,255,255,0);padding:0}
+@media only screen and (min-width:768px){.form__wrapper{padding:17px;background-color:rgba(255,255,255,0.7);padding:15px}
+}
+.form__wrapper .no-padding-bottom .form__block .form__block__wrapper.form__block__content{padding-bottom:0}
+.form__wrapper .form__block{border:0;position:relative;margin-bottom:10px;background-color:white}
+@media only screen and (min-width:768px){.form__wrapper .form__block{margin-bottom:15px}
+}
+.form__wrapper .form__block .form__block__wrapper{width:100%;padding:20px 15px}
+@media only screen and (min-width:768px){.form__wrapper .form__block .form__block__wrapper{padding:38px}
+}
+.form__wrapper .form__block .form__block__wrapper.form__block__content{padding-top:5px}
+@media only screen and (min-width:768px){.form__wrapper .form__block .form__block__wrapper.form__block__content{padding-top:20px}
+}
+.form__wrapper .form__block .form__block__wrapper.no__padding__bottom{padding-bottom:0}
+.form__wrapper .form__block .form__block__wrapper.no__padding__bottom h3{margin-bottom:0}
+.form__wrapper .form__block .form__block__wrapper h3{margin-bottom:10px;font-family:"myriad-pro","arial",sans-serif;font-weight:normal;font-weight:lighter;font-size:1.5rem;line-height:1.375rem;color:#004165}
+@media only screen and (min-width:768px){.form__wrapper .form__block .form__block__wrapper h3{font-size:2rem;line-height:2rem;margin-bottom:32px}
+}
+.form__wrapper .form__block .form__block__wrapper h3:first-letter {text-transform:uppercase}
+.form__wrapper .form__block .form__block__wrapper h3 .block__sub__title{display:block;margin-top:10px;font-size:14px;font-size:.875rem;font-family:"myriad-pro","arial",sans-serif;font-weight:normal;text-decoration:inherit;color:inherit}
+@media only screen and (min-width:768px){.form__wrapper .form__block .form__block__wrapper h3 .block__sub__title{display:inline-block;margin-left:5px}
+}
+.form__wrapper .form__block.transparent{background-image:none;background-color:transparent}
+.form__wrapper .form__block .form__item{position:relative;font-size:0;margin:12px auto;float:left;width:100%}
+.form__wrapper .form__block .form__item:after{content:"";display:table;clear:both}
+.form__wrapper .form__block .form__item .inputs{display:block;width:100%}
+.form__wrapper .form__block .form__item .inputs input:focus{box-shadow:none}
+@media only screen and (min-width:768px){.form__wrapper .form__block .form__item .inputs{display:inline-table;width:50%}
+}
+@media only screen and (min-width:960px){.form__wrapper .form__block .form__item .inputs{width:54%}
+}
+.form__wrapper .form__block .form__item .inputs input[type='radio']+label:before{display:none}
+.form__wrapper .form__block .form__item .inputs input[type='radio']+label.btn{display:block;padding:10px;font-size:1rem;border:solid 1px #ccc;text-align:center;margin:0 0 10px 0;background-color:#FFF;color:#007dba}
+.form__wrapper .form__block .form__item .inputs input[type='radio']+label.btn:first-of-type{border-radius:3px 0 0 3px}
+.form__wrapper .form__block .form__item .inputs input[type='radio']+label.btn:last-of-type{border-radius:0 3px 3px 0;border-right:1px solid #ccc}
+@media only screen and (min-width:320px){.form__wrapper .form__block .form__item .inputs input[type='radio']+label.btn__radio{font-size:16px;font-size:1rem;position:relative;cursor:pointer;display:inline-block;border:1px solid #ccc;border-right:0;background-color:#fff;color:#007dba;height:40px;line-height:36px;text-align:center;padding:0 18px}
+.form__wrapper .form__block .form__item .inputs input[type='radio']+label.btn__radio:last-of-type{border-right:1px solid #ccc}
+.form__wrapper .form__block .form__item .inputs input[type='radio']+label.btn__radio:before{content:"";width:18px;height:18px;position:absolute;left:-30px;top:2px;background:url('https://propertyprofilereport.anz.com.au/etc/designs/ppr/images/radio.svg')}
+}
+@media only screen and (min-width:768px){.form__wrapper .form__block .form__item .inputs input[type='radio']+label.btn__radio{margin:0;width:auto;color:#007dba;display:inline-block;padding:0 17px}
+}
+@media only screen and (min-width:960px){.form__wrapper .form__block .form__item .inputs input[type='radio']+label.btn__radio{margin:0}
+}
+.form__wrapper .form__block .form__item .inputs input[type='radio']+label.btn__radio.btn__radio--half{display:inline-block;width:50%}
+.form__wrapper .form__block .form__item .inputs input[type='radio']+label.btn__radio.btn__radio--half.btn__float{float:right}
+@media only screen and (min-width:320px){.form__wrapper .form__block .form__item .inputs input[type='radio']+label.btn__radio.btn__radio--half.btn__float{float:none}
+}
+@media only screen and (min-width:768px){.form__wrapper .form__block .form__item .inputs input[type='radio']+label.btn__radio.btn__radio--half{width:100px}
+}
+@media only screen and (min-width:320px){.form__wrapper .form__block .form__item .inputs input[type='radio']+label.btn__radio--blocked{display:block;margin-bottom:10px;margin-right:0}
+}
+.form__wrapper .form__block .form__item .inputs input[type='radio']:checked+label.btn{border:solid 1px #007dba;background-color:rgba(0,125,186,0.6);color:#fff}
+@media only screen and (min-width:320px){.form__wrapper .form__block .form__item .inputs input[type='radio']:checked+label.btn__radio{border:solid 1px rgba(0,125,186,0.6);background-color:#014165;color:#fff}
+.form__wrapper .form__block .form__item .inputs input[type='radio']:checked+label.btn__radio:before{background:url('https://propertyprofilereport.anz.com.au/etc/designs/ppr/images/radio-selected.svg')}
+}
+.form__wrapper .form__block .form__item .inputs input[type='text'],.form__wrapper .form__block .form__item .inputs input[type='tel']{padding:8px 16px;border:1px solid #CCC}
+.form__wrapper .form__block .form__item .inputs input[type='text']:focus,.form__wrapper .form__block .form__item .inputs input[type='tel']:focus{border:1px solid #0093d8;box-shadow:0 0 8px 1px rgba(0,124,188,0.4);-webkit-box-shadow:0 0 8px 1px rgba(0,124,188,0.4);-moz-box-shadow:0 0 8px 1px rgba(0,124,188,0.4)}
+@media only screen and (min-width:960px){.form__wrapper .form__block .form__item .inputs input[type='text'].half-width,.form__wrapper .form__block .form__item .inputs input[type='tel'].half-width{width:50%}
+}
+.form__wrapper .form__block .form__item .inputs input[type='text']::-webkit-input-placeholder,.form__wrapper .form__block .form__item .inputs input[type='tel']::-webkit-input-placeholder{color:#a8a8a8;font-size:16px;font-size:1rem}
+.form__wrapper .form__block .form__item .inputs input[type='text']::-moz-placeholder,.form__wrapper .form__block .form__item .inputs input[type='tel']::-moz-placeholder{color:#a8a8a8;font-size:16px;font-size:1rem}
+.form__wrapper .form__block .form__item .inputs input[type='text']:-ms-input-placeholder,.form__wrapper .form__block .form__item .inputs input[type='tel']:-ms-input-placeholder{color:#a8a8a8;font-size:16px;font-size:1rem}
+.form__wrapper .form__block .form__item .inputs input[type='text']:-moz-placeholder,.form__wrapper .form__block .form__item .inputs input[type='tel']:-moz-placeholder{color:#a8a8a8;font-size:16px;font-size:1rem}
+.form__wrapper .form__block .form__item .inputs.inputs__error select.error__style,.form__wrapper .form__block .form__item .inputs.inputs__error input.error__style{border-color:#d53d39}
+.form__wrapper .form__block .form__item .inputs.inputs__error select.error__style:focus,.form__wrapper .form__block .form__item .inputs.inputs__error input.error__style:focus{box-shadow:none}
+.form__wrapper .form__block .form__item .inputs.inputs__error label:nth-last-of-type(2).btn{border-right:1px solid #d53d39 !important;border-radius:0 3px 3px 0}
+.form__wrapper .form__block .form__item .inputs.inputs__error input[type='radio']+label.btn{border-color:#d53d39}
+.form__wrapper .form__block .form__item .inputs.inputs__error input[type='radio']+label.btn:last-of-type{border-right:1px solid #d53d39}
+.form__wrapper .form__block .form__item .inputs.inputs__error input[type='radio']+label.btn__radio--half.btn__float{float:right}
+@media only screen and (min-width:320px){.form__wrapper .form__block .form__item .inputs.inputs__error input[type='radio']+label.btn__radio--half.btn__float{float:none}
+}
+.form__wrapper .form__block .form__item .inputs.inputs__error .error{position:relative;display:block;font-size:14px;font-size:.875rem;color:#d53d39;margin-top:5px;line-height:16px}
+.form__wrapper .form__block .form__item .inputs.inputs__error .error a{color:#d53d39}
+@media only screen and (min-width:768px){.form__wrapper .form__block .form__item .inputs.inputs__error .error{max-width:380px}
+.form__wrapper .form__block .form__item .inputs.inputs__error .error a{text-decoration:none;cursor:default}
+}
+.form__wrapper .form__block .form__item .inputs.inputs__error .error:before{position:absolute;content:"";background:url('https://propertyprofilereport.anz.com.au/etc/designs/ppr/images/error.svg');width:15px;height:15px;top:4px;left:-23px;display:none}
+.form__wrapper .form__block .form__item.main-reason .inputs input[type='radio']+label.btn__radio{border:0;text-align:left;height:auto;line-height:1.4;display:inline-block;margin-left:30px;padding:0 5px}
+.form__wrapper .form__block .form__item.main-reason .inputs input[type='radio']+label.btn__radio:before{display:inline-block}
+.form__wrapper .form__block .form__item.main-reason .inputs input[type='radio']:checked+label.btn__radio{background:#FFF;color:#007dba}
+.form__wrapper .form__block .form__item.main-reason .inputs.inputs__error label.btn__radio{color:#d53d39;border:0 !important}
+.form__wrapper .form__block .form__item .addresslookup{width:100%}
+.form__wrapper .form__block .form__item .label{position:relative;display:block;font-size:16px;font-size:1rem;margin-bottom:10px;font-family:"myriad-pro","arial",sans-serif;font-weight:bold;font-weight:normal}
+@media only screen and (min-width:768px){.form__wrapper .form__block .form__item .label{display:inline-block;width:45%;text-align:right;padding-right:35px;margin-bottom:0;font-family:"myriad-pro","arial",sans-serif;font-weight:normal}
+}
+.form__wrapper .form__block .form__item .label:before{content:"";display:none}
+.form__wrapper .form__block .form__item .label.required:after{position:absolute;content:"*";padding-left:3px;color:#d53d39}
+@media only screen and (min-width:768px){.form__wrapper .form__block .form__item .label.required:after{right:38px}
+}
+.form__wrapper .form__block .form__item .label:first-letter {text-transform:uppercase}
+.form__wrapper .form__block .form__item .label span.required:after{position:absolute;content:"*";padding-left:3px;color:#d53d39}
+@media only screen and (min-width:768px){.form__wrapper .form__block .form__item .label span.required:after{right:38px}
+}
+.form__wrapper .form__block .form__item .label .item__sub__title{font-size:14px;font-size:.875rem;line-height:1rem;width:95%;display:block;color:#747678;font-family:"myriad-pro","arial",sans-serif;font-weight:normal}
+@media only screen and (min-width:768px){.form__wrapper .form__block .form__item .label .item__sub__title{float:right;margin-bottom:0}
+}
+.form__wrapper .form__block .form__item fieldset .float__left{float:none}
+@media only screen and (min-width:768px){.form__wrapper .form__block .form__item fieldset .float__left{float:left}
+}
+.form__wrapper .form__block .form__item input[type='radio']{height:0;float:left;position:absolute;opacity:0}
+.form__wrapper .form__block .form__item input[type='text'],.form__wrapper .form__block .form__item input[type='tel'],.form__wrapper .form__block .form__item input[type='email']{width:100%;padding:8px;font-size:16px;font-size:1rem;border-radius:3px}
+@media only screen and (min-width:768px){.form__wrapper .form__block .form__item input[type='text'],.form__wrapper .form__block .form__item input[type='tel'],.form__wrapper .form__block .form__item input[type='email']{max-width:400px}
+}
+.form__wrapper .form__block .form__item select{width:100%;padding:8px;font-size:16px;font-size:1rem;padding:8px 16px;-webkit-appearance:none;-moz-appearance:none;appearance:none;background:url('https://propertyprofilereport.anz.com.au/etc/designs/ppr/images/arrow_down_blue.png') right 15px center no-repeat;background-size:12px;border:1px solid #ccc;color:#007dba;border-radius:3px}
+.form__wrapper .form__block .form__item select::-ms-expand{display:none}
+@media only screen and (min-width:768px){.form__wrapper .form__block .form__item select{max-width:400px}
+}
+.form__wrapper .form__block .form__item select:focus{box-shadow:none}
+@media only screen and (min-width:960px){.form__wrapper .form__block .form__item select.half-width{width:50%}
+}
+@media only screen and (min-width:768px){.hero .cp-hero.frame{max-width:100%}
+}
+.mobile__menu__trigger{width:20px;height:14px;position:relative}
+.mobile__menu__trigger span{display:block;position:absolute;height:2px;width:100%;background:#fff;opacity:1;left:0}
+.mobile__menu__trigger span:nth-child(1){top:0}
+.mobile__menu__trigger span:nth-child(2){top:6px}
+.mobile__menu__trigger span:nth-child(3){top:12px}
+.mobile__menu__trigger.open span:nth-child(1){-webkit-transform:rotate(45deg);-moz-transform:rotate(45deg);-ms-transform:rotate(45deg);transform:rotate(45deg);top:5px;left:4px}
+.mobile__menu__trigger.open span:nth-child(2){width:0;opacity:0}
+.mobile__menu__trigger.open span:nth-child(3){-webkit-transform:rotate(-45deg);-moz-transform:rotate(-45deg);-ms-transform:rotate(-45deg);transform:rotate(-45deg);top:5px;left:4px}
+header{position:relative;z-index:10}
+header .header__main{background-color:#004066;max-width:100%}
+@media only screen and (min-width:960px){header .header__main{max-width:90%;margin-top:10px;border-radius:5px}
+}
+@media only screen and (min-width:1164px){header .header__main{max-width:1134px}
+}
+header .header__main .mobile__menu{float:left;padding:25px 0 0 18px;background:#004165;cursor:pointer}
+header .header__main .mobile__menu .mobile__menu__trigger{width:20px;height:14px;position:relative}
+header .header__main .mobile__menu .mobile__menu__trigger span{display:block;position:absolute;height:2px;width:100%;background:#fff;opacity:1;left:0}
+header .header__main .mobile__menu .mobile__menu__trigger span:nth-child(1){top:0}
+header .header__main .mobile__menu .mobile__menu__trigger span:nth-child(2){top:6px}
+header .header__main .mobile__menu .mobile__menu__trigger span:nth-child(3){top:12px}
+header .header__main .mobile__menu .mobile__menu__trigger.open span:nth-child(1){-webkit-transform:rotate(45deg);-moz-transform:rotate(45deg);-ms-transform:rotate(45deg);transform:rotate(45deg);top:5px;left:4px}
+header .header__main .mobile__menu .mobile__menu__trigger.open span:nth-child(2){width:0;opacity:0}
+header .header__main .mobile__menu .mobile__menu__trigger.open span:nth-child(3){-webkit-transform:rotate(-45deg);-moz-transform:rotate(-45deg);-ms-transform:rotate(-45deg);transform:rotate(-45deg);top:5px;left:4px}
+@media only screen and (min-width:960px){header .header__main .mobile__menu{display:none}
+}
+header .header__main .header__logo{width:141px;height:60px;position:relative}
+header .header__main .header__logo img{display:block;position:absolute;width:95px;top:8px;left:15px}
+header .header__main .header__nav{display:none}
+@media only screen and (min-width:960px){header .header__main .header__nav{display:inline-block}
+header .header__main .header__nav ul{list-style:none;margin-left:10px}
+header .header__main .header__nav li{float:left}
+header .header__main .header__nav li a{display:inline-block;font-size:19px;font-size:1.1875rem;text-transform:capitalize;text-decoration:none;color:white;padding:20px 14px 20px}
+header .header__main .header__nav li a:hover{background-color:#0093d8}
+}
+.overlay{opacity:0;-webkit-transition:opacity .25s ease-out;-moz-transition:opacity .25s ease-out;transition:opacity .25s ease-out}
+.menu__open{-webkit-transform:translateX(250px);-moz-transform:translateX(250px);-ms-transform:translateX(250px);transform:translateX(250px);position:fixed;top:0;bottom:0}
+.menu__open .overlay{position:fixed;background:#000;opacity:.5;z-index:10}
+.menu__open header>.header__main .mobile__menu{padding-left:5px;display:none}
+.menu__open .mobile__menu__section .mobile__menu{position:absolute;margin-left:-15px;padding:25px 15px 23px 15px;border-top-left-radius:3px;width:50px;height:60px;top:0;right:-40px;cursor:pointer;display:block}
+.menu__open .mobile__menu__section .mobile__menu .mobile__menu__trigger{width:20px;height:14px;position:relative}
+.menu__open .mobile__menu__section .mobile__menu .mobile__menu__trigger span{display:block;position:absolute;height:2px;width:100%;background:#fff;opacity:1;left:0}
+.menu__open .mobile__menu__section .mobile__menu .mobile__menu__trigger span:nth-child(1){top:0}
+.menu__open .mobile__menu__section .mobile__menu .mobile__menu__trigger span:nth-child(2){top:6px}
+.menu__open .mobile__menu__section .mobile__menu .mobile__menu__trigger span:nth-child(3){top:12px}
+.menu__open .mobile__menu__section .mobile__menu .mobile__menu__trigger.open span:nth-child(1){-webkit-transform:rotate(45deg);-moz-transform:rotate(45deg);-ms-transform:rotate(45deg);transform:rotate(45deg);top:5px;left:4px}
+.menu__open .mobile__menu__section .mobile__menu .mobile__menu__trigger.open span:nth-child(2){width:0;opacity:0}
+.menu__open .mobile__menu__section .mobile__menu .mobile__menu__trigger.open span:nth-child(3){-webkit-transform:rotate(-45deg);-moz-transform:rotate(-45deg);-ms-transform:rotate(-45deg);transform:rotate(-45deg);top:5px;left:4px}
+.menu__open .mobile__menu__section .menu__nav{display:block}
+.mobile__menu__section{position:absolute;top:0;left:-250px;width:250px;height:100%;background:#fff;box-shadow:rgba(0,0,0,0.3) 0 2px 2px 0;z-index:99;padding-bottom:58px}
+.mobile__menu__section .mobile__menu{display:none}
+.mobile__menu__section .menu__nav{max-height:100%;overflow-y:auto;overflow-x:hidden;display:none}
+.mobile__menu__section .menu__nav .menu{list-style-type:none;margin:0;padding:0}
+.mobile__menu__section .menu__nav .menu .item{border-bottom:1px solid #e5e5e5}
+.mobile__menu__section .menu__nav .menu .item a{display:block;font-size:20px;font-size:1.25rem;padding:20px 0 20px 30px;color:#007dba;text-decoration:none;text-transform:capitalize;cursor:pointer}
+.mobile__menu__section .menu__nav .menu .item a.title{color:#666;padding-top:25px;padding-bottom:15px;font-family:"myriad-pro","arial",sans-serif;font-weight:normal;font-weight:lighter}
+.cp-property-details{float:left;width:100%}
+.block__plus{display:block;position:relative;margin-right:10px}
+.block__plus .action__plus{cursor:pointer}
+.block__plus .action__plus span{position:absolute;width:25px;height:3px;background:#007dba;right:0;bottom:8px}
+.block__plus .action__plus span:last-child{-webkit-transform:rotate(90deg);-moz-transform:rotate(90deg);-ms-transform:rotate(90deg);transform:rotate(90deg)}
+@media only screen and (min-width:768px){.block__plus{display:none}
+}
+.property__block{display:inline-block;width:100%}
+@media only screen and (min-width:768px){.property__block{display:block;width:auto}
+}
+.property__block .property__accordion.expanded .property__bar{display:none}
+.property__block .property__accordion.expanded .property__items{display:block;float:left;margin-bottom:15px;margin-top:0}
+@media only screen and (min-width:768px){.property__block .property__accordion.expanded .property__items{margin-bottom:30px;margin-top:30px}
+}
+.property__block .property__accordion.expanded .property__items select#propertyType{color:#007dba}
+.property__block .property__accordion.expanded .property__actions{display:inline-block;margin-bottom:40px;width:100%}
+.property__block .property__accordion.border__top .property__bar{border-top:solid 1px #e0e0e0}
+.property__block .property__accordion.actions__display .property__actions{display:block}
+.property__block .property__accordion:first-child .property__bar{border-top:solid 1px #e0e0e0;margin-top:15px}
+.property__block .property__accordion:first-child .property__items{margin-top:0;margin-bottom:0}
+.property__block .property__accordion:first-child .property__actions{display:none}
+.property__block .property__accordion:first-child.actions__display .property__actions{display:block}
+@media only screen and (min-width:768px){.property__block .property__accordion.wrapper--focused .property__bar .property__bar__wrapper{background-color:#c6dfea}
+.property__block .property__accordion.wrapper--focused .property__bar .property__bar__wrapper .property__bar__action .non__mobile{opacity:1}
+}
+.property__block .property__accordion .property__bar{border-bottom:solid 1px #e0e0e0}
+@media only screen and (min-width:768px){.property__block .property__accordion .property__bar{margin-top:0}
+}
+.property__block .property__accordion .property__bar .property__bar__wrapper{padding:6px 0;transition:all .3s ease}
+@media only screen and (min-width:768px){.property__block .property__accordion .property__bar .property__bar__wrapper{margin:5px 0;padding:10px 5px}
+.property__block .property__accordion .property__bar .property__bar__wrapper:hover{background-color:#c6dfea}
+.property__block .property__accordion .property__bar .property__bar__wrapper:hover .property__bar__action .non__mobile{display:inline-block;opacity:1}
+.property__block .property__accordion .property__bar .property__bar__wrapper:hover.hide__delete .property__bar__action .non__mobile.action__delete{display:none}
+}
+.property__block .property__accordion .property__bar .property__bar__wrapper .property__bar__title{display:inline-block;width:80%;font-size:.875rem;line-height:1rem}
+@media only screen and (min-width:768px){.property__block .property__accordion .property__bar .property__bar__wrapper .property__bar__title{font-family:"myriad-pro","arial",sans-serif;font-weight:normal;font-weight:bold;font-size:16px;line-height:22px}
+}
+.property__block .property__accordion .property__bar .property__bar__wrapper .property__bar__action{float:right;display:inline-block}
+.property__block .property__accordion .property__bar .property__bar__wrapper .property__bar__action .action__edit{display:inline-block;cursor:pointer;background:url('https://propertyprofilereport.anz.com.au/etc/designs/ppr/images/edit.svg');width:22px;height:22px;margin-right:25px;border:0}
+.property__block .property__accordion .property__bar .property__bar__wrapper .property__bar__action .action__delete{display:inline-block;cursor:pointer;background:url('https://propertyprofilereport.anz.com.au/etc/designs/ppr/images/delete.svg');width:22px;height:22px;margin-right:25px;border:0}
+.property__block .property__accordion .property__bar .property__bar__wrapper .property__bar__action .action__arrowdown{display:inline-block;cursor:pointer;background:url('https://propertyprofilereport.anz.com.au/etc/designs/ppr/images/arrow_down_blue.png');width:22px;height:22px;margin-right:25px;width:12px;height:12px;margin-right:15px;background-size:12px;background-repeat:no-repeat;transform:translate(0,calc(44%))}
+.property__block .property__accordion .property__bar .property__bar__wrapper .property__bar__action .non__mobile{display:none}
+@media only screen and (min-width:768px){.property__block .property__accordion .property__bar .property__bar__wrapper .property__bar__action .non__mobile{opacity:0;display:inline-block}
+}
+@media only screen and (min-width:768px){.property__block .property__accordion .property__bar .property__bar__wrapper .property__bar__action .mobile{display:none}
+}
+.property__block .property__accordion .property__items{display:none;width:100%;margin-top:15px}
+@media only screen and (min-width:768px){.property__block .property__accordion .property__items{margin-top:30px}
+}
+.property__block .property__accordion .property__actions{display:none}
+.property__actions button{display:inline-block;width:100px;padding:10px;font-size:16px;font-size:1rem;text-align:center;border-radius:4px;cursor:pointer;background-color:#f2f2f2}
+@media only screen and (min-width:768px){.property__actions button{width:calc(50% - 1px);padding:12px;border-radius:0;border:0}
+.property__actions button:hover{text-decoration:underline}
+}
+.property__actions button.action__delete{margin-left:calc((60% - 100px)/2);color:#0072ac;background-color:#fff;border:1px solid #0072ac}
+@media only screen and (min-width:768px){.property__actions button.action__delete{border:0;color:#494949;background-color:#e5e5e5;margin:0}
+}
+.property__actions button.action__confirm{margin-right:calc((60% - 100px)/2);color:#fff;background-color:#0072ac;border:1px solid #0072ac}
+@media only screen and (min-width:768px){.property__actions button.action__confirm{border:0;color:#494949;background-color:#e5e5e5;margin:0}
+}
+.property__actions button:last-child{float:right}
+.property__actions button span{height:25px;line-height:22px;width:25px;background-color:#007dba;border-radius:50%;color:#FFF;display:inline-block;margin:0 10px 2px 0}
+.property__actions button#btnAdd{width:100%;border:0;background-color:#FFF;text-align:left;color:#007dba;padding:15px 0}
+@media only screen and (min-width:768px){.property__actions button#btnAdd{margin:25px -38px 0 0;width:calc(100% + 76px);background-color:#efefef;text-align:center;font-size:1rem}
+}
+.property__actions button#btnAdd:focus{box-shadow:none}
+.property__actions button#btnAdd span{text-align:center}
+.property__actions button#btnAdd span.add__more{margin:0;padding:0;line-height:100%;text-align:left;height:auto;display:inline;background-color:transparent;color:#007dba;position:relative;top:-8px}
+@media only screen and (min-width:480px){.property__actions button#btnAdd span.add__more{top:0}
+}
+.property__actions button#btnAdd i{height:24px;width:24px;background:url('https://propertyprofilereport.anz.com.au/etc/designs/ppr/images/btn-add.png') no-repeat center;background-size:cover;display:inline-block;margin:0 10px -6px 0}
+.property__actions button#btnAdd .small-font{font-size:14px;font-size:.875rem;font-weight:normal;display:block;position:relative;top:-9px;margin-left:34px}
+@media only screen and (min-width:480px){.property__actions button#btnAdd .small-font{top:0;margin-left:0;display:inline}
+}
+.form__wrapper .form__block .cp-contact-details .short-contact .form__item .inputs input[type='radio']+label.btn__radio{transition:all .3s ease}
+.form__wrapper .form__block .cp-contact-details .short-contact .form__item .inputs input[type='radio']+label.btn__radio:hover{background-color:#0072ac;color:white}
+.form__wrapper .form__block .cp-contact-details .short-contact .form__item .inputs input[type='radio']:checked+label.btn__radio{transition:all .3s ease}
+.form__wrapper .form__block .cp-contact-details .short-contact .form__item .inputs input[type='radio']:checked+label.btn__radio:hover{background-color:#014165;color:white}
+.form__wrapper .form__block .form__item .inputs input[type='radio']+label.btn__radio.tab.active{border:solid 1px #014165;background-color:#014165;color:#fff}
+.form__wrapper .form__block .form__item .inputs input[type='radio']+label.btn__radio.tab:hover{border:solid 1px #0072ac;background-color:#0072ac;color:#fff}
+.cp-contact-details .form__item .inputs__radio .item__sub__title{color:#747678;display:none;font-size:.875rem;line-height:1rem}
+@media only screen and (min-width:768px){.cp-contact-details .form__item .inputs__radio .item__sub__title{margin-top:7px}
+}
+.cp-contact-details .form__item .inputs__radio .item__sub__title.active{display:block}
+.cp-contact-details .form__item .would-be-contact span{font-size:.875rem;line-height:1rem;display:block;color:#747678;margin-top:5px}
+@media only screen and (min-width:768px){.cp-contact-details .form__item .would-be-contact span{margin-top:0}
+}
+.cp-contact-details .form__item .would-be-contact .span_tooltip{display:inline-block;border:1px solid;border-radius:13px;width:13px;line-height:12px;height:13px;text-align:center;font-weight:800;position:static;font-size:x-small;font-family:serif}
+@media only screen and (min-width:768px){.cp-contact-details .form__item .would-be-contact .span_tooltip{position:relative}
+}
+.cp-contact-details .form__item .would-be-contact .span_tooltip .tooltip-text{visibility:hidden;background-color:#fff;color:#494949;border:1px solid;font-family:"myriad-pro","arial",sans-serif;font-weight:normal;border-color:#ccc;text-align:left;border-radius:3px;padding:20px 20px;position:absolute;z-index:1;bottom:125%;left:0;opacity:0;transition:opacity .3s;box-shadow:rgba(0,0,0,0.3) 0 0 8px 0}
+@media only screen and (min-width:768px){.cp-contact-details .form__item .would-be-contact .span_tooltip .tooltip-text{margin-left:-180px;margin-bottom:10px}
+}
+.cp-contact-details .form__item .would-be-contact .span_tooltip .tooltip-square{visibility:hidden;display:none;width:15px;height:15px;background:#fff;z-index:100;position:relative;transform:rotate(45deg);top:-33px;left:-3px;border-right:1px solid;border-bottom:1px solid;border-color:#ccc;transition:opacity .3s}
+@media only screen and (min-width:768px){.cp-contact-details .form__item .would-be-contact .span_tooltip .tooltip-square{display:block}
+}
+.cp-contact-details .form__item .would-be-contact .span_tooltip:hover .tooltip-text{visibility:visible;opacity:1}
+.cp-contact-details .form__item .would-be-contact .span_tooltip:hover .tooltip-square{visibility:visible;opacity:1}
+.cp-contact-details .form__item .postcode{line-height:40px}
+.cp-contact-details .form__item .postcode span{font-size:.875rem;line-height:1rem;display:block;color:#747678;margin-top:5px}
+@media only screen and (min-width:768px){.cp-contact-details .form__item .postcode span{margin-top:0}
+}
+.cp-contact-details .form__item .postcode .span_tooltip{display:inline-block;border:1px solid;border-radius:13px;width:13px;line-height:12px;height:13px;text-align:center;font-weight:800;position:static;font-size:x-small;font-family:serif}
+@media only screen and (min-width:768px){.cp-contact-details .form__item .postcode .span_tooltip{position:relative}
+}
+.cp-contact-details .form__item .postcode .span_tooltip .tooltip-text{visibility:hidden;background-color:#fff;color:#494949;border:1px solid;font-family:"myriad-pro","arial",sans-serif;font-weight:normal;border-color:#ccc;text-align:left;border-radius:3px;padding:20px 20px;position:absolute;z-index:1;bottom:125%;left:0;opacity:0;transition:opacity .3s;box-shadow:rgba(0,0,0,0.3) 0 0 8px 0}
+@media only screen and (min-width:768px){.cp-contact-details .form__item .postcode .span_tooltip .tooltip-text{margin-left:-180px;margin-bottom:10px}
+}
+.cp-contact-details .form__item .postcode .span_tooltip .tooltip-square{visibility:hidden;display:none;width:15px;height:15px;background:#fff;z-index:100;position:relative;transform:rotate(45deg);top:-35px;left:-3px;border-right:1px solid;border-bottom:1px solid;border-color:#ccc;transition:opacity .3s}
+@media only screen and (min-width:768px){.cp-contact-details .form__item .postcode .span_tooltip .tooltip-square{display:block}
+}
+.cp-contact-details .form__item .postcode .span_tooltip:hover .tooltip-text{visibility:visible;opacity:1}
+.cp-contact-details .form__item .postcode .span_tooltip:hover .tooltip-square{visibility:visible;opacity:1}
+.cp-contact-details .form__item .tabs{float:left;width:100%}
+@media only screen and (min-width:768px){.cp-contact-details .form__item .tabs{width:54%;max-width:400px}
+}
+.cp-contact-details .form__item .tabs .tab{display:inline-block;height:40px;line-height:40px;padding:0 20px;font-size:16px;font-size:1rem;border:solid 1px #ccc;border-right:0;text-align:center;margin:0 0 10px 0;background-color:#FFF;color:#007dba;width:50%;transition:all .3s ease;cursor:pointer}
+@media only screen and (min-width:768px){.cp-contact-details .form__item .tabs .tab{width:25%}
+}
+.cp-contact-details .form__item .tabs .tab:hover{border:solid 1px #0072ac;background-color:#0072ac;color:#fff}
+.cp-contact-details .form__item .tabs .tab:first-of-type{border-radius:3px 0 0 3px}
+.cp-contact-details .form__item .tabs .tab:last-of-type{border-radius:0 3px 3px 0;border-right:1px solid #ccc}
+.cp-contact-details .form__item .tabs .tab.active{border:solid 1px #014165;background-color:#014165;color:#fff}
+.cp-contact-details .form__item .inputs .input__phone-type{display:inline-block;width:calc(50% - 5px);float:left}
+.cp-contact-details .form__item .inputs .input__region-number{display:inline-block;width:calc(50% - 5px);float:right}
+.cp-contact-details .form__item .inputs .input__phone-number,.cp-contact-details .form__item .inputs .input__mobile-number{display:inline-block;width:100%;margin-top:10px}
+.cp-contact-details .form__item .inputs span.hide{display:none}
+@media only screen and (min-width:768px){.cp-contact-details .form__item .inputs .input__phone-type{width:95px;float:none;margin-right:10px}
+.cp-contact-details .form__item .inputs .input__phone-type select{width:inherit}
+.cp-contact-details .form__item .inputs .input__region-number{width:70px;float:none;margin-right:10px}
+.cp-contact-details .form__item .inputs .input__phone-number{width:calc(100% - 185px);margin-top:0;max-width:210px}
+.cp-contact-details .form__item .inputs .input__mobile-number{margin-top:0;width:calc(100% - 105px);max-width:295px}
+}
+@media only screen and (min-width:960px){.cp-contact-details .form__item .inputs .input__phone-type{width:115px}
+.cp-contact-details .form__item .inputs .input__region-number{width:90px}
+.cp-contact-details .form__item .inputs .input__phone-number{width:calc(100% - 225px);max-width:175px}
+.cp-contact-details .form__item .inputs .input__mobile-number{width:calc(100% - 125px);max-width:275px}
+}
+.cp-contact-details .first-home-buyers{color:#004165}
+.cp-contact-details .first-home-buyers h4{font-size:2rem;font-weight:lighter}
+.cp-contact-details .first-home-buyers-content{margin-top:10px;font-size:.875rem;line-height:1.25rem;color:#747678}
+.cp-contact-details .first-home-buyers-content p{margin-bottom:10px}
+.cp-contact-details .first-home-buyers-content p:last-child{margin-bottom:0}
+@media only screen and (min-width:768px){.cp-contact-details .first-home-buyers-content{margin-top:0}
+}
+.contactdetails .form__item .contactNumber{position:relative}
+@media only screen and (min-width:768px){.contactdetails .form__item .contactNumber{top:-8px}
+}
+.form__block .disclaimer{margin-top:10px;font-size:.875rem;line-height:1.25rem;color:#747678;height:200px;overflow:hidden;position:relative;transition:all .3s linear}
+.form__block .disclaimer p{margin-bottom:10px}
+.form__block .disclaimer p:last-child{margin-bottom:0}
+.form__block .disclaimer.open{height:auto}
+@media only screen and (min-width:768px){.form__block .disclaimer{margin-top:0;height:auto}
+}
+.form__block .show-more{position:absolute;width:100%;height:50px;line-height:50px;bottom:-10px;border:0;color:#007dba;opacity:.8;text-align:center;background:#FFF;cursor:pointer;font-size:1rem}
+.form__block .show-more:after{content:'';display:inline-block;height:10px;width:10px;background:url('https://propertyprofilereport.anz.com.au/etc/designs/ppr/images/arrow_down_blue.png') no-repeat center;background-size:100%;margin:0 0 0 6px;transition:all .3s ease}
+.form__block .show-more.open{display:none}
+.form__block .show-more.open:after{-webkit-transform:rotate(180deg);-moz-transform:rotate(180deg);-ms-transform:rotate(180deg);-o-transform:rotate(180deg);transform:rotate(180deg)}
+@media only screen and (min-width:768px){.form__block .show-more{display:none}
+}
+.form__actions{padding:28px 0}
+.form__actions.form__actions--last{padding-bottom:0;display:none}
+@media only screen and (min-width:768px){.form__actions.form__actions--last{display:block}
+}
+.form__actions.single button{width:100%}
+.form__actions button{width:50%;border:0;display:inline-block;background-color:#e4e4e4;padding:15px;text-align:center;cursor:pointer;color:#313131;font-size:18px;font-size:1.125rem}
+.form__actions.submit__action{text-align:center}
+.form__actions.submit__action .btn__submit{cursor:pointer;display:inline-block;border:0;background-color:#008a02;color:white;border-radius:4px;height:44px;line-height:44px;width:100%;max-width:84%;font-weight:600;text-transform:capitalize}
+@media only screen and (min-width:480px){.form__actions.submit__action .btn__submit{max-width:50%}
+}
+@media only screen and (min-width:768px){.form__actions.submit__action .btn__submit{width:150px;padding:11px;height:auto;line-height:1.4}
+.form__actions.submit__action .btn__submit:hover{background-color:#00a303}
+}
+.content__block{background-color:white;position:relative}
+@media only screen and (min-width:768px){.content__block{border-radius:0;border:0;width:100%}
+}
+.content__block .content__block__half{display:block;padding:35px 0 35px;border:0;border-bottom:1px solid #d2d2d2;margin:0 auto}
+@media only screen and (min-width:480px){.content__block .content__block__half{padding:30px 0 25px}
+}
+@media only screen and (min-width:768px){.content__block .content__block__half{width:50%;float:left;border:0;margin:40px 0 52px;padding:0}
+}
+@media only screen and (min-width:480px){.content__block .content__block__half.anz__forms--padding{padding-bottom:50px}
+}
+@media only screen and (min-width:768px){.content__block .content__block__half.border-right{border-right:1px solid #d2d2d2}
+}
+.content__block .content__block__half h3{text-align:center;font-size:2rem;font-family:"myriad-pro","arial",sans-serif;font-weight:normal;font-weight:lighter;line-height:2.25rem}
+@media only screen and (min-width:480px){.content__block .content__block__half h3{font-size:2.25rem}
+}
+@media only screen and (min-width:768px){.content__block .content__block__half h3{font-size:2rem}
+}
+.content__block .content__block__half .cta{width:100%}
+.content__block .content__block__half .cta .cta-wrapper{width:100%}
+@media only screen and (min-width:480px){.content__block .content__block__half .cta .cta-wrapper{margin:0 auto;font-size:0;text-align:center;padding:0 20px}
+}
+@media only screen and (min-width:768px){.content__block .content__block__half .cta .cta-wrapper{margin:18px 0 0 0;padding:0}
+}
+@media only screen and (min-width:960px){.content__block .content__block__half .cta .cta-wrapper{margin:10px 0 0 0;padding-left:0}
+}
+.content__block .content__block__half .cta .cta-wrapper .cta__block{width:100%;max-width:84%;border-radius:4px;border:1px solid white;display:block;float:none;margin:30px auto 5px;background-color:#007dba}
+@media only screen and (min-width:480px){.content__block .content__block__half .cta .cta-wrapper .cta__block{max-width:50%;margin-top:40px}
+}
+@media only screen and (min-width:768px){.content__block .content__block__half .cta .cta-wrapper .cta__block{width:100%;margin:0;max-width:100%;background-color:transparent;margin-top:20px}
+}
+@media only screen and (min-width:960px){.content__block .content__block__half .cta .cta-wrapper .cta__block{height:100%;float:left;padding-left:0}
+}
+.content__block .content__block__half .cta .cta-wrapper .cta__block a{display:block;text-decoration:none;color:#007dba;text-align:center;font-size:18px;font-size:1.125rem;overflow:hidden;position:relative;height:44px;line-height:44px}
+@media only screen and (min-width:768px){.content__block .content__block__half .cta .cta-wrapper .cta__block a{text-align:center;padding:6px 16px;height:auto;line-height:unset}
+}
+@media only screen and (min-width:960px){.content__block .content__block__half .cta .cta-wrapper .cta__block a{padding:0 10px;text-align:center}
+}
+.content__block .content__block__half .cta .cta-wrapper .cta__block a .cta__btn{color:white;display:inline-block;position:relative}
+@media only screen and (min-width:768px){.content__block .content__block__half .cta .cta-wrapper .cta__block a .cta__btn{color:#007dba;font-size:1.375rem;font-weight:normal}
+}
+@media only screen and (min-width:960px){.content__block .content__block__half .cta .cta-wrapper .cta__block a .cta__btn{height:80px}
+}
+.content__block .content__block__half .cta .cta-wrapper .cta__block a .cta__btn .icon{background:url('https://propertyprofilereport.anz.com.au/etc/designs/ppr/images/call-white.svg') center no-repeat;height:16px;width:16px;position:absolute;top:15px;left:0}
+@media only screen and (min-width:768px){.content__block .content__block__half .cta .cta-wrapper .cta__block a .cta__btn .icon{background:url('https://propertyprofilereport.anz.com.au/etc/designs/ppr/images/call-out.svg') center no-repeat;height:30px;position:relative;width:100%;top:0;margin-bottom:20px}
+}
+.content__block .content__block__half .cta .cta-wrapper .cta__block a .cta__btn .btn--text{padding-left:30px;display:inline-block;text-align:left}
+@media only screen and (min-width:480px){.content__block .content__block__half .cta .cta-wrapper .cta__block a .cta__btn .btn--text{padding-left:40px}
+}
+@media only screen and (min-width:768px){.content__block .content__block__half .cta .cta-wrapper .cta__block a .cta__btn .btn--text{padding-left:0;font-size:1.4375rem;font-weight:normal}
+}
+.content__block .content__block__half .cta .cta-wrapper .cta__block a .cta__btn .btn--text .btn--mobile-hide{display:none}
+@media only screen and (min-width:768px){.content__block .content__block__half .cta .cta-wrapper .cta__block a .cta__btn .btn--text .btn--mobile-hide{display:inline-block}
+}
+.content__block .content__block__half .cta .cta-wrapper .cta__block.request-a-call-back a{background:#FFF;border:1px solid #007dba;border-radius:3px}
+@media only screen and (min-width:768px){.content__block .content__block__half .cta .cta-wrapper .cta__block.request-a-call-back a{border:0}
+}
+.content__block .content__block__half .cta .cta-wrapper .cta__block.request-a-call-back .cta__btn{color:#007dba}
+.content__block .content__block__half .cta .cta__info{text-align:center;font-size:14px;font-size:.875rem;color:#747678;margin-top:20px}
+@media only screen and (min-width:480px){.content__block .content__block__half .cta .cta__info{padding-top:15px;margin-top:0}
+}
+@media only screen and (min-width:768px){.content__block .content__block__half .cta .cta__info{padding-top:0}
+}
+.content__block .content__block__half .quick__link{margin-top:35px;position:relative;width:100%;text-align:center;padding-left:0;margin-left:0}
+@media only screen and (min-width:768px){.content__block .content__block__half .quick__link{text-align:left;margin:40px auto 0;width:89%;padding-left:25%}
+}
+@media only screen and (min-width:960px){.content__block .content__block__half .quick__link{padding-left:30%}
+}
+.content__block .content__block__half .quick__link a{display:block;text-decoration:none;font-size:18px;font-size:1.125rem;color:#007dba;margin-top:10px;box-shadow:none}
+.content__block .content__block__half .quick__link a:hover{text-decoration:underline}
+.content__block .content__block__half .quick__link a:before{content:"";width:8px;height:12px;background:url('https://propertyprofilereport.anz.com.au/etc/designs/ppr/images/arrow.svg') no-repeat center center;float:left;margin-top:5px;position:absolute;margin-left:-20px}
+footer{background-color:#007dba;padding:0 15px;position:relative;z-index:10}
+@media only screen and (min-width:768px){footer{padding:20px 15px;overflow:hidden;height:190px}
+}
+@media only screen and (min-width:768px){footer .frame{max-width:100%}
+}
+@media only screen and (min-width:960px){footer .frame{max-width:1164px}
+}
+footer .footer-left{padding:20px 0}
+@media only screen and (min-width:768px){footer .footer-left{float:left;width:70%}
+}
+footer .footer-left .footer-menu li{list-style-type:none;color:white;font-size:.875rem}
+@media only screen and (min-width:768px){footer .footer-left .footer-menu li{display:inline-block;margin-right:10px}
+}
+footer .footer-left .footer-menu li a{font-weight:bold;display:inline-block;color:white;text-decoration:none;padding:10px 0;width:100%}
+@media only screen and (min-width:768px){footer .footer-left .footer-menu li a{padding:0}
+}
+footer .footer-left .footer-menu li a:hover{text-decoration:underline}
+footer .social-network{margin:10px 0}
+@media only screen and (min-width:768px){footer .social-network{width:27%;float:right;margin:21px 0 0}
+}
+footer .social-network h3{color:white;font-weight:normal;font-size:.875rem;margin-bottom:15px}
+footer .social-network li{display:inline-block;margin-right:10px;font-size:0}
+footer .social-network li a{display:inline-block;width:32px;height:32px}
+footer .social-network li.facebook a{background:url('https://propertyprofilereport.anz.com.au/etc/designs/ppr/images/socialnetwork.png')}
+footer .social-network li.linkedin a{background:url('https://propertyprofilereport.anz.com.au/etc/designs/ppr/images/socialnetwork.png') 0 96px}
+footer .social-network li.twitter a{background:url('https://propertyprofilereport.anz.com.au/etc/designs/ppr/images/socialnetwork.png') 0 64px}
+footer .social-network li.youtube a{background:url('https://propertyprofilereport.anz.com.au/etc/designs/ppr/images/socialnetwork.png') 0 32px}
+footer .copyright{display:none;padding:15px 0 50px 0;font-size:.875rem;color:white}
+@media only screen and (min-width:768px){footer .copyright{display:block}
+}
+footer .copyright.last{display:block}
+@media only screen and (min-width:768px){footer .copyright.last{display:none}
+}
+.header__banner--mobile{background-size:cover;top:0;left:0;width:100%;background-image:none;height:0}
+@media only screen and (min-width:480px){.header__banner--mobile{background-image:url('https://propertyprofilereport.anz.com.au/etc/designs/ppr/images/bg.jpg');background-position:center;height:23vw}
+}
+@media only screen and (min-width:768px){.header__banner--mobile{background-image:none;height:0}
+}
+.header__banner{text-align:center;margin:0}
+@media only screen and (min-width:768px){.header__banner{background-color:transparent;text-align:left;margin:25px auto 35px auto}
+}
+.header__banner .header__banner__info ul,.header__banner .header__banner__nav ul{list-style:none}
+.header__banner .header__banner__info ul li,.header__banner .header__banner__nav ul li{display:inline-block;padding:25px}
+.header__banner .header__banner__info ul li a,.header__banner .header__banner__nav ul li a{text-decoration:none;color:white;text-shadow:0 0 7px #333;text-transform:capitalize}
+.header__banner .header__banner__text{display:inline-block;width:100%;background-color:#007dba}
+@media only screen and (min-width:768px){.header__banner .header__banner__text{background-color:transparent}
+}
+.header__banner .header__banner__text .header__banner__text__wrapper{width:80%;margin:5px auto 15px auto;font-family:"myriad-pro","arial",sans-serif;font-weight:normal;font-weight:lighter}
+@media only screen and (min-width:768px){.header__banner .header__banner__text .header__banner__text__wrapper{margin:0}
+}
+.header__banner .header__banner__text .header__banner__text__wrapper .header__banner__text__primary{font-size:36px;font-size:1.3rem;text-transform:capitalize;color:#004165;line-height:2.7rem;font-weight:600;margin:0;color:#FFF}
+@media only screen and (min-width:768px){.header__banner .header__banner__text .header__banner__text__wrapper .header__banner__text__primary{color:white;font-size:2.25rem;font-weight:300;line-height:150%;margin-bottom:15px}
+}
+.header__banner .header__banner__text .header__banner__text__wrapper .header__banner__text__secondary{font-size:16px;font-size:1rem;color:#494949;font-weight:400;color:#FFF}
+@media only screen and (min-width:768px){.header__banner .header__banner__text .header__banner__text__wrapper .header__banner__text__secondary{font-size:18px;font-size:1.125rem;line-height:1.5rem;color:white}
+}
+.errorpage_container{height:calc(100vh - 500px);text-align:center;display:table;width:100%;min-height:400px;position:relative;z-index:10}
+@media only screen and (min-width:768px){.errorpage_container{height:calc(100vh - 250px)}
+}
+@media only screen and (min-width:960px){.errorpage_container{height:calc(100vh - 262px)}
+}
+.errorpage_container .errorpage_wrapper{display:table-cell;vertical-align:middle}
+.errorpage_container .errorpage_wrapper .errorpage_title{margin-bottom:15px}
+@media only screen and (min-width:768px){.errorpage_container .errorpage_wrapper .errorpage_title{margin-bottom:30px}
+}
+.errorpage_container .errorpage_wrapper .errorpage_title h1{font-weight:lighter;font-size:2.5rem;line-height:2.5rem}
+@media only screen and (min-width:768px){.errorpage_container .errorpage_wrapper .errorpage_title h1{font-size:4.5rem;line-height:4.5rem}
+}
+.errorpage_container .errorpage_wrapper .errorpage_discription{width:83%;margin:0 auto;margin-bottom:35px}
+@media only screen and (min-width:768px){.errorpage_container .errorpage_wrapper .errorpage_discription{margin-bottom:60px}
+}
+@media only screen and (min-width:768px){.errorpage_container .errorpage_wrapper .errorpage_discription p{font-size:1.15rem;line-height:1.15rem}
+}
+.errorpage_container .errorpage_wrapper .errorpage_backlink{color:#007dba;text-decoration:inherit;display:inline-block;border:0;background:inherit;cursor:pointer}
+.errorpage_container .errorpage_wrapper .errorpage_backlink:focus{color:#007dba}
+@media only screen and (min-width:768px){.errorpage_container .errorpage_wrapper .errorpage_backlink{font-size:1.20rem;line-height:1.20rem;margin-bottom:45px}
+}
+.cp.success{margin-bottom:80px}
+.cp.failure{margin-bottom:80px}
+.cp.error-404{margin-bottom:80px}
+.cp.error-500{margin-bottom:80px}
+.form__block .form__success{text-align:center}
+.form__block .form__success h3{text-align:center;color:#004165}
+.form__block .form__success p{text-align:center;margin:20px auto 0 auto}
+@media only screen and (min-width:480px){.form__block .form__success p{width:80%}
+}
+@media only screen and (min-width:768px){.form__block .form__success p{width:80%}
+}
+@media only screen and (min-width:1164px){.form__block .form__success p{width:50%}
+}
+.form__block .form__success .normal_buyer{text-align:center;margin:20px auto 0 auto}
+@media only screen and (min-width:480px){.form__block .form__success .normal_buyer{width:80%}
+}
+@media only screen and (min-width:768px){.form__block .form__success .normal_buyer{width:80%}
+}
+@media only screen and (min-width:1164px){.form__block .form__success .normal_buyer{width:50%}
+}
+.form__block .form__success .fhb_buyer{text-align:center;margin:20px auto 0 auto}
+@media only screen and (min-width:480px){.form__block .form__success .fhb_buyer{width:80%}
+}
+@media only screen and (min-width:768px){.form__block .form__success .fhb_buyer{width:80%}
+}
+@media only screen and (min-width:1164px){.form__block .form__success .fhb_buyer{width:50%}
+}
+.form__block .form--confirmation{background:url('https://propertyprofilereport.anz.com.au/etc/designs/ppr/images/submit-success.svg') center no-repeat;width:50px;height:50px;margin:25px auto}
+.form__block .form__error h3{text-align:center;color:#004165}
+.form__block .form__error p{text-align:center;margin:20px auto 10px auto}
+.form__block .form__error p a{white-space:nowrap}
+@media only screen and (min-width:320px){.form__block .form__error p{width:78%}
+}
+@media only screen and (min-width:768px){.form__block .form__error p{width:80%}
+}
+@media only screen and (min-width:1164px){.form__block .form__error p{width:37%}
+}
+.form__block .form__error a{color:#007dba;text-decoration:none}
+.form__block .form__error a:hover{text-decoration:underline}
+.form__block .form--error{background:url('https://propertyprofilereport.anz.com.au/etc/designs/ppr/images/submit-error.svg') center no-repeat;width:50px;height:50px;margin:25px auto}
+.error__actions button{width:50%;border:0;display:inline-block;background-color:#e4e4e4;padding:15px;text-align:center;cursor:pointer;color:#313131;font-size:18px;font-size:1.125rem}
+.error__actions.return__action{text-align:center;padding:25px 0 10px 0}
+.error__actions.return__action .error_button{text-align:center;cursor:pointer;display:inline-block;border-style:solid;border-width:thin;text-decoration:none;border-color:#007dba;background-color:white;color:#007dba;border-radius:4px;padding:10px;width:120px;max-width:80%}
+.ui-autocomplete{background-color:#fff;z-index:100;list-style-type:none;border:1px solid #ccc;position:absolute;margin-top:-1px;max-height:212px;width:100%;overflow:auto}
+.ui-autocomplete li{font-size:16px;font-type:myriad-pro;color:#007dba;font-weight:500;padding:10px 12px}
+.ui-autocomplete li:hover,.ui-autocomplete li.ui-state-focus{background-color:#007dba;color:#fff}
+@media only screen and (min-width:768px){.ui-autocomplete{display:inline-block;width:50%}
+}
+@media only screen and (min-width:960px){.ui-autocomplete{width:54%}
+}
+.address__ui{display:inline-block;width:100%;position:relative}
+@media only screen and (min-width:768px){.address__ui{display:inline-table;width:50%}
+}
+@media only screen and (min-width:960px){.address__ui{width:54%}
+}
+.ui-helper-hidden-accessible{display:none}
+.desktop .inputs.inputs__error .error span.none__mobile__call,.tablet .inputs.inputs__error .error span.none__mobile__call{display:inline-block}
+.desktop .inputs.inputs__error .error a.mobile__call,.tablet .inputs.inputs__error .error a.mobile__call{display:none}
+.mobile .inputs.inputs__error .error span.none__mobile__call{display:none}
+.mobile .inputs.inputs__error .error a.mobile__call{display:inline-block}
