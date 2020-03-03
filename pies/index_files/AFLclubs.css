@@ -1,0 +1,173 @@
+.clubLogoHeight80 .img-responsive {
+max-height: 80px !important;
+}
+.clubLogoHeight90 .img-responsive {
+max-height: 90px;
+}
+.clubLogoHeight100 .img-responsive {
+max-height: 100px;
+}
+div.clubLogoHeight110 .img-responsive {
+max-height: 110px;
+}
+div.clubLogoHeight120 .img-responsive {
+max-height: 120px;
+}
+div.clubLogoHeight130 .img-responsive {
+max-height: 130px;
+}
+div.clubLogoHeight140 .img-responsive {
+max-height: 140px;
+}
+div.clubLogoHeight150 .img-responsive {
+max-height: 150px;
+}
+div.clubLogoHeight160 .img-responsive {
+max-height: 160px;
+}
+.telstraNPS .kplNps:before {
+   font-size: 12px;
+   float: left;
+   text-align: center;
+content: "Not at all likely\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\ Extremely likely";
+}
+
+.nps-square-number-0{
+	background: url("https://assets.kampyle.com/clients/nebula/telstra/nps_blue_white.png") no-repeat;
+    margin-right: 4px;
+    background-position: 0 -31px;	
+}
+
+.nps-square-number-1{
+	background: url("https://assets.kampyle.com/clients/nebula/telstra/nps_blue_white.png") no-repeat;
+    margin-right: 4px;
+    background-position: -30px -31px;	
+}
+
+.nps-square-number-2{
+	background: url("https://assets.kampyle.com/clients/nebula/telstra/nps_blue_white.png") no-repeat;
+    margin-right: 4px;	
+    background-position: -60px -31px;
+}
+
+.nps-square-number-3{
+	background: url("https://assets.kampyle.com/clients/nebula/telstra/nps_blue_white.png") no-repeat;
+    margin-right: 4px;
+    background-position: -90px -31px;	
+}
+
+.nps-square-number-4{
+	background: url("https://assets.kampyle.com/clients/nebula/telstra/nps_blue_white.png") no-repeat;
+    margin-right: 4px;
+    background-position: -120px -31px;	
+}
+
+.nps-square-number-5{
+	background: url("https://assets.kampyle.com/clients/nebula/telstra/nps_blue_white.png") no-repeat;
+    margin-right: 4px;	
+    background-position: -150px -31px;
+}
+
+.nps-square-number-6{
+	background: url("https://assets.kampyle.com/clients/nebula/telstra/nps_blue_white.png") no-repeat;
+    margin-right: 4px;	
+    background-position: -180px -31px;
+}
+
+.nps-square-number-7{
+	background: url("https://assets.kampyle.com/clients/nebula/telstra/nps_blue_white.png") no-repeat;
+    margin-right: 4px;
+    background-position: -210px -31px;	
+}
+
+.nps-square-number-8{
+	background: url("https://assets.kampyle.com/clients/nebula/telstra/nps_blue_white.png") no-repeat;
+    margin-right: 4px;
+    background-position: -240px -31px;	
+}
+
+.nps-square-number-9{
+	background: url("https://assets.kampyle.com/clients/nebula/telstra/nps_blue_white.png") no-repeat;
+    margin-right: 4px;
+    background-position: -270px -31px;	
+}
+
+.nps-square-number-10{
+	background: url("https://assets.kampyle.com/clients/nebula/telstra/nps_blue_white.png") no-repeat;
+    margin-right: 4px;	
+    background-position: -300px -31px;
+}
+
+.nps-square-number-0-off {
+	background: url("https://assets.kampyle.com/clients/nebula/telstra/nps_blue_white.png") no-repeat;
+    margin-right: 4px;	
+}
+
+.nps-square-number-1-off {
+	background: url("https://assets.kampyle.com/clients/nebula/telstra/nps_blue_white.png") no-repeat;
+    margin-right: 4px;
+    background-position: -30px 0px;	
+}
+
+.nps-square-number-2-off {
+	background: url("https://assets.kampyle.com/clients/nebula/telstra/nps_blue_white.png") no-repeat;
+    margin-right: 4px;	
+    background-position: -60px 0;
+}
+
+.nps-square-number-3-off {
+	background: url("https://assets.kampyle.com/clients/nebula/telstra/nps_blue_white.png") no-repeat;
+    margin-right: 4px;
+    background-position: -90px 0;	
+}
+
+.nps-square-number-4-off {
+	background: url("https://assets.kampyle.com/clients/nebula/telstra/nps_blue_white.png") no-repeat;
+    margin-right: 4px;
+    background-position: -120px 0;	
+}
+
+.nps-square-number-5-off {
+	background: url("https://assets.kampyle.com/clients/nebula/telstra/nps_blue_white.png") no-repeat;
+    margin-right: 4px;	
+    background-position: -150px 0;
+}
+
+.nps-square-number-6-off {
+	background: url("https://assets.kampyle.com/clients/nebula/telstra/nps_blue_white.png") no-repeat;
+    margin-right: 4px;	
+    background-position: -180px 0;
+}
+
+.nps-square-number-7-off {
+	background: url("https://assets.kampyle.com/clients/nebula/telstra/nps_blue_white.png") no-repeat;
+    margin-right: 4px;
+    background-position: -210px 0;	
+}
+
+.nps-square-number-8-off {
+	background: url("https://assets.kampyle.com/clients/nebula/telstra/nps_blue_white.png") no-repeat;
+    margin-right: 4px;
+    background-position: -240px 0;	
+}
+
+.nps-square-number-9-off {
+	background: url("https://assets.kampyle.com/clients/nebula/telstra/nps_blue_white.png") no-repeat;
+    margin-right: 4px;
+    background-position: -270px 0;	
+}
+
+.nps-square-number-10-off {
+	background: url("https://assets.kampyle.com/clients/nebula/telstra/nps_blue_white.png") no-repeat;
+    margin-right: 4px;	
+    background-position: -300px 0;
+}
+
+
+label.control-label[for="NPS_numbersSquare"] {
+    /* background: black; */
+    width: 70% !important;
+}
+
+
+
