@@ -1,0 +1,50 @@
+// ==UserScript==
+// @name         EVG IS Add the SYNC TO OTHER SYSTEMS dropdown on Segment Setup screen
+// @namespace    http://tampermonkey.net/
+// @version      0.1
+// @description  Used to make the SYNC TO OTHER SYSTEMS dropdown appear (with whatever options you want) on the Setup tab of Segments
+// @author       Chris Charalambous
+// @match        https://interactionstudio.evergage.com/*
+// @grant        none
+// ==/UserScript==
+var myVar;
+(function() {
+    'use strict';
+
+    myVar = setInterval(makeChange, 1000);
+})();
+
+function makeChange(){
+    if(document.getElementsByClassName('k-input ng-scope')){
+        //Uncomment this line (and it's corresponding close bracket below) if you only want the SYNC TO OTHER SYSTEMS to appear on a specific dataset, then just replace NTO2 with your dataset name
+        //if(document.getElementsByClassName('k-input ng-scope')[0].innerHTML.toUpperCase() == 'NTO2'){
+            if(document.getElementById('segmentEditor')){
+                if(document.getElementById('segmentEditor').getElementsByClassName('col-md-12')){
+                    if(document.getElementById('segmentEditor').getElementsByClassName('col-md-12')[0].innerHTML.indexOf('Inject into Journey') < 0){
+                        document.getElementById('segmentEditor').getElementsByClassName('col-md-12')[0].innerHTML = '<div class="col-md-12">' +
+                            '<div class="btn-group pull-right dropdown" uib-dropdown="">' +
+                            '<button type="button" class="btn btn-default dropdown-toggle" uib-dropdown-toggle="" aria-haspopup="true" aria-expanded="false" onclick="javascript:if(document.getElementById(\'segmentEditor\').querySelectorAll(\'ul\')[0].style.display == \'block\'){document.getElementById(\'segmentEditor\').querySelectorAll(\'ul\')[0].style.display = \'none\';}else{document.getElementById(\'segmentEditor\').querySelectorAll(\'ul\')[0].style.display = \'block\';}">Sync to Other Systems<span class="caret"></span></button>' +
+                            '<ul class="dropdown-menu" uib-dropdown-menu="" role="menu" aria-labelledby="split-button"><!-- ngRepeat: gear in availableExportGears -->' +
+                            '<li role="menuitem" ng-repeat="gear in availableExportGears" class="ng-scope"><a role="button" ng-click="configureSync(segment, gear)" class="ng-binding">Inject into MC Journey</a></li><!-- end ngRepeat: gear in availableExportGears -->' +
+                            '<li role="menuitem" ng-repeat="gear in availableExportGears" class="ng-scope"><a role="button" ng-click="configureSync(segment, gear)" class="ng-binding">Send Ad Hoc SMS</a></li><!-- end ngRepeat: gear in availableExportGears -->' +
+                            '<li role="menuitem" ng-repeat="gear in availableExportGears" class="ng-scope"><a role="button" ng-click="configureSync(segment, gear)" class="ng-binding">Add To Facebook Audience abc123</a></li><!-- end ngRepeat: gear in availableExportGears -->' +
+                            '<li role="menuitem" ng-repeat="gear in availableExportGears" class="ng-scope"><a role="button" ng-click="configureSync(segment, gear)" class="ng-binding">Add To LinkedIn Audience xyz987</a></li><!-- end ngRepeat: gear in availableExportGears -->' +
+                            '<li role="menuitem" ng-repeat="gear in availableExportGears" class="ng-scope"><a role="button" ng-click="configureSync(segment, gear)" class="ng-binding">Update CRM Lead Record Priority = HIGH</a></li><!-- end ngRepeat: gear in availableExportGears -->' +
+                            '<li role="menuitem" ng-repeat="gear in availableExportGears" class="ng-scope"><a role="button" ng-click="configureSync(segment, gear)" class="ng-binding">Create Task in CRM</a></li><!-- end ngRepeat: gear in availableExportGears -->' +
+                            '</ul></div><div class="pull-right chip-container"><!-- ngRepeat: integration in integrations --></div></div>';
+                        //added this line after the button kept collapsing every time I'd click on it... but NOTE: if opening up an existing segment, you may need to refresh the screen after clicking SETUP tab.
+                        clearInterval(myVar);
+                    }
+                }
+            }
+        //}
+    }
+
+}
+
+function stopChanges(){
+    clearInterval(myVar);
+}
+function toggleSyncDropDown(){
+    if(document.getElementById("segmentEditor").querySelectorAll("ul")[0].style.display == "block"){document.getElementById("segmentEditor").querySelectorAll("ul")[0].style.display = "none";}else{document.getElementById("segmentEditor").querySelectorAll("ul")[0].style.display = "block";}
+}
