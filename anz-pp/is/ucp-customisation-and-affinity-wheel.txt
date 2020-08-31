@@ -1,0 +1,136 @@
+// ==UserScript==
+// @name         Interaction Studio 2.0 Evergage: UCP Customisation Script including Affinities Donut customization - {insert customer name}
+// @namespace    http://tampermonkey.net/
+// @version      0.1
+// @description  try to take over the world!
+// @author       Creator: Sergey Agadzhanov. Modified by: Chris Charalambous
+// @match        https://interactionstudio.evergage.com/*
+// @grant        none
+// ==/UserScript==
+
+
+function donutUpdate(){
+	/*
+		Add, remove and modify lines here.
+
+		Quadrants: topLeft, bottomLeft, topRight, bottomRight.
+		Line: line number in the quadrant that you would like to update
+		Label: new value of the line
+		Bar: new size of the bar. Value from to 100
+	*/
+
+	var data = [
+		 {quadrant: "topLeft", line: 1, label: "Rain", bar: 100}
+		,{quadrant: "topLeft", line: 2, label: "3-in-1", bar: 70}
+        ,{quadrant: "topLeft", line: 3, label: "Recycled fabric", bar: 30}
+        ,{quadrant: "topLeft", line: 4, label: "Protection", bar: 10}
+
+        ,{quadrant: "bottomLeft", line: 1, label: "", bar: 0}
+		,{quadrant: "bottomLeft", line: 2, label: " ", bar: 0}
+        ,{quadrant: "bottomLeft", line: 3, label: "Clearance", bar: 80}
+        ,{quadrant: "bottomLeft", line: 4, label: "Jacket", bar: 100}
+
+
+        ,{quadrant: "topRight", line: 1, label: "Kathmandu", bar: 100}
+		,{quadrant: "topRight", line: 2, label: " ", bar: 0}
+        ,{quadrant: "topRight", line: 3, label: " ", bar: 0}
+        ,{quadrant: "topRight", line: 4, label: " ", bar: 0}
+
+        ,{quadrant: "bottomRight", line: 1, label: " ", bar: 0}
+		,{quadrant: "bottomRight", line: 2, label: " ", bar: 0}
+        ,{quadrant: "bottomRight", line: 3, label: "Outdoor", bar: 50}
+        ,{quadrant: "bottomRight", line: 4, label: "Practical", bar: 100}
+
+
+	];
+
+
+    //CC: use this to change content in the top left (just re-writing innerHTML stuff)
+    /*if(document.getElementsByClassName('metrics-summary ng-scope')){
+        document.getElementsByClassName('metrics-summary ng-scope')[0].innerHTML = '<div class="panel-wrapper" ng-show="overviewScreenType === \'saas\'"><div class="info-panel customer-aov"><div class="panel-right"><div class="panel-header ng-binding">0h 12m</div><div class="panel-sub-header ng-binding">Average Engagement Time</div></div></div></div><div class="panel-wrapper" ng-show="overviewScreenType === \'saas\'"><div class="info-panel customer-aov"><div class="panel-right"><div class="panel-header ng-binding">2</div><div class="panel-sub-header">Total Web Sessions</div></div></div></div><div class="panel-wrapper" ng-show="overviewScreenType === \'saas\'"><div class="info-panel customer-aov"><div class="panel-right"><div class="panel-header ng-binding">60%</div><div class="panel-sub-header">Engagement Score</div></div></div></div>';
+    }*/
+
+    //CC: This changes the attributes list - rather than use the Text Replace tampermonkey script, I wanted to remove a lot of stuff, so just a replace is easier
+    /*if(document.getElementsByClassName('summaryTable customAttributesTable') && document.getElementsByClassName('summaryTable customAttributesTable')[0]){
+        document.getElementsByClassName('summaryTable customAttributesTable')[0].innerHTML = '';//'<eg-customer-overview-custom-attributes customer-attributes="preparedCustomerSummary.attributes" customer-type="user" customer-id="tvickers@salesforce.com" class="ng-isolate-scope"><table><tbody><!-- ngRepeat: attr in customerAttributes --><tr ng-repeat="attr in customerAttributes" ng-class-odd="\'grey\'" class="ng-scope grey"><td class="attrLabel ng-binding">Community Membership</td><!-- ngIf: attr.editable --><td class="attrValue ng-scope" ng-if="attr.editable" uib-tooltip-template="\'app/segments/customers/details/valueMetadataTemplate.html\'" tooltip-placement="bottom" tooltip-append-to-body="true" tooltip-enable="attr.metadata"><div ng-switch="" on="attr.type" ng-class="{ \'no-value\': (attr.value == null) || (attr.value === \'\') }"><!-- ngSwitchWhen: Number --><!-- ngSwitchDefault: --><span ng-switch-default="" editable-text="attr.value" onbeforesave="updateAttribute($data, attr)" class="ng-scope ng-binding editable editable-click">No<span class="plus-button"><i ng-show="(attr.value == null) || (attr.value === \'\')" class="fas fa-plus-square fa-lg ng-hide"></i></span></span><!-- end ngSwitchWhen: --><!-- ngSwitchWhen: date --></div></td><!-- end ngIf: attr.editable --><!-- ngIf: !attr.editable --></tr><!-- end ngRepeat: attr in customerAttributes --><tr ng-repeat="attr in customerAttributes" ng-class-odd="\'grey\'" class="ng-scope"><td class="attrLabel ng-binding">DMP Persona</td><!-- ngIf: attr.editable --><td class="attrValue ng-scope" ng-if="attr.editable" uib-tooltip-template="\'app/segments/customers/details/valueMetadataTemplate.html\'" tooltip-placement="bottom" tooltip-append-to-body="true" tooltip-enable="attr.metadata"><div ng-switch="" on="attr.type" ng-class="{ \'no-value\': (attr.value == null) || (attr.value === \'\') }"><!-- ngSwitchWhen: Number --><!-- ngSwitchDefault: --><span ng-switch-default="" editable-text="attr.value" onbeforesave="updateAttribute($data, attr)" class="ng-scope ng-binding editable editable-click">Urban Female<span class="plus-button"><i ng-show="(attr.value == null) || (attr.value === \'\')" class="fas fa-plus-square fa-lg ng-hide"></i></span></span><!-- end ngSwitchWhen: --><!-- ngSwitchWhen: date --></div></td><!-- end ngIf: attr.editable --><!-- ngIf: !attr.editable --></tr><!-- end ngRepeat: attr in customerAttributes --><tr ng-repeat="attr in customerAttributes" ng-class-odd="\'grey\'" class="ng-scope grey"><td class="attrLabel ng-binding">Likelihood To Buy</td><!-- ngIf: attr.editable --><td class="attrValue ng-scope" ng-if="attr.editable" uib-tooltip-template="\'app/segments/customers/details/valueMetadataTemplate.html\'" tooltip-placement="bottom" tooltip-append-to-body="true" tooltip-enable="attr.metadata"><div ng-switch="" on="attr.type" ng-class="{ \'no-value\': (attr.value == null) || (attr.value === \'\') }"><!-- ngSwitchWhen: Number --><!-- ngSwitchDefault: --><span ng-switch-default="" editable-text="attr.value" onbeforesave="updateAttribute($data, attr)" class="ng-scope ng-binding editable editable-click">57<span class="plus-button"><i ng-show="(attr.value == null) || (attr.value === \'\')" class="fas fa-plus-square fa-lg ng-hide"></i></span></span><!-- end ngSwitchWhen: --><!-- ngSwitchWhen: date --></div></td><!-- end ngIf: attr.editable --><!-- ngIf: !attr.editable --></tr><!-- end ngRepeat: attr in customerAttributes --><tr ng-repeat="attr in customerAttributes" ng-class-odd="\'grey\'" class="ng-scope"><td class="attrLabel ng-binding">Likelihood To Click</td><!-- ngIf: attr.editable --><td class="attrValue ng-scope" ng-if="attr.editable" uib-tooltip-template="\'app/segments/customers/details/valueMetadataTemplate.html\'" tooltip-placement="bottom" tooltip-append-to-body="true" tooltip-enable="attr.metadata"><div ng-switch="" on="attr.type" ng-class="{ \'no-value\': (attr.value == null) || (attr.value === \'\') }"><!-- ngSwitchWhen: Number --><!-- ngSwitchDefault: --><span ng-switch-default="" editable-text="attr.value" onbeforesave="updateAttribute($data, attr)" class="ng-scope ng-binding editable editable-click">41<span class="plus-button"><i ng-show="(attr.value == null) || (attr.value === \'\')" class="fas fa-plus-square fa-lg ng-hide"></i></span></span><!-- end ngSwitchWhen: --><!-- ngSwitchWhen: date --></div></td><!-- end ngIf: attr.editable --><!-- ngIf: !attr.editable --></tr><!-- end ngRepeat: attr in customerAttributes --><tr ng-repeat="attr in customerAttributes" ng-class-odd="\'grey\'" class="ng-scope grey"><td class="attrLabel ng-binding">Likelihood To Open</td><!-- ngIf: attr.editable --><td class="attrValue ng-scope" ng-if="attr.editable" uib-tooltip-template="\'app/segments/customers/details/valueMetadataTemplate.html\'" tooltip-placement="bottom" tooltip-append-to-body="true" tooltip-enable="attr.metadata"><div ng-switch="" on="attr.type" ng-class="{ \'no-value\': (attr.value == null) || (attr.value === \'\') }"><!-- ngSwitchWhen: Number --><!-- ngSwitchDefault: --><span ng-switch-default="" editable-text="attr.value" onbeforesave="updateAttribute($data, attr)" class="ng-scope ng-binding editable editable-click">66<span class="plus-button"><i ng-show="(attr.value == null) || (attr.value === \'\')" class="fas fa-plus-square fa-lg ng-hide"></i></span></span><!-- end ngSwitchWhen: --><!-- ngSwitchWhen: date --></div></td><!-- end ngIf: attr.editable --><!-- ngIf: !attr.editable --></tr><!-- end ngRepeat: attr in customerAttributes --><tr ng-repeat="attr in customerAttributes" ng-class-odd="\'grey\'" class="ng-scope"><td class="attrLabel ng-binding">Likelihood To Unsubscribe</td><!-- ngIf: attr.editable --><td class="attrValue ng-scope" ng-if="attr.editable" uib-tooltip-template="\'app/segments/customers/details/valueMetadataTemplate.html\'" tooltip-placement="bottom" tooltip-append-to-body="true" tooltip-enable="attr.metadata"><div ng-switch="" on="attr.type" ng-class="{ \'no-value\': (attr.value == null) || (attr.value === \'\') }"><!-- ngSwitchWhen: Number --><!-- ngSwitchDefault: --><span ng-switch-default="" editable-text="attr.value" onbeforesave="updateAttribute($data, attr)" class="ng-scope ng-binding editable editable-click">12<span class="plus-button"><i ng-show="(attr.value == null) || (attr.value === \'\')" class="fas fa-plus-square fa-lg ng-hide"></i></span></span><!-- end ngSwitchWhen: --><!-- ngSwitchWhen: date --></div></td><!-- end ngIf: attr.editable --><!-- ngIf: !attr.editable --></tr><!-- end ngRepeat: attr in customerAttributes --><!-- end ngRepeat: attr in customerAttributes --><tr ng-repeat="attr in customerAttributes" ng-class-odd="\'grey\'" class="ng-scope"><td class="attrLabel ng-binding">Open Cases</td><!-- ngIf: attr.editable --><td class="attrValue ng-scope" ng-if="attr.editable" uib-tooltip-template="\'app/segments/customers/details/valueMetadataTemplate.html\'" tooltip-placement="bottom" tooltip-append-to-body="true" tooltip-enable="attr.metadata"><div ng-switch="" on="attr.type" ng-class="{ \'no-value\': (attr.value == null) || (attr.value === \'\') }" class="no-value"><!-- ngSwitchWhen: Number --><!-- ngSwitchDefault: --><span ng-switch-default="" editable-text="attr.value" onbeforesave="updateAttribute($data, attr)" class="ng-scope ng-binding editable editable-click editable-empty"><span class="plus-button"><i ng-show="(attr.value == null) || (attr.value === \'\')" class="fas fa-plus-square fa-lg"></i></span></span><!-- end ngSwitchWhen: --><!-- ngSwitchWhen: date --></div></td><!-- end ngIf: attr.editable --><!-- ngIf: !attr.editable --></tr><!-- end ngRepeat: attr in customerAttributes --><tr ng-repeat="attr in customerAttributes" ng-class-odd="\'grey\'" class="ng-scope grey"><td class="attrLabel ng-binding">Phone Number</td><!-- ngIf: attr.editable --><td class="attrValue ng-scope" ng-if="attr.editable" uib-tooltip-template="\'app/segments/customers/details/valueMetadataTemplate.html\'" tooltip-placement="bottom" tooltip-append-to-body="true" tooltip-enable="attr.metadata"><div ng-switch="" on="attr.type" ng-class="{ \'no-value\': (attr.value == null) || (attr.value === \'\') }"><!-- ngSwitchWhen: Number --><!-- ngSwitchDefault: --><span ng-switch-default="" editable-text="attr.value" onbeforesave="updateAttribute($data, attr)" class="ng-scope ng-binding editable editable-click">0421444444<span class="plus-button"><i ng-show="(attr.value == null) || (attr.value === \'\')" class="fas fa-plus-square fa-lg ng-hide"></i></span></span><!-- end ngSwitchWhen: --><!-- ngSwitchWhen: date --></div></td><!-- end ngIf: attr.editable --><!-- ngIf: !attr.editable --></tr><!-- end ngRepeat: attr in customerAttributes --></tbody></table></eg-customer-overview-custom-attributes>';
+    }*/
+
+    //CC: This changes the lower right panel, the list of products viewed. Suggest mocking it up in Inspect, then copy/pasting the HTML into here. NOTE: this is fidgety -  you may need to refresh the screen=
+    if(document.getElementsByClassName('rightPreviewPane')){
+        document.getElementsByClassName('rightPreviewPane')[0].innerHTML = '<div class="itemView contentEntry vrow" data-index="0"><div class="visitHeaderDiv"><div class="visitDate">Aug 10, 2020</div><div class="visitTimeOfDay">10:18AM</div><div class="visitDuration">5m 28s</div></div><div class="backgroundDiv"><div class="backgroundBar"></div><div class="backgroundDot mediumDot"></div></div><div class="imageDiv"><img src="https://kmd-assets.imgix.net/catalog/product/a/0/a0948_893_isograd_mns_3in1_jacket_v3_a_7.jpg?auto=format&amp;fit=crop&amp;q=50&amp;ixlib=imgixjs-3.3.2&amp;w=741" class="nonPurchased"></div><div class="itemNavigation"><a href="#/dataset/nto/catalog/itemEdit?itemType=Product&amp;itemId=2050857&amp;timeRange=pastWeek" target="_blank" title="Edit Item in Catalog"><i class="far fa-chart-bar"></i></a><a href="#/dataset/nto/catalog/products?itemId=2050857&amp;timeRange=pastWeek" target="_blank" title="Open Item in Catalog"><i class="far fa-book"></i></a><a href="https://www.northerntrailoutfitters.com/default/women%E2%80%99s-rovereto-running-shoes-2050857ATT.html" target="_blank" title="Open Item on Site"><i class="far fa-external-link"></i></a></div><div class="itemDetails"><div class="itemName nonPurchased">Isograd Men\'s 3-in-1 Jacket</div></div><div class="spacerRight"></div></div>';
+    }*/
+
+    //CC: These are used to adjust the green gender affinity icon
+    /*
+    if(document.getElementsByClassName('far far fa-female fa-3x') && document.getElementsByClassName('far far fa-female fa-3x')[0]){
+        document.getElementsByClassName('far far fa-female fa-3x')[0].className = 'far far fa-male fa-3x';
+    }*/
+    /*if(document.getElementById('genderTagAffinityDirective')){
+        document.getElementById('genderTagAffinityDirective').innerHTML = '<div class="gender-icons"><!-- ngRepeat: icon in iconData --><div class="gender-icon ng-scope" ng-repeat="icon in iconData"></div><!-- end ngRepeat: icon in iconData --></div>';
+    }*/
+
+    //Uncomment this to change the four quadrant descriptors in the wheel (e.g. to change ITEMCLASS, STYLE etc.)
+    /*document.getElementsByTagName('textPath')[0].innerHTML = 'COURSE';
+    document.getElementsByTagName('textPath')[1].innerHTML = 'SERVICES';
+    document.getElementsByTagName('textPath')[2].innerHTML = 'LOCATION';
+    document.getElementsByTagName('textPath')[3].innerHTML = 'UNIVERSITY';*/
+
+	data.forEach(e => {
+		var labelElement = document.querySelector(`div#${e.quadrant} .highcharts-xaxis-labels text:nth-child(${e.line}) tspan`);
+		var barElement = document.querySelector(`div#${e.quadrant} .highcharts-container .highcharts-series rect:nth-child(${e.line})`);
+        var maxHeight, newHeight, newY;
+
+		if(labelElement){
+			labelElement.innerHTML = e.label;
+		}
+
+		if(barElement){
+
+            if (e.quadrant == "topLeft" || e.quadrant == "bottomLeft" ) {
+                maxHeight = parseFloat(barElement.getAttribute('y')) + parseFloat(barElement.getAttribute('height'));
+                newHeight = maxHeight * (1.0 * e.bar / 100);
+                newY = maxHeight - newHeight;
+
+                barElement.setAttribute('width',8);
+                if(e.bar == 0){
+                    barElement.setAttribute('width', 0);
+                }
+                barElement.setAttribute('height', newHeight);
+                barElement.setAttribute('y', newY);
+            } else {
+                maxHeight = 225.5;
+                newHeight = maxHeight * (1.0 * e.bar / 100);
+                newY = maxHeight - newHeight;
+
+                barElement.setAttribute('width', 8);
+                if(e.bar == 0){
+                    barElement.setAttribute('width', 0);
+                }
+                barElement.setAttribute('height', newHeight);
+                barElement.setAttribute('y', 0);
+            }
+		}
+
+	});
+}
+
+function onclickDonutUpdate(){
+    document.querySelectorAll('div.donut-center-icons i').forEach(e => {
+        e.addEventListener('click', () => {
+            setTimeout(_ => {
+                donutUpdate();
+            }, 100);
+        });
+    });
+}
+
+(function() {
+    'use strict';
+    var interval = setInterval(_ => {
+        if(document.querySelectorAll('div.donut-center-icons i').length){
+            clearInterval(interval);
+            donutUpdate();
+            onclickDonutUpdate();
+        }
+    }, 100);
+})();
