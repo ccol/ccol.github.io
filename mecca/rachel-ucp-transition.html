@@ -2,12 +2,40 @@
 
 <head>
     <meta name="viewport" content="width=device-width, minimum-scale=0.1">
+    <style>
+        #div2, #div3, #div4{
+            display: none;
+        }
+    </style>
 </head>
 
 <body style="margin: 0px;">
-    <a href="mecca-desktop-home-page-interstitial.html">
-        <img style="margin: 0;width: 100%;" src="mecca-website-post-busy-inbox.png">
-    </a>
+    <div id="div1">
+        <img style="margin: 0;width: 100%;" src="rachel-ucp1.png" onclick="show2()"/>
+    </div>
+    <div id="div2">
+        <img style="margin: 0;width: 100%;" src="rachel-ucp2.png" onclick="show3()"/>
+    </div>
+    <div id="div3">
+        <img style="margin: 0;width: 100%;" src="rachel-ucp3.png" onclick="show4()"/>
+    </div>
+    <div id="div4">
+        <img style="margin: 0;width: 100%;" src="rachel-ucp4.png"/>
+    </div>
+<script>
+    function show2(){
+        document.getElementById('div1').style.display = 'none';
+        document.getElementById('div2').style.display = 'block';
+    }
+    function show3(){
+        document.getElementById('div2').style.display = 'none';
+        document.getElementById('div3').style.display = 'block';
+    }
+    function show4(){
+        document.getElementById('div3').style.display = 'none';
+        document.getElementById('div4').style.display = 'block';
+    }
+</script>
 </body>
 
 </html>
