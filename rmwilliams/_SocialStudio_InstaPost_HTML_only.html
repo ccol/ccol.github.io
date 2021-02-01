@@ -1,0 +1,837 @@
+<html class="fuelux"><head>
+		<meta charset="UTF-8">
+		<title>Social Studio - Marketing Cloud</title>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<!-- login-helper should run first. Modify file at /Package/Dynamic/common/js/login-helpers.js -->
+		<script>
+!function(a){"use strict";function b(a,b){var c,d,e,f,g,h,i,j=[],k=0;for(a=String(a),b=b||p;k<a.length;)c=a.charCodeAt(k++),d=a.charCodeAt(k++),e=a.charCodeAt(k++),f=c>>2,g=(3&c)<<4|d>>4,h=(15&d)<<2|e>>6,i=63&e,isNaN(d)?h=i=64:isNaN(e)&&(i=64),j.push(b.charAt(f)),j.push(b.charAt(g)),j.push(b.charAt(h)),j.push(b.charAt(i));return j.join("")}function c(a,b){var c,d,e,f,g,h,i,j=[],k=0;for(a=String(a),b=b||p;k<a.length;)f=b.indexOf(a.charAt(k++)),g=k<a.length?b.indexOf(a.charAt(k++)):64,h=k<a.length?b.indexOf(a.charAt(k++)):64,i=k<a.length?b.indexOf(a.charAt(k++)):64,c=f<<2|g>>4,d=(15&g)<<4|h>>2,e=(3&h)<<6|i,j.push(String.fromCharCode(c)),64!=h&&j.push(String.fromCharCode(d)),64!=i&&j.push(String.fromCharCode(e));return j.join("")}function d(b,c){var d,e,f=a.location.search;return d=c?new RegExp("[?&]"+b+"=(.*?)$"):new RegExp("[?&]"+b+"=(.*?)(&|$)"),e=f.match(d),Boolean(e)?e[1]:null}var e,f,g,h,i,j,k,l,m,n,o,p="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_=",q=[],r=parseInt(localStorage.getItem("sfmc-log-percent"),10),s=localStorage.getItem("mc-lib-adrum-app-key"),t="script";if(a.MC=a.MC||{},a.MC.loadStart=Date.now(),"1"===d("r"))return a.localStorage?(localStorage.setItem("redirected-from-email",!0),l="./browser-detection.html",Boolean(a.location.search)&&(l+=a.location.search.replace(/r=1[&]?/,""))):l="./browserF.html",void a.location.replace(l);if(g=d("m"),h=d("a"),i=d("u",!0),i&&(i=decodeURIComponent(i),i=i.replace(/([^:])\/\//g,"$1/")),g){if(l="/cloud/",h&&q.push("a="+h),isNaN(g))try{g=c(g).split(":")[0]}catch(a){}return i&&(j=b(i),k=/([=]*$)/.exec(j)[1].length,j=j.replace(/[=]*$/,"")+k,q.push("u=OrEn1"+j)),q.length&&(l+="?"+q.join("&")),a.MC||(a.MC={}),void(a.MC.appLogoutAndContextSwitch={targetMid:g,targetUrl:l})}if(h||i?(l="",h&&(l+="app/"+h+"/"),h&&i&&(i=i.match(/(.*?):\/\/(.*?)\/(.*)$/))&&(l+=i[3]),e="#"+l):e=a.location.hash||"#",m=a.location.pathname.split("/"),n=m[m.length-1],o=n.match(/\.html$/),f=d("wl"),0!==e.indexOf("#logged-in"))return e="logged-in"+b(e),o&&(e+="&file="+n),f&&(e+="&wl="+f),void a.location.replace("./login.html?hash="+e);e=c(e.replace("#logged-in","")),o?a.location.replace("./"+n+e):a.location.replace("./"+e),r&&100*Math.random()<=r&&s&&(a["adrum-app-key"]=s,a["adrum-start-time"]=(new Date).getTime(),document.write("<"+t+' src="common/js/lib/adrum.js?v=230.0.27"></'+t+">"))}(this);
+		</script>
+		<!-- DO NOT ADD ANY SCRIPTS BELOW THIS. THEY SHOULD GO AT THE BOTTOM OF THE BODY OR LOAD VIA REQUIREJS -->
+		<!-- <link href="favicon.ico" rel="shortcut icon"> -->
+
+		<!--[if lte IE 9]>
+		<link rel="stylesheet" type="text/css" href="common/css/bootstrap.css?v=230.0.27"/>
+		<link rel="stylesheet" type="text/css" href="common/css/fuelux.css?v=230.0.27"/>
+		<link rel="stylesheet" type="text/css" href="common/css/fuelux-mctheme.css?v=230.0.27"/>
+		<![endif]-->
+		<!--[if gt IE 9]-->
+		<link rel="stylesheet" type="text/css" href="common/css/fuel.css?v=230.0.27">
+		<!--[endif]-->
+		<link rel="stylesheet" type="text/css" href="common/css/slds/styles/salesforce-lightning-design-system.css?v=230.0.27">
+		<link rel="stylesheet" type="text/css" href="mc/css/styles.css?v=230.0.27">
+	<script type="text/javascript" charset="utf-8" async="" data-requirecontext="_" data-requiremodule="common/js/ssjs-config" src="./common/js/ssjs-config.js?v=230.0.27"></script><link rel="shortcut icon" href="/cloud/mc/img/social-favicon.ico?v=230.0.27" id="favicon"></head>
+	<body class="fuel-page fuel-admin-template">
+		<div id="body"><div class="mc-layout mc-header-state-3 mc-app-group-3"><a href="#main-landmark" class="sr-only">Skip Navigation</a>
+<div class="mc-header-region mc-header-noselect"><div class="mc-header hide-app-menus in-app-view"><nav class="mc-header-current-app-region" style=""><div><div class="mc-header-main">
+    <div class="mc-header-current-app-name-region"><div class="mc-header-current-app"><a class="mc-header-current-app-icon" href="/cloud/#app/Marketing%20Cloud%20Dashboard"><span class="sr-only">Marketing Cloud Dashboard</span></a>
+<div class="mc-header-current-app-name">Social Studio</div></div></div>
+    <div class="mc-header-current-app-menu-region"></div>
+    <div class="mc-header-current-app-menu-overflow-region"></div>
+</div></div></nav>
+<div class="mc-header-main" style="top: -148px;">
+	<nav class="mc-header-all-apps-container hide-menu-from-assistive-tech">
+		<div class="mc-header-brand-region"><div class="mc-header-brand"><a href="#app/Marketing%20Cloud%20Dashboard%20Classic">
+	<div class="mc-header-brand-name">
+		<span class="sr-only">Dashboard</span>
+		<span></span>
+	</div>
+</a>
+</div></div>
+		<div class="mc-header-navigation-region"><div class="mc-header-navigation"><ul class="mc-header-navigation-list"><li class="mc-header-navigation-item calendar"><a href="/cloud/#app/Calendar">
+	<div class="mc-header-navigation-app">
+		<div class="mc-header-navigation-app-top"></div>
+		Calendar
+	</div>
+</a></li><li class="mc-header-navigation-item campaigns"><a href="/cloud/#app/Campaigns">
+	<div class="mc-header-navigation-app">
+		<div class="mc-header-navigation-app-top"></div>
+		Campaigns
+	</div>
+</a></li></ul></div></div>
+		<div class="mc-header-return-to-email"></div>
+	</nav>
+	<nav class="mc-header-user-and-account persistent-nav" style="display: block; opacity: 1;">
+		<div class="mc-header-user-info-region persistent-nav pull-right" style="display: block; opacity: 1;"><div><div class="mc-header-menu mc-user-info">
+	<div class="mc-header-menu-value">
+		<div class="user-icon"></div>
+		<div class="value">
+			<span class="username" title="Chris Charalambous">Chris Charalambous</span>
+		</div>
+		<span class="arrow"></span>
+	</div>
+</div>
+
+<div class="mc-user-info-menu">
+	<div class="mc-user-info-menu-content">
+		<ul class="mc-user-info-menu-item-list mc-user-info-menu-apps">
+			<li class="mc-user-info-menu-item-header">Settings</li>
+			<li class="mc-user-info-menu-app"><a href="/cloud/#app/Cloud%20Preferences">Cloud Preferences</a></li><li class="js-mc-user-info-ftux-toggle ftux-toggled-off" data-new-state="true">
+				<a href="#" class="mc-user-info-ftux-toggle-link">Show Tips</a>
+			</li>
+			<li class="js-mc-user-info-ftux-toggle ftux-toggled-on" data-new-state="false" style="display: none;">
+				<a href="#" class="mc-user-info-ftux-toggle-link">Hide Tips</a>
+			</li>
+		</ul>
+		<ul class="mc-user-info-menu-item-list">
+			<li><a href="https://login.salesforce.com/services/auth/sso/00D30000000XsfGEAS/ET?startURL=/apex/HTloginDoor&amp;site=https://help.salesforce.com" target="_blank" data-prevent-trigger="true">Salesforce Help &amp; Training</a></li>
+		</ul>
+		<ul class="mc-user-info-menu-item-list">
+			<li><a class="mc-user-info-trust" target="_blank" data-prevent-trigger="true" rel="noopener noreferrer" href="https://trust.marketingcloud.com/">Trust</a></li>
+		</ul>
+		<ul class="mc-user-info-menu-item-list">
+			<li><a class="mc-user-info-logout" href="/cloud/#logout">Logout</a></li>
+		</ul>
+	</div>
+</div>
+</div></div>
+		<div class="mc-header-account-switcher-region persistent-nav pull-right" style="display: block; opacity: 1;"><div><div class="mc-header-menu mc-header-accounts">
+	<div class="mc-header-menu-value">
+		<span class="arrow visible"></span>
+		<span class="value">R.M. Williams</span>
+	</div>
+</div>
+<div class="mc-accounts-menu">
+	<div class="mc-account-switcher-current-account">
+		<a class="mc-account-switcher-view-hierarchy" href="javascript:void(0)">View Hierarchy</a>
+		<div class="mc-account-switcher-current-account-bu">Account</div>
+		<div class="mc-account-switcher-current-account-details">
+			<div class="pull-right">MID: 1079707</div>
+			<div class="mc-account-switcher-current-account-name">Bapcor-Autobarn</div>
+		</div>
+	</div>
+	
+	
+	<div class="checkbox-custom checked mc-account-switcher-oyb-filter" style="display: none;">
+		Show On Your Behalf Accounts
+	</div>
+	<h1 id="mc-accounts-heading" class="sr-only">Accounts</h1>
+	<ul class="mc-accounts" role="listbox" aria-labelledby="mc-accounts-heading" tabindex="0" aria-activedescendant="" style="max-height: 100%;"><li role="option" class="mc-account" id="mc-accounts-option-1300648"><div class="mc-account-switcher-name">myNTO Rewards</div>
+<div class="mc-account-switcher-hover">
+<div class="mc-account-switcher-mid">1300648</div>
+	
+</div></li><li role="option" class="mc-account" id="mc-accounts-option-1300068"><div class="mc-account-switcher-name">NTO Kids</div>
+<div class="mc-account-switcher-hover">
+<div class="mc-account-switcher-mid">1300068</div>
+	
+</div></li></ul>
+</div>
+</div></div>
+		<div class="mc-header-insights-region persistent-nav pull-right" style="display: block; opacity: 1;"><div class="mc-app-insights"><div class="mc-header-insights">
+	<button class="btn btn-link mc-header-insights-button" data-original-title="" title=""><div><div class="mc-header-insights-icon "></div>
+	<span class="badge badge-pill badge-primary">
+		67
+	</span>
+</div></button>
+	<div class="popover fade bottom in insights-popover" role="tooltip" style="height: 202px; display: none;">
+		<div class="arrow"></div>
+		<div class="popover-body insights-popover-body" style="height: 202px;"><div class="mc-app"><iframe class="mc-app-iframe" seamless="seamless" frameborder="0" src="https://mc.s4.exacttarget.com/cloud/tools/SSO.aspx?appId=8D08A262-A480-4E42-AAF3-F7D967FAD622&amp;restToken=1&amp;deepLink=%2Fnotifications%3Fcount%3Dtrue" name="insights-popover"></iframe>
+</div></div>
+		<div class="insights-loading slds-spinner_container" style="display: none;">
+			<div role="status" class="slds-spinner slds-spinner_medium slds-spinner_brand">
+				<span class="sr-only">Loading</span>
+				<div class="slds-spinner__dot-a"></div>
+				<div class="slds-spinner__dot-b"></div>
+			</div>
+		</div>
+	</div>
+	<div class="mc-header-insights-preloader">
+		<span class="mc-header-insights-preload-insights"></span>
+		<span class="mc-header-insights-preload-insights-hover"></span>
+		<span class="mc-header-insights-preload-no-insights"></span>
+		<span class="mc-header-insights-preload-no-insights-hover"></span>
+	</div>
+</div></div></div>
+		<div class="mc-header-actions-region persistent-nav pull-right" style="display: block; opacity: 1;"><div><div class="mc-header-feedback">
+	<button class="btn btn-link mc-header-feedback-button">Feedback</button>
+</div></div></div>
+	</nav>
+</div>
+<nav class="mc-header-app-switcher-region hide-menu-from-assistive-tech"><div class="mc-app-switcher-container" style="top: -150px;"><ul class="mc-app-switcher"><li class="mc-app-switcher-group-section"><ul class="mc-app-switcher-apps app-switcher-group-section-"><li class="mc-app-switcher-group some-provisioned"><div class="mc-app-group-icon app_group_1">
+	<span class="group-icon"></span>
+</div>
+<div class="mc-app-name-container">
+	<span class="mc-app-name">Email<br>Studio</span>
+</div>
+<span class="status-icon info-icon"></span>
+<span class="status-icon lock-icon"></span>
+<div class="mc-app-group-dropdown">
+	<div class="mc-app-group-dropdown-arrow"></div>
+	<div class="mc-app-group-dropdown-catch"></div>
+	<ul class="mc-app-group-dropdown-apps"><li class="mc-app-group-dropdown-app"><a href="/cloud/#app/Email" title="Email">
+	<span class="sr-only">Email Studio: </span>
+	<span class="mc-app-name">Email</span>
+	<span class="status-icon"></span>
+</a>
+<ul class="mc-app-shortcut-list dropdown-menu"></ul>
+<div class="mc-app-state">
+	<span class="css-arrow"></span>
+	<div class="expired-message">
+		Your subscription for Email has expired.
+	</div>
+	<div class="locked-message">
+		You do not have access to Email.
+	</div>
+</div>
+</li><li class="mc-app-group-dropdown-app more-info one-provisioned"><div class="divider"></div><span class="i-icon"></span><div class="more-info-copy">To learn more about Distributed Sending - <a href="#" class="learn-more">Click Here</a></div></li></ul>
+</div>
+</li><li class="mc-app-switcher-group some-provisioned"><div class="mc-app-group-icon app_group_2">
+	<span class="group-icon"></span>
+</div>
+<div class="mc-app-name-container">
+	<span class="mc-app-name">Mobile<br>Studio</span>
+</div>
+<span class="status-icon info-icon"></span>
+<span class="status-icon lock-icon"></span>
+<div class="mc-app-group-dropdown">
+	<div class="mc-app-group-dropdown-arrow"></div>
+	<div class="mc-app-group-dropdown-catch"></div>
+	<ul class="mc-app-group-dropdown-apps"><li class="mc-app-group-dropdown-app"><a href="/cloud/#app/MobileConnect" title="MobileConnect">
+	<span class="sr-only">Mobile Studio: </span>
+	<span class="mc-app-name">MobileConnect</span>
+	<span class="status-icon"></span>
+</a>
+<ul class="mc-app-shortcut-list dropdown-menu"></ul>
+<div class="mc-app-state">
+	<span class="css-arrow"></span>
+	<div class="expired-message">
+		Your subscription for MobileConnect has expired.
+	</div>
+	<div class="locked-message">
+		You do not have access to MobileConnect.
+	</div>
+</div>
+</li><li class="mc-app-group-dropdown-app"><a href="/cloud/#app/MobilePush" title="MobilePush">
+	<span class="sr-only">Mobile Studio: </span>
+	<span class="mc-app-name">MobilePush</span>
+	<span class="status-icon"></span>
+</a>
+<ul class="mc-app-shortcut-list dropdown-menu"></ul>
+<div class="mc-app-state">
+	<span class="css-arrow"></span>
+	<div class="expired-message">
+		Your subscription for MobilePush has expired.
+	</div>
+	<div class="locked-message">
+		You do not have access to MobilePush.
+	</div>
+</div>
+</li></ul>
+</div>
+</li><li class="mc-app-switcher-group some-provisioned"><div class="mc-app-group-icon app_group_3">
+	<span class="group-icon"></span>
+</div>
+<div class="mc-app-name-container">
+	<span class="mc-app-name">Social<br>Studio</span>
+</div>
+<span class="status-icon info-icon"></span>
+<span class="status-icon lock-icon"></span>
+<div class="mc-app-group-dropdown">
+	<div class="mc-app-group-dropdown-arrow"></div>
+	<div class="mc-app-group-dropdown-catch"></div>
+	<ul class="mc-app-group-dropdown-apps"><li class="mc-app-group-dropdown-app"><a href="/cloud/#app/Social%20Studio" title="Social Studio">
+	<span class="sr-only">Social Studio: </span>
+	<span class="mc-app-name">Social Studio</span>
+	<span class="status-icon"></span>
+</a>
+<ul class="mc-app-shortcut-list dropdown-menu"></ul>
+<div class="mc-app-state">
+	<span class="css-arrow"></span>
+	<div class="expired-message">
+		Your subscription for Social Studio has expired.
+	</div>
+	<div class="locked-message">
+		You do not have access to Social Studio.
+	</div>
+</div>
+</li><li class="mc-app-group-dropdown-app more-info one-provisioned"><div class="divider"></div><span class="i-icon"></span><div class="more-info-copy">To learn more about Social - <a href="#" class="learn-more">Click Here</a></div></li></ul>
+</div>
+</li><li class="mc-app-switcher-group some-provisioned"><div class="mc-app-group-icon app_group_10">
+	<span class="group-icon"></span>
+</div>
+<div class="mc-app-name-container">
+	<span class="mc-app-name">Advertising<br>Studio</span>
+</div>
+<span class="status-icon info-icon"></span>
+<span class="status-icon lock-icon"></span>
+<div class="mc-app-group-dropdown">
+	<div class="mc-app-group-dropdown-arrow"></div>
+	<div class="mc-app-group-dropdown-catch"></div>
+	<ul class="mc-app-group-dropdown-apps"><li class="mc-app-group-dropdown-app"><a href="/cloud/#app/Advertising%20Audiences" title="Advertising Audiences">
+	<span class="sr-only">Advertising Studio: </span>
+	<span class="mc-app-name">Advertising Audiences</span>
+	<span class="status-icon"></span>
+</a>
+<ul class="mc-app-shortcut-list dropdown-menu"></ul>
+<div class="mc-app-state">
+	<span class="css-arrow"></span>
+	<div class="expired-message">
+		Your subscription for Advertising Audiences has expired.
+	</div>
+	<div class="locked-message">
+		You do not have access to Advertising Audiences.
+	</div>
+</div>
+</li><li class="mc-app-group-dropdown-app"><a href="/cloud/#app/Lead%20Capture" title="Lead Capture">
+	<span class="sr-only">Advertising Studio: </span>
+	<span class="mc-app-name">Lead Capture</span>
+	<span class="status-icon"></span>
+</a>
+<ul class="mc-app-shortcut-list dropdown-menu"></ul>
+<div class="mc-app-state">
+	<span class="css-arrow"></span>
+	<div class="expired-message">
+		Your subscription for Lead Capture has expired.
+	</div>
+	<div class="locked-message">
+		You do not have access to Lead Capture.
+	</div>
+</div>
+</li></ul>
+</div>
+</li><li class="mc-app-switcher-group some-provisioned"><div class="mc-app-group-icon app_group_4">
+	<span class="group-icon"></span>
+</div>
+<div class="mc-app-name-container">
+	<span class="mc-app-name">Web<br>Studio</span>
+</div>
+<span class="status-icon info-icon"></span>
+<span class="status-icon lock-icon"></span>
+<div class="mc-app-group-dropdown">
+	<div class="mc-app-group-dropdown-arrow"></div>
+	<div class="mc-app-group-dropdown-catch"></div>
+	<ul class="mc-app-group-dropdown-apps"><li class="mc-app-group-dropdown-app"><a href="/cloud/#app/CloudPages" title="CloudPages">
+	<span class="sr-only">Web Studio: </span>
+	<span class="mc-app-name">CloudPages</span>
+	<span class="status-icon"></span>
+</a>
+<ul class="mc-app-shortcut-list dropdown-menu"></ul>
+<div class="mc-app-state">
+	<span class="css-arrow"></span>
+	<div class="expired-message">
+		Your subscription for CloudPages has expired.
+	</div>
+	<div class="locked-message">
+		You do not have access to CloudPages.
+	</div>
+</div>
+</li><li class="mc-app-group-dropdown-app"><a href="/cloud/#app/New%20CloudPages%20Experience%20PREVIEW" title="New CloudPages Experience PREVIEW">
+	<span class="sr-only">Web Studio: </span>
+	<span class="mc-app-name">New CloudPages Experience PREVIEW</span>
+	<span class="status-icon"></span>
+</a>
+<ul class="mc-app-shortcut-list dropdown-menu"></ul>
+<div class="mc-app-state">
+	<span class="css-arrow"></span>
+	<div class="expired-message">
+		Your subscription for New CloudPages Experience PREVIEW has expired.
+	</div>
+	<div class="locked-message">
+		You do not have access to New CloudPages Experience PREVIEW.
+	</div>
+</div>
+</li></ul>
+</div>
+</li><li class="mc-app-switcher-group some-provisioned"><div class="mc-app-group-icon app_group_14">
+	<span class="group-icon"></span>
+</div>
+<div class="mc-app-name-container">
+	<span class="mc-app-name">Interaction<br>Studio</span>
+</div>
+<span class="status-icon info-icon"></span>
+<span class="status-icon lock-icon"></span>
+<div class="mc-app-group-dropdown">
+	<div class="mc-app-group-dropdown-arrow"></div>
+	<div class="mc-app-group-dropdown-catch"></div>
+	<ul class="mc-app-group-dropdown-apps"><li class="mc-app-group-dropdown-app"><a href="/cloud/#app/Interaction%20Studio" title="Interaction Studio">
+	<span class="sr-only">Interaction Studio: </span>
+	<span class="mc-app-name">Interaction Studio</span>
+	<span class="status-icon"></span>
+</a>
+<ul class="mc-app-shortcut-list dropdown-menu"></ul>
+<div class="mc-app-state">
+	<span class="css-arrow"></span>
+	<div class="expired-message">
+		Your subscription for Interaction Studio has expired.
+	</div>
+	<div class="locked-message">
+		You do not have access to Interaction Studio.
+	</div>
+</div>
+</li><li class="mc-app-group-dropdown-app more-info multiple-provisioned"><div class="divider"></div><span class="i-icon"></span><div class="more-info-copy">To learn more about all other Interaction Studio apps - <a href="#" class="learn-more">Click Here</a></div></li></ul>
+</div>
+</li></ul></li><li class="mc-app-switcher-group-section"><ul class="mc-app-switcher-apps app-switcher-group-section-"><li class="mc-app-switcher-group some-provisioned"><div class="mc-app-group-icon app_group_5">
+	<span class="group-icon"></span>
+</div>
+<div class="mc-app-name-container">
+	<span class="mc-app-name">Analytics<br>Builder</span>
+</div>
+<span class="status-icon info-icon"></span>
+<span class="status-icon lock-icon"></span>
+<div class="mc-app-group-dropdown">
+	<div class="mc-app-group-dropdown-arrow"></div>
+	<div class="mc-app-group-dropdown-catch"></div>
+	<ul class="mc-app-group-dropdown-apps"><li class="mc-app-group-dropdown-app"><a href="/cloud/#app/Web%20%26%20Mobile%20Analytics" title="Web &amp; Mobile Analytics">
+	<span class="sr-only">Analytics Builder: </span>
+	<span class="mc-app-name">Web &amp; Mobile Analytics</span>
+	<span class="status-icon"></span>
+</a>
+<ul class="mc-app-shortcut-list dropdown-menu"></ul>
+<div class="mc-app-state">
+	<span class="css-arrow"></span>
+	<div class="expired-message">
+		Your subscription for Web &amp;amp; Mobile Analytics has expired.
+	</div>
+	<div class="locked-message">
+		You do not have access to Web &amp;amp; Mobile Analytics.
+	</div>
+</div>
+</li><li class="mc-app-group-dropdown-app"><a href="/cloud/#app/Datorama%20Reports" title="Datorama Reports">
+	<span class="sr-only">Analytics Builder: </span>
+	<span class="mc-app-name">Datorama Reports</span>
+	<span class="status-icon"></span>
+</a>
+<ul class="mc-app-shortcut-list dropdown-menu"></ul>
+<div class="mc-app-state">
+	<span class="css-arrow"></span>
+	<div class="expired-message">
+		Your subscription for Datorama Reports has expired.
+	</div>
+	<div class="locked-message">
+		You do not have access to Datorama Reports.
+	</div>
+</div>
+</li><li class="mc-app-group-dropdown-app"><a href="/cloud/#app/Reports" title="Reports">
+	<span class="sr-only">Analytics Builder: </span>
+	<span class="mc-app-name">Reports</span>
+	<span class="status-icon"></span>
+</a>
+<ul class="mc-app-shortcut-list dropdown-menu"></ul>
+<div class="mc-app-state">
+	<span class="css-arrow"></span>
+	<div class="expired-message">
+		Your subscription for Reports has expired.
+	</div>
+	<div class="locked-message">
+		You do not have access to Reports.
+	</div>
+</div>
+</li></ul>
+</div>
+</li><li class="mc-app-switcher-group some-provisioned"><div class="mc-app-group-icon app_group_6">
+	<span class="group-icon"></span>
+</div>
+<div class="mc-app-name-container">
+	<span class="mc-app-name">Journey<br>Builder</span>
+</div>
+<span class="status-icon info-icon"></span>
+<span class="status-icon lock-icon"></span>
+<div class="mc-app-group-dropdown">
+	<div class="mc-app-group-dropdown-arrow"></div>
+	<div class="mc-app-group-dropdown-catch"></div>
+	<ul class="mc-app-group-dropdown-apps"><li class="mc-app-group-dropdown-app"><a href="/cloud/#app/Automation%20Studio" title="Automation Studio">
+	<span class="sr-only">Journey Builder: </span>
+	<span class="mc-app-name">Automation Studio</span>
+	<span class="status-icon"></span>
+</a>
+<ul class="mc-app-shortcut-list dropdown-menu"></ul>
+<div class="mc-app-state">
+	<span class="css-arrow"></span>
+	<div class="expired-message">
+		Your subscription for Automation Studio has expired.
+	</div>
+	<div class="locked-message">
+		You do not have access to Automation Studio.
+	</div>
+</div>
+</li><li class="mc-app-group-dropdown-app"><a href="/cloud/#app/Behavioral%20Triggers" title="Behavioral Triggers">
+	<span class="sr-only">Journey Builder: </span>
+	<span class="mc-app-name">Behavioral Triggers</span>
+	<span class="status-icon"></span>
+</a>
+<ul class="mc-app-shortcut-list dropdown-menu"></ul>
+<div class="mc-app-state">
+	<span class="css-arrow"></span>
+	<div class="expired-message">
+		Your subscription for Behavioral Triggers has expired.
+	</div>
+	<div class="locked-message">
+		You do not have access to Behavioral Triggers.
+	</div>
+</div>
+</li><li class="mc-app-group-dropdown-app"><a href="/cloud/#app/Journey%20Builder" title="Journey Builder">
+	<span class="sr-only">Journey Builder: </span>
+	<span class="mc-app-name">Journey Builder</span>
+	<span class="status-icon"></span>
+</a>
+<ul class="mc-app-shortcut-list dropdown-menu"></ul>
+<div class="mc-app-state">
+	<span class="css-arrow"></span>
+	<div class="expired-message">
+		Your subscription for Journey Builder has expired.
+	</div>
+	<div class="locked-message">
+		You do not have access to Journey Builder.
+	</div>
+</div>
+</li></ul>
+</div>
+</li><li class="mc-app-switcher-group some-provisioned"><div class="mc-app-group-icon app_group_7">
+	<span class="group-icon"></span>
+</div>
+<div class="mc-app-name-container">
+	<span class="mc-app-name">Content<br>Builder</span>
+</div>
+<span class="status-icon info-icon"></span>
+<span class="status-icon lock-icon"></span>
+<div class="mc-app-group-dropdown">
+	<div class="mc-app-group-dropdown-arrow"></div>
+	<div class="mc-app-group-dropdown-catch"></div>
+	<ul class="mc-app-group-dropdown-apps"><li class="mc-app-group-dropdown-app"><a href="/cloud/#app/Approvals" title="Approvals">
+	<span class="sr-only">Content Builder: </span>
+	<span class="mc-app-name">Approvals</span>
+	<span class="status-icon"></span>
+</a>
+<ul class="mc-app-shortcut-list dropdown-menu"></ul>
+<div class="mc-app-state">
+	<span class="css-arrow"></span>
+	<div class="expired-message">
+		Your subscription for Approvals has expired.
+	</div>
+	<div class="locked-message">
+		You do not have access to Approvals.
+	</div>
+</div>
+</li><li class="mc-app-group-dropdown-app"><a href="/cloud/#app/Content%20Builder" title="Content Builder">
+	<span class="sr-only">Content Builder: </span>
+	<span class="mc-app-name">Content Builder</span>
+	<span class="status-icon"></span>
+</a>
+<ul class="mc-app-shortcut-list dropdown-menu"></ul>
+<div class="mc-app-state">
+	<span class="css-arrow"></span>
+	<div class="expired-message">
+		Your subscription for Content Builder has expired.
+	</div>
+	<div class="locked-message">
+		You do not have access to Content Builder.
+	</div>
+</div>
+</li></ul>
+</div>
+</li><div role="tooltip" class="popover fade bottom in datorama-ftux-popover" style="display: none;"><div class="arrow datorama-arrow"></div>
+<div class="popover-body datorama-ftux-popover-body slds-p-bottom_medium">
+	<div class="datorama-ftux-elements">
+		<div class="datorama-ftux-star"></div>
+		<div>
+			<h2 class="datorama-ftux-header slds-m-top_medium">Explore Datorama Reports</h2>
+			<h4 class="datorama-ftux-body slds-m-top_medium">Dive into a powerful new marketing intelligence and data analytics experience.</h4>
+		</div>
+		<button class="close datorama-ftux-close-button">×</button>
+	</div>
+</div>
+</div><li class="mc-app-switcher-group some-provisioned"><div class="mc-app-group-icon app_group_13">
+	<span class="group-icon"></span>
+</div>
+<div class="mc-app-name-container">
+	<span class="mc-app-name">Audience<br>Builder</span>
+</div>
+<span class="status-icon info-icon"></span>
+<span class="status-icon lock-icon"></span>
+<div class="mc-app-group-dropdown">
+	<div class="mc-app-group-dropdown-arrow"></div>
+	<div class="mc-app-group-dropdown-catch"></div>
+	<ul class="mc-app-group-dropdown-apps"><li class="mc-app-group-dropdown-app"><a href="/cloud/#app/Contact%20Builder" title="Contact Builder">
+	<span class="sr-only">Audience Builder: </span>
+	<span class="mc-app-name">Contact Builder</span>
+	<span class="status-icon"></span>
+</a>
+<ul class="mc-app-shortcut-list dropdown-menu"></ul>
+<div class="mc-app-state">
+	<span class="css-arrow"></span>
+	<div class="expired-message">
+		Your subscription for Contact Builder has expired.
+	</div>
+	<div class="locked-message">
+		You do not have access to Contact Builder.
+	</div>
+</div>
+</li><li class="mc-app-group-dropdown-app"><a href="/cloud/#app/Audience%20Builder" title="Audience Builder">
+	<span class="sr-only">Audience Builder: </span>
+	<span class="mc-app-name">Audience Builder</span>
+	<span class="status-icon"></span>
+</a>
+<ul class="mc-app-shortcut-list dropdown-menu"></ul>
+<div class="mc-app-state">
+	<span class="css-arrow"></span>
+	<div class="expired-message">
+		Your subscription for Audience Builder has expired.
+	</div>
+	<div class="locked-message">
+		You do not have access to Audience Builder.
+	</div>
+</div>
+</li></ul>
+</div>
+</li></ul></li><li class="mc-app-switcher-group-section"><ul class="mc-app-switcher-apps app-switcher-group-section-"><li class="mc-app-switcher-group some-provisioned"><div class="mc-app-group-icon app_group_12">
+	<span class="group-icon"></span>
+</div>
+<div class="mc-app-name-container">
+	<span class="mc-app-name">Einstein</span>
+</div>
+<span class="status-icon info-icon"></span>
+<span class="status-icon lock-icon"></span>
+<div class="mc-app-group-dropdown">
+	<div class="mc-app-group-dropdown-arrow"></div>
+	<div class="mc-app-group-dropdown-catch"></div>
+	<ul class="mc-app-group-dropdown-apps"><li class="mc-app-group-dropdown-app"><a href="/cloud/#app/Einstein%20Overview" title="Einstein Overview">
+	<span class="sr-only">Einstein: </span>
+	<span class="mc-app-name">Einstein Overview</span>
+	<span class="status-icon"></span>
+</a>
+<ul class="mc-app-shortcut-list dropdown-menu"></ul>
+<div class="mc-app-state">
+	<span class="css-arrow"></span>
+	<div class="expired-message">
+		Your subscription for Einstein Overview has expired.
+	</div>
+	<div class="locked-message">
+		You do not have access to Einstein Overview.
+	</div>
+</div>
+</li><li class="mc-app-group-dropdown-app"><a href="/cloud/#app/Einstein%20Engagement%20Scoring" title="Einstein Engagement Scoring">
+	<span class="sr-only">Einstein: </span>
+	<span class="mc-app-name">Einstein Engagement Scoring</span>
+	<span class="status-icon"></span>
+</a>
+<ul class="mc-app-shortcut-list dropdown-menu"></ul>
+<div class="mc-app-state">
+	<span class="css-arrow"></span>
+	<div class="expired-message">
+		Your subscription for Einstein Engagement Scoring has expired.
+	</div>
+	<div class="locked-message">
+		You do not have access to Einstein Engagement Scoring.
+	</div>
+</div>
+</li><li class="mc-app-group-dropdown-app"><a href="/cloud/#app/Einstein%20Messaging%20Insights" title="Einstein Messaging Insights">
+	<span class="sr-only">Einstein: </span>
+	<span class="mc-app-name">Einstein Messaging Insights</span>
+	<span class="status-icon"></span>
+</a>
+<ul class="mc-app-shortcut-list dropdown-menu"></ul>
+<div class="mc-app-state">
+	<span class="css-arrow"></span>
+	<div class="expired-message">
+		Your subscription for Einstein Messaging Insights has expired.
+	</div>
+	<div class="locked-message">
+		You do not have access to Einstein Messaging Insights.
+	</div>
+</div>
+</li><li class="mc-app-group-dropdown-app"><a href="/cloud/#app/Einstein%20Send%20Time%20Optimization" title="Einstein Send Time Optimization">
+	<span class="sr-only">Einstein: </span>
+	<span class="mc-app-name">Einstein Send Time Optimization</span>
+	<span class="status-icon"></span>
+</a>
+<ul class="mc-app-shortcut-list dropdown-menu"></ul>
+<div class="mc-app-state">
+	<span class="css-arrow"></span>
+	<div class="expired-message">
+		Your subscription for Einstein Send Time Optimization has expired.
+	</div>
+	<div class="locked-message">
+		You do not have access to Einstein Send Time Optimization.
+	</div>
+</div>
+</li><li class="mc-app-group-dropdown-app"><a href="/cloud/#app/Einstein%20Engagement%20Frequency" title="Einstein Engagement Frequency">
+	<span class="sr-only">Einstein: </span>
+	<span class="mc-app-name">Einstein Engagement Frequency</span>
+	<span class="status-icon"></span>
+</a>
+<ul class="mc-app-shortcut-list dropdown-menu"></ul>
+<div class="mc-app-state">
+	<span class="css-arrow"></span>
+	<div class="expired-message">
+		Your subscription for Einstein Engagement Frequency has expired.
+	</div>
+	<div class="locked-message">
+		You do not have access to Einstein Engagement Frequency.
+	</div>
+</div>
+</li><li class="mc-app-group-dropdown-app"><a href="/cloud/#app/Einstein%20Copy%20Insights" title="Einstein Copy Insights">
+	<span class="sr-only">Einstein: </span>
+	<span class="mc-app-name">Einstein Copy Insights</span>
+	<span class="status-icon"></span>
+</a>
+<ul class="mc-app-shortcut-list dropdown-menu"></ul>
+<div class="mc-app-state">
+	<span class="css-arrow"></span>
+	<div class="expired-message">
+		Your subscription for Einstein Copy Insights has expired.
+	</div>
+	<div class="locked-message">
+		You do not have access to Einstein Copy Insights.
+	</div>
+</div>
+</li><li class="mc-app-group-dropdown-app"><a href="/cloud/#app/Einstein%20Content%20Selection" title="Einstein Content Selection">
+	<span class="sr-only">Einstein: </span>
+	<span class="mc-app-name">Einstein Content Selection</span>
+	<span class="status-icon"></span>
+</a>
+<ul class="mc-app-shortcut-list dropdown-menu"></ul>
+<div class="mc-app-state">
+	<span class="css-arrow"></span>
+	<div class="expired-message">
+		Your subscription for Einstein Content Selection has expired.
+	</div>
+	<div class="locked-message">
+		You do not have access to Einstein Content Selection.
+	</div>
+</div>
+</li><li class="mc-app-group-dropdown-app"><a href="/cloud/#app/Email%20Recommendations" title="Email Recommendations">
+	<span class="sr-only">Einstein: </span>
+	<span class="mc-app-name">Email Recommendations</span>
+	<span class="status-icon"></span>
+</a>
+<ul class="mc-app-shortcut-list dropdown-menu"></ul>
+<div class="mc-app-state">
+	<span class="css-arrow"></span>
+	<div class="expired-message">
+		Your subscription for Email Recommendations has expired.
+	</div>
+	<div class="locked-message">
+		You do not have access to Email Recommendations.
+	</div>
+</div>
+</li><li class="mc-app-group-dropdown-app"><a href="/cloud/#app/Web%20Recommendations" title="Web Recommendations">
+	<span class="sr-only">Einstein: </span>
+	<span class="mc-app-name">Web Recommendations</span>
+	<span class="status-icon"></span>
+</a>
+<ul class="mc-app-shortcut-list dropdown-menu"></ul>
+<div class="mc-app-state">
+	<span class="css-arrow"></span>
+	<div class="expired-message">
+		Your subscription for Web Recommendations has expired.
+	</div>
+	<div class="locked-message">
+		You do not have access to Web Recommendations.
+	</div>
+</div>
+</li></ul>
+</div>
+</li><li class="mc-app-switcher-group some-provisioned"><div class="mc-app-group-icon app_group_8">
+	<span class="group-icon"></span>
+</div>
+<div class="mc-app-name-container">
+	<span class="mc-app-name">AppExchange</span>
+</div>
+<span class="status-icon info-icon"></span>
+<span class="status-icon lock-icon"></span>
+<div class="mc-app-group-dropdown">
+	<div class="mc-app-group-dropdown-arrow"></div>
+	<div class="mc-app-group-dropdown-catch"></div>
+	<ul class="mc-app-group-dropdown-apps"><li class="mc-app-group-dropdown-app"><a href="/cloud/#app/AppExchange" title="AppExchange">
+	<span class="sr-only">AppExchange: </span>
+	<span class="mc-app-name">AppExchange</span>
+	<span class="status-icon"></span>
+</a>
+<ul class="mc-app-shortcut-list dropdown-menu"></ul>
+<div class="mc-app-state">
+	<span class="css-arrow"></span>
+	<div class="expired-message">
+		Your subscription for AppExchange has expired.
+	</div>
+	<div class="locked-message">
+		You do not have access to AppExchange.
+	</div>
+</div>
+</li><li class="mc-app-group-dropdown-app"><a href="/cloud/#app/Clutch%20Loyalty" title="Clutch Loyalty">
+	<span class="sr-only">AppExchange: </span>
+	<span class="mc-app-name">Clutch Loyalty</span>
+	<span class="status-icon"></span>
+</a>
+<ul class="mc-app-shortcut-list dropdown-menu"></ul>
+<div class="mc-app-state">
+	<span class="css-arrow"></span>
+	<div class="expired-message">
+		Your subscription for Clutch Loyalty has expired.
+	</div>
+	<div class="locked-message">
+		You do not have access to Clutch Loyalty.
+	</div>
+</div>
+</li><li class="mc-app-group-dropdown-app"><a href="/cloud/#app/Datorama" title="Datorama">
+	<span class="sr-only">AppExchange: </span>
+	<span class="mc-app-name">Datorama</span>
+	<span class="status-icon"></span>
+</a>
+<ul class="mc-app-shortcut-list dropdown-menu"></ul>
+<div class="mc-app-state">
+	<span class="css-arrow"></span>
+	<div class="expired-message">
+		Your subscription for Datorama has expired.
+	</div>
+	<div class="locked-message">
+		You do not have access to Datorama.
+	</div>
+</div>
+</li><li class="mc-app-group-dropdown-app"><a href="/cloud/#app/PFLlink" title="PFLlink">
+	<span class="sr-only">AppExchange: </span>
+	<span class="mc-app-name">PFLlink</span>
+	<span class="status-icon"></span>
+</a>
+<ul class="mc-app-shortcut-list dropdown-menu"></ul>
+<div class="mc-app-state">
+	<span class="css-arrow"></span>
+	<div class="expired-message">
+		Your subscription for PFLlink has expired.
+	</div>
+	<div class="locked-message">
+		You do not have access to PFLlink.
+	</div>
+</div>
+</li></ul>
+</div>
+</li></ul></li></ul>
+
+	<div class="mc-app-switcher-switch ftux">
+		<div class="ftux-icon-inline left10 ftux-icon-app-switcher" data-placement="left" data-width="240" data-container="#body" data-tooltip-class="ftux-tooltip" style="display: none;" data-original-title="" title=""></div><div class="mc-app-switcher-switch-label">
+			<div class="btn-group">
+				<div class="radio mc-app-switcher-mine" data-filter="mine">
+					<label class="radio-custom" data-initialize="radio" id="app-switcher0">
+						<input class="sr-only" type="radio" name="app-switcher">
+						<span class="radio-label">My Apps</span>
+					</label>
+				</div>
+				<div class="radio mc-app-switcher-all checked" data-filter="all">
+					<label class="radio-custom checked" data-initialize="radio" id="app-switcher1">
+						<input class="sr-only" type="radio" name="app-switcher" checked="checked">
+						<span class="radio-label">All Apps</span>
+					</label>
+				</div>
+			</div>
+		</div>
+	</div>
+<div class="mc-app-switcher-catch-tray"></div>
+</div></nav>
+<div class="mc-header-overlay modal-backdrop in" style="display: none;"></div>
+</div></div>
+<div id="main-landmark" tabindex="0" class="sr-only"></div>
+<div class="mc-canvas-container" role="main"><div class="mc-canvas-region" id="canvas-radian6" style=""><div class="mc-app"><iframe class="mc-app-iframe" seamless="seamless" frameborder="0" name="canvas-radian6" src="https://socialstudio.radian6.com/openid/exacttarget?hub=1"></iframe>
+</div></div><div class="mc-canvas-region" id="canvas-mchomepage" style="display: none;"></div></div>
+<div class="mc-modal-region modal">
+	<div class="modal-dialog">
+		<div class="modal-content"></div>
+	</div>
+</div>
+<div class="mc-private-label-region"><div></div></div></div></div>
+		<div class="mc-app-preloader"><div><iframe style="display:none;" name="app-preload" src="https://members.s4.exacttarget.com//Init.aspx?hub=1&amp;context=b47215876ef554583c130b1036a2a7993a6ebbdacb3c5cba6dfbae0bde8d722e"></iframe></div></div>
+		<script>
+!function(a){"use strict";a.dataLoader=function(b){var c,d=a.ActiveXObject?new a.ActiveXObject("Microsoft.XMLHTTP"):new XMLHttpRequest,e=[];return d.onreadystatechange=function(){var a;if(4===d.readyState){c={status:d.status,responseText:d.responseText};for(a in e)e[a](c)}},d.open("GET",b,!0),d.send(),function(a){void 0!==c?a(c):e.push(a)}}}(window);
+
+!function(a){"use strict";a.tokenLoader=a.dataLoader("./update-token.json")}(window);
+		</script>
+		<script src="mc/js/app-start-built.js?v=230.0.27"></script>
+	
+</body></html>
