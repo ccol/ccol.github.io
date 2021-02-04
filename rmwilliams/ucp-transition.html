@@ -2,30 +2,71 @@
 
 <head>
     <meta name="viewport" content="width=device-width, minimum-scale=0.1">
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <style>
-        #div2, #div3, #div4{
-            display: none;
+        img{
+            position:absolute;
+            left:0;
+            -webkit-transition: opacity 1s ease-in-out;
+            -moz-transition: opacity 1s ease-in-out;
+            -o-transition: opacity 1s ease-in-out;
+            transition: opacity 1s ease-in-out;
+            opacity:0;
+            -ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+            filter: alpha(opacity=0);
         }
+        img.opaque {
+            opacity:1;
+            -ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
+            filter: alpha(opacity=1);
+        }
+        p#cf7_controls {
+            text-align:center;
+            position: absolute;
+            top: 0;
+            width: 100%;
+            font-family: Roboto, Arial;
+            color: gray;
+          }
+          #cf7_controls span {
+            padding-right:2em;
+            cursor:pointer;
+          }
+            
     </style>
 </head>
 
 <body style="margin: 0px;">
-    <div id="div1">
-        <img style="margin: 0;width: 100%;" src="ucp1.png" onclick="show2()"/>
-    </div>
-    <div id="div2">
+    <div id="cf7" class="shadow">
+        <img style="margin: 0;width: 100%;" class="opaque" src="ucp1.png" onclick="show2()"/>
         <img style="margin: 0;width: 100%;" src="ucp2.png" onclick="show3()"/>
-    </div>
-    <div id="div3">
         <img style="margin: 0;width: 100%;" src="ucp3.png" onclick="show4()"/>
-    </div>
-    <div id="div4">
         <img style="margin: 0;width: 100%;" src="ucp4.png"/>
     </div>
+    <div>
+        <p id="cf7_controls">
+            Transition: &nbsp;&nbsp;&nbsp;
+            <span class="selected">Anonymous</span>
+            <span>Mike 1</span>
+            <span>Mike 2</span>
+            <span>Mike 3</span>
+        </p>
+    </div>
 <script>
+    $(document).ready(function() {
+        $("#cf7_controls").on('click', 'span', function() {
+          $("#cf7 img").removeClass("opaque");
+      
+          var newImage = $(this).index();
+      
+          $("#cf7 img").eq(newImage).addClass("opaque");
+      
+          $("#cf7_controls span").removeClass("selected");
+          $(this).addClass("selected");
+        });
+      });
     function show2(){
-        document.getElementById('div1').style.display = 'none';
-        document.getElementById('div2').style.display = 'block';
+        console.log('show2');
     }
     function show3(){
         document.getElementById('div2').style.display = 'none';
