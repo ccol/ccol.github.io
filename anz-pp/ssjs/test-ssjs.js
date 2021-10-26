@@ -2,7 +2,10 @@
 
 <script runat=server>
 Platform.Load('core', '1');
+Platform.Response.Write('works!');
+/*
 
+//Only got Eliot's bit up to here - need to add code to fetch DE
 var fieldArr = [];
 
 for(var i = 0; i < srcFields.length; i++){
@@ -33,4 +36,5 @@ Write(Stringify(data));
 
 var targetDE = DataExtension.Init(guid);
 var count = targetDE.Rows(Add(data);
+*/
 </script>
