@@ -1,4 +1,4 @@
-Add your files, then:
+Add your files then:
 1. cd to this directory
 2. git init
 3. git status
