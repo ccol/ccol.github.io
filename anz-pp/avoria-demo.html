@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Avoria Broadband — Agent Comparison Demo</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #0f172a;
+      color: #e2e8f0;
+    }
+
+    .header {
+      background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+      color: white;
+      padding: 20px 24px 12px;
+      text-align: center;
+      border-bottom: 1px solid #334155;
+    }
+    .header h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.5px; }
+    .header .subtitle { font-size: 14px; opacity: 0.6; margin-top: 4px; }
+    .header .scenario {
+      margin-top: 10px;
+      padding: 10px 16px;
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 8px;
+      font-size: 13px;
+      line-height: 1.5;
+      color: #94a3b8;
+      max-width: 900px;
+      margin-left: auto;
+      margin-right: auto;
+      text-align: left;
+    }
+    .header .scenario strong { color: #e2e8f0; }
+
+    .controls-bar {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      padding: 12px;
+      background: #1e293b;
+      border-bottom: 1px solid #334155;
+      flex-wrap: wrap;
+    }
+    .controls-bar button {
+      padding: 8px 18px;
+      border: none;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .btn-step {
+      background: #3b82f6;
+      color: white;
+    }
+    .btn-step:hover { background: #2563eb; }
+    .btn-step:disabled { background: #334155; color: #64748b; cursor: default; }
+    .btn-reset {
+      background: #dc2626;
+      color: white;
+    }
+    .btn-reset:hover { background: #b91c1c; }
+    .btn-auto {
+      background: #8b5cf6;
+      color: white;
+    }
+    .btn-auto:hover { background: #7c3aed; }
+    .step-indicator {
+      align-self: center;
+      font-size: 12px;
+      color: #64748b;
+    }
+
+    .container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      max-width: 1500px;
+      margin: 16px auto;
+      padding: 0 16px;
+      height: calc(100vh - 200px);
+    }
+
+    .agent-panel {
+      background: #1e293b;
+      border-radius: 12px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      border: 1px solid #334155;
+    }
+
+    .panel-header {
+      padding: 12px 16px;
+      font-weight: 600;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border-bottom: 1px solid #334155;
+    }
+    .badge {
+      font-size: 10px;
+      padding: 3px 8px;
+      border-radius: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .panel-subtitle {
+      margin-left: auto;
+      font-size: 11px;
+      font-weight: 400;
+      opacity: 0.5;
+    }
+
+    .external .panel-header { background: #451a03; color: #fed7aa; }
+    .external .badge { background: #f59e0b; color: #451a03; }
+
+    .agentforce .panel-header { background: #172554; color: #bfdbfe; }
+    .agentforce .badge { background: #3b82f6; color: white; }
+
+    .chat-messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .message {
+      max-width: 90%;
+      padding: 10px 14px;
+      border-radius: 12px;
+      font-size: 13px;
+      line-height: 1.6;
+      animation: fadeIn 0.3s ease;
+    }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+    .message.user {
+      align-self: flex-end;
+      background: #334155;
+      color: #e2e8f0;
+      border-bottom-right-radius: 4px;
+    }
+    .message.agent {
+      align-self: flex-start;
+      border-bottom-left-radius: 4px;
+    }
+    .external .message.agent { background: #292524; color: #fef3c7; border: 1px solid #78350f; }
+    .agentforce .message.agent { background: #1e3a5f; color: #dbeafe; border: 1px solid #1e40af; }
+
+    .message.system {
+      align-self: center;
+      background: #334155;
+      color: #94a3b8;
+      font-size: 11px;
+      font-style: italic;
+      max-width: 95%;
+    }
+
+    .api-log {
+      background: #0f172a;
+      color: #94a3b8;
+      font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+      font-size: 11px;
+      padding: 8px 10px;
+      border-radius: 6px;
+      margin-top: 8px;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      word-break: break-all;
+      border: 1px solid #1e293b;
+    }
+    .api-log .label { color: #60a5fa; font-weight: 600; }
+    .api-log .query { color: #fb923c; }
+    .api-log .success { color: #4ade80; }
+    .api-log .check { color: #a78bfa; }
+
+    .callout {
+      border-radius: 8px;
+      padding: 8px 12px;
+      margin-top: 8px;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+    .callout strong { display: block; margin-bottom: 2px; }
+    .callout-gap {
+      background: #450a0a;
+      border: 1px solid #991b1b;
+      color: #fca5a5;
+    }
+    .callout-gap strong { color: #fecaca; }
+    .callout-platform {
+      background: #052e16;
+      border: 1px solid #166534;
+      color: #86efac;
+    }
+    .callout-platform strong { color: #bbf7d0; }
+
+    .message strong { font-weight: 700; }
+    .message em { font-style: italic; opacity: 0.8; }
+
+    .chat-messages::-webkit-scrollbar { width: 6px; }
+    .chat-messages::-webkit-scrollbar-track { background: transparent; }
+    .chat-messages::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
+
+    @media (max-width: 900px) {
+      .container { grid-template-columns: 1fr; height: auto; }
+      .agent-panel { min-height: 400px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>Avoria Broadband Support -- Side-by-Side Agent Comparison</h1>
+    <p class="subtitle">External Agent (API-only) vs. Agentforce (Platform Runtime)</p>
+    <div class="scenario">
+      <strong>Demo Scenario:</strong> Sarah Chen, IT Director at NovaTech Solutions (Premium customer), contacts Avoria Broadband support.
+      Her office internet has been down for 2 hours -- exceeding her Premium SLA's 1-hour first response guarantee.
+      Both agents receive identical messages. Watch what each one knows -- and doesn't know.
+    </div>
+  </div>
+
+  <div class="controls-bar">
+    <button class="btn-step" id="btn-next" onclick="nextStep()">Step 1: Customer Identifies Themselves</button>
+    <button class="btn-auto" onclick="autoPlay()">Auto-Play All Steps</button>
+    <button class="btn-reset" onclick="resetDemo()">Reset</button>
+    <span class="step-indicator" id="step-label">Step 0 / 4</span>
+  </div>
+
+  <div class="container">
+    <div class="agent-panel external">
+      <div class="panel-header">
+        <span>External AI Agent</span>
+        <span class="badge">API / MCP Only</span>
+        <span class="panel-subtitle">Treats Salesforce as a database</span>
+      </div>
+      <div class="chat-messages" id="ext-messages">
+        <div class="message system">External Agent ready. Queries Salesforce via REST API / MCP -- no entitlement, SLA, escalation, or Omni-Channel awareness.</div>
+      </div>
+    </div>
+
+    <div class="agent-panel agentforce">
+      <div class="panel-header">
+        <span>Agentforce Agent</span>
+        <span class="badge">Platform Runtime</span>
+        <span class="panel-subtitle">Full platform context inherited</span>
+      </div>
+      <div class="chat-messages" id="af-messages">
+        <div class="message system">Agentforce Agent ready. Full platform context: entitlements, milestones, escalation rules, Omni-Channel, Knowledge data categories, FLS, session tracing.</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const STEPS = [
+      {
+        label: "Step 1: Customer Identifies Themselves",
+        nextLabel: "Step 2: Customer Expresses Urgency",
+        userMessage: "Hi, I'm Sarah Chen from NovaTech Solutions. Our entire office internet has been down for 2 hours. We're on your Premium plan and this is unacceptable. I need this fixed NOW.",
+        external: {
+          response: "I found your record. You're Sarah Chen, IT Director at NovaTech Solutions.\n\nI'm sorry to hear about your issue. Let me create a support case for you right away.",
+          apiCalls: [
+            { type: "query", text: "SOQL: SELECT Id, Name, Title, Account.Name FROM Contact WHERE FirstName='Sarah' AND LastName='Chen'" },
+            { type: "query", text: "SOQL: SELECT Id, Name, Industry FROM Account WHERE Id='001Hu00003zDWHzIAO'" },
+          ],
+          gap: "No entitlement check. No SLA awareness. The agent found the customer record but doesn't know this is a Premium account, doesn't know about the 1-hour first response SLA, and has no idea the SLA has been breached. Every customer gets the same generic response."
+        },
+        agentforce: {
+          response: "Hi Sarah, I've pulled up your account. I can see **NovaTech Solutions** is on our **Premium Support plan** with a dedicated SLA.\n\nI can see your Premium SLA guarantees a **1-hour first response** and **4-hour resolution**. Since you've been down for 2 hours, your **first response SLA has been breached**. I'm treating this as **Priority 1** and fast-tracking it immediately.\n\nI've created a **P1 case** and it has been **automatically assigned to our Premium Network Support team**. Your entitlement milestones are now active and tracking.",
+          apiCalls: [
+            { type: "query", text: "SOQL: SELECT Id, Name, Title, Account.Name FROM Contact WHERE FirstName='Sarah' AND LastName='Chen'" },
+            { type: "check", text: "ENTITLEMENT CHECK: Premium Support -- First Response milestone: 1 hour (VIOLATED at 2 hours)" },
+            { type: "success", text: "FLOW TRIGGER: Record-Triggered Flow -> Auto-attached Entitlement, started Milestone tracking" },
+            { type: "success", text: "ASSIGNMENT RULE: Priority=High + Support_Tier=Premium -> Avoria Premium Network Support queue" },
+            { type: "success", text: "CASE CREATED: Priority=High, RecordType=Technical Support (Premium), Status=New" },
+          ],
+          platform: "Agentforce checked the customer's entitlement, detected the SLA breach, created the case with the correct record type, and triggered auto-assignment -- all inherited from the platform automatically."
+        }
+      },
+      {
+        label: "Step 2: Customer Expresses Urgency",
+        nextLabel: "Step 3: Customer Asks for Help",
+        userMessage: "We've been down for 2 hours already! This is costing us thousands. What's being done about this?",
+        external: {
+          response: "I understand the urgency. I've created a support case for you.\n\n**Case ID:** 500Hu00002VI3nqIAD\n**Priority:** High\n**Status:** New\n\nLet me search our knowledge base for some troubleshooting steps that might help.",
+          apiCalls: [
+            { type: "query", text: "CREATE Case: ContactId, AccountId, Subject='Office internet outage', Priority=High, Status=New, Origin=Chat" },
+            { type: "query", text: "Result: 500Hu00002VI3nqIAD" },
+          ],
+          gap: "No SLA/milestone visibility. The agent has no idea the 1-hour first response window was missed. It can't report on SLA status, breach timing, or escalation triggers. The customer gets no transparency about where things stand contractually."
+        },
+        agentforce: {
+          response: "I completely understand the impact, Sarah. Here's exactly where things stand:\n\n- **SLA Status:** Your 1-hour first response milestone was breached at the 1-hour mark. We are now in **violation**.\n- **Escalation:** Because this is a P1 case with a breached Premium SLA, our **escalation rule has been triggered**. Your case is being escalated to our **Tier 2 Network Engineering** team.\n- **Your case manager has been notified** of the SLA breach.\n\nI want to be transparent: we missed your first response window, and that's being tracked and reported internally.",
+          apiCalls: [
+            { type: "check", text: "MILESTONE CHECK: Avoria_First_Response -- Target: 1 hour, Elapsed: 2 hours -- VIOLATED" },
+            { type: "check", text: "MILESTONE CHECK: Avoria_Resolution -- Target: 4 hours, Elapsed: 2 hours -- IN PROGRESS" },
+            { type: "success", text: "ESCALATION RULE: Priority=High + Support_Tier=Premium + First Response Violated -> Escalate to Tier 2" },
+            { type: "success", text: "NOTIFICATION: Case owner and manager notified of SLA breach" },
+            { type: "success", text: "SLA_Status__c updated to 'First Response Breached'" },
+          ],
+          platform: "Agentforce has real-time visibility into milestone timers and escalation rules. It knows the SLA is breached, can explain exactly what's happening, and has already triggered the escalation workflow."
+        }
+      },
+      {
+        label: "Step 3: Customer Asks for Help",
+        nextLabel: "Step 4: Customer Demands Engineer",
+        userMessage: "What can you do right now to fix this?",
+        external: {
+          response: "I found some articles that might help:\n\n1. **Avoria - Office-Wide Outage Troubleshooting (Business Accounts)** - Step-by-step guide for diagnosing and resolving office-wide internet outages. Premium support article.\n2. **Projector troubleshooting guide** - Common issues when using a multimedia projector\n3. **Avoria - Basic Connectivity Reset Guide** - General troubleshooting steps for all tiers.\n4. **Troubleshooting issues with your home theater** - Guide for diagnosing common issues with home theaters\n5. **Why is my turbine not producing any energy?** - Turbine troubleshooting\n\nI'd suggest starting with the first article. Here are the general steps:\n1. Check if the issue is isolated to your office or area-wide\n2. Power cycle your modem and router (unplug for 30 seconds)\n3. Check all cable connections\n4. Try connecting directly via ethernet cable\n\nHave you tried any of these steps already?",
+          apiCalls: [
+            { type: "query", text: "SOSL: FIND {outage troubleshooting} IN ALL FIELDS RETURNING KnowledgeArticleVersion(Id, Title, Summary)" },
+            { type: "query", text: "Returned 5 articles -- NO data category filtering applied" },
+          ],
+          gap: "No Knowledge data category filtering. The agent searched ALL articles without tier-based visibility. It returned irrelevant results (projectors, home theater, turbines) alongside the correct one. It also surfaced the 'Premium support article' label from the Summary field -- leaking tier metadata. Internal-only articles could also appear. No FLS enforcement on internal fields."
+        },
+        agentforce: {
+          response: "Let me search our knowledge base for your support tier...\n\nBased on our **advanced troubleshooting guide for Premium business accounts**, here are the steps specific to office-wide outages:\n\n1. Check if the issue is isolated to your building or area-wide (our network status shows no area outages currently)\n2. Verify the ONT/modem power light status -- solid green = connected, flashing = line issue\n3. If the ONT shows a line issue, this indicates a problem on **our side** that requires a field engineer\n\nI've filtered out internal procedures and standard-tier articles -- you're seeing the Premium-tier guidance only.\n\nShould I proceed with dispatching an engineer, or would you like to try step 2 first?",
+          apiCalls: [
+            { type: "query", text: "KNOWLEDGE SEARCH: 'outage troubleshooting' -- filtered by Data Category: Support_Tier=Premium" },
+            { type: "success", text: "ARTICLE FOUND: 'Office-Wide Outage Troubleshooting (Business Accounts)' -- Premium visibility" },
+            { type: "check", text: "ARTICLE FILTERED: 'Internal Escalation Procedures' -- Data Category: Internal Only -- NOT shown" },
+            { type: "check", text: "ARTICLE FILTERED: 'Basic Connectivity Reset Guide' -- Data Category: All Tiers -- deprioritized" },
+            { type: "check", text: "FLS CHECK: Internal_Notes__c, Cost_to_Serve__c -- hidden from customer profile" },
+          ],
+          platform: "Agentforce respects Knowledge data categories -- Premium customers see Premium articles only. Internal articles are automatically hidden. Field-Level Security prevents internal fields from leaking into the conversation."
+        }
+      },
+      {
+        label: "Step 4: Customer Demands Engineer",
+        nextLabel: "Demo Complete",
+        userMessage: "We've already tried all that. This needs a real network engineer, not troubleshooting scripts.",
+        external: {
+          response: "I completely understand. I've updated your case status to **Escalated**.\n\nSomeone from our support team should be in touch with you soon.\n\nIs there anything else I can help with in the meantime?",
+          apiCalls: [
+            { type: "query", text: "UPDATE Case 500Hu00002VI3nqIAD: Status -> 'Escalated'" },
+          ],
+          gap: "No Omni-Channel awareness. The agent updated a field but can't check who's available, what skills they have, or their current capacity. 'Someone should be in touch' is the best it can offer -- no specific engineer, no timeline, no routing. There is also no session trace: a regulator asking 'what did your system do when the SLA was breached?' gets no answer."
+        },
+        agentforce: {
+          response: "Understood, Sarah. Since the standard troubleshooting hasn't resolved this, and your first response SLA is already breached, I'm taking immediate action:\n\n1. **Escalating** your case to our **Tier 2 Network Engineering** team\n2. Checking engineer availability...\n\nI can see that **James Park**, a Tier 2 network infrastructure specialist, is **online and available** right now with capacity for a P1 case.\n\n**I'm transferring you to James now.** He'll have full context of your case, your Premium SLA status, and the troubleshooting steps already attempted.\n\nYour case reference: Case #00001234\nEscalation reason: P1 + Premium SLA first response breach + unresolved after troubleshooting\n\n*Transferring to James Park, Tier 2 Network Engineering...*",
+          apiCalls: [
+            { type: "success", text: "CASE UPDATE: Status -> Escalated, IsEscalated -> true" },
+            { type: "success", text: "ESCALATION RULE FIRED: Avoria Case Escalation -> Tier 2 Network Engineering queue" },
+            { type: "check", text: "OMNI-CHANNEL: Checking availability -- Skills: 'Network Infrastructure' + Capacity: Available" },
+            { type: "success", text: "OMNI-CHANNEL: James Park -- Tier 2, Network Infrastructure skill, Online, Capacity: 2/5" },
+            { type: "success", text: "OMNI-CHANNEL: Routing case to James Park -- skills match + capacity confirmed" },
+            { type: "check", text: "SESSION TRACE: Full decision chain logged for audit compliance" },
+            { type: "check", text: "GUARDRAIL CHECK: No refunds/credits offered without manager approval" },
+          ],
+          platform: "Agentforce checked Omni-Channel for available agents with the right skills and capacity, then routed directly. The full session trace -- every reasoning step, every decision -- is logged and auditable. If a regulator asks 'what happened when the SLA was breached?', the answer is right here."
+        }
+      },
+    ];
+
+    let currentStep = -1;
+    let autoPlaying = false;
+
+    function addMessage(containerId, text, type, extras) {
+      const container = document.getElementById(containerId);
+      const div = document.createElement("div");
+      div.className = `message ${type}`;
+      div.innerHTML = formatMarkdown(text);
+
+      if (extras?.apiCalls?.length) {
+        const logDiv = document.createElement("div");
+        logDiv.className = "api-log";
+        logDiv.innerHTML = `<span class="label">API Calls / Platform Actions:</span>\n` +
+          extras.apiCalls.map(c => {
+            const cls = c.type === "success" ? "success" : c.type === "check" ? "check" : "query";
+            const icon = c.type === "success" ? "+" : c.type === "check" ? "~" : ">";
+            return `<span class="${cls}">${icon} ${escapeHtml(c.text)}</span>`;
+          }).join("\n");
+        div.appendChild(logDiv);
+      }
+
+      if (extras?.gap) {
+        const g = document.createElement("div");
+        g.className = "callout callout-gap";
+        g.innerHTML = `<strong>What's Missing:</strong>${escapeHtml(extras.gap)}`;
+        div.appendChild(g);
+      }
+      if (extras?.platform) {
+        const p = document.createElement("div");
+        p.className = "callout callout-platform";
+        p.innerHTML = `<strong>Platform Advantage:</strong>${escapeHtml(extras.platform)}`;
+        div.appendChild(p);
+      }
+
+      container.appendChild(div);
+      container.scrollTop = container.scrollHeight;
+    }
+
+    function formatMarkdown(text) {
+      return escapeHtml(text)
+        .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
+        .replace(/\*(.+?)\*/g, "<em>$1</em>")
+        .replace(/\n/g, "<br>");
+    }
+
+    function escapeHtml(text) {
+      const d = document.createElement("div");
+      d.textContent = text;
+      return d.innerHTML;
+    }
+
+    function nextStep() {
+      currentStep++;
+      if (currentStep >= STEPS.length) {
+        document.getElementById("btn-next").disabled = true;
+        document.getElementById("btn-next").textContent = "Demo Complete";
+        document.getElementById("step-label").textContent = "Done -- 4 / 4";
+        addMessage("ext-messages", "Demo complete. This agent queried Salesforce via API -- it found data but missed every platform capability: entitlements, SLA milestones, escalation rules, Knowledge data categories, Omni-Channel routing, FLS, and session tracing.", "system");
+        addMessage("af-messages", "Demo complete. Agentforce inherited the full platform: entitlement checks, SLA breach detection, escalation workflows, Knowledge data category security, Omni-Channel skills-based routing, FLS enforcement, guardrails, and a complete audit trail.", "system");
+        return;
+      }
+
+      const step = STEPS[currentStep];
+      document.getElementById("step-label").textContent = `Step ${currentStep + 1} / 4`;
+
+      // User message to both
+      addMessage("ext-messages", step.userMessage, "user");
+      addMessage("af-messages", step.userMessage, "user");
+
+      // Agent responses with delay
+      setTimeout(() => {
+        addMessage("ext-messages", step.external.response, "agent", {
+          apiCalls: step.external.apiCalls,
+          gap: step.external.gap,
+        });
+      }, 600);
+
+      setTimeout(() => {
+        addMessage("af-messages", step.agentforce.response, "agent", {
+          apiCalls: step.agentforce.apiCalls,
+          platform: step.agentforce.platform,
+        });
+
+        // Update button
+        if (currentStep + 1 < STEPS.length) {
+          document.getElementById("btn-next").textContent = STEPS[currentStep + 1].label;
+        } else {
+          document.getElementById("btn-next").textContent = "Show Summary";
+        }
+
+        if (autoPlaying && currentStep + 1 < STEPS.length) {
+          setTimeout(() => nextStep(), 3000);
+        } else if (autoPlaying && currentStep + 1 >= STEPS.length) {
+          autoPlaying = false;
+          nextStep();
+        }
+      }, 1200);
+    }
+
+    function autoPlay() {
+      if (currentStep >= STEPS.length) return;
+      autoPlaying = true;
+      nextStep();
+    }
+
+    function resetDemo() {
+      currentStep = -1;
+      autoPlaying = false;
+      document.getElementById("ext-messages").innerHTML =
+        '<div class="message system">External Agent ready. Queries Salesforce via REST API / MCP -- no entitlement, SLA, escalation, or Omni-Channel awareness.</div>';
+      document.getElementById("af-messages").innerHTML =
+        '<div class="message system">Agentforce Agent ready. Full platform context: entitlements, milestones, escalation rules, Omni-Channel, Knowledge data categories, FLS, session tracing.</div>';
+      document.getElementById("btn-next").disabled = false;
+      document.getElementById("btn-next").textContent = STEPS[0].label;
+      document.getElementById("step-label").textContent = "Step 0 / 4";
+    }
+  </script>
+</body>
+</html>
