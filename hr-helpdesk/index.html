@@ -410,7 +410,6 @@
     background: linear-gradient(180deg, #141414 0%, #0e0e0e 100%);
     border: 1px solid rgba(0,161,224,0.30);
     border-radius: 18px;
-    overflow: hidden;
     animation: slideIn 400ms ease;
     box-shadow: 0 12px 36px rgba(0,0,0,0.4);
   }
@@ -1066,6 +1065,133 @@
     font-weight: 700;
     letter-spacing: 0.16em;
   }
+
+  /* ===== Step 11 — confirm + system check-in loader ===== */
+  .confirm-row {
+    align-self: flex-end;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+  .confirm-row .lbl {
+    font-size: 11px;
+    color: rgba(255,255,255,0.55);
+    letter-spacing: 0.04em;
+    margin-right: 6px;
+  }
+  .sys-loader {
+    align-self: stretch;
+    width: 100%;
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 14px;
+    padding: 14px 16px;
+    animation: slideIn 350ms ease;
+  }
+  .sys-loader .lh {
+    font-size: 10px; font-weight: 700;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    color: rgba(255,255,255,0.55);
+    margin-bottom: 10px;
+  }
+  .sys-loader .row {
+    display: flex; align-items: center; gap: 12px;
+    padding: 8px 0;
+    font-size: 13px;
+    color: rgba(255,255,255,0.55);
+    opacity: 0.4;
+    transform: translateY(4px);
+    transition: opacity 250ms ease, transform 250ms ease, color 200ms ease;
+  }
+  .sys-loader .row.in { opacity: 1; transform: none; }
+  .sys-loader .row.done { color: rgba(255,255,255,0.92); }
+  .sys-loader .spin {
+    width: 14px; height: 14px;
+    border-radius: 9999px;
+    border: 2px solid rgba(196,181,253,0.25);
+    border-top-color: #c4b5fd;
+    animation: afspin 0.9s linear infinite;
+    flex-shrink: 0;
+  }
+  .sys-loader .row.done .spin {
+    border: none;
+    background: #22c55e;
+    animation: none;
+    position: relative;
+  }
+  .sys-loader .row.done .spin::after {
+    content: "✓";
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    color: #052e16;
+    font-size: 10px; font-weight: 800;
+  }
+  @keyframes afspin { to { transform: rotate(360deg); } }
+  .sys-loader .row .name { flex: 1; }
+  .sys-loader .row .id {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 11px;
+    color: rgba(255,255,255,0.40);
+  }
+
+  /* ===== Step 12 — done summary ===== */
+  .done-card {
+    align-self: stretch;
+    width: 100%;
+    background: linear-gradient(180deg, rgba(34,197,94,0.10) 0%, rgba(20,20,20,0.4) 100%);
+    border: 1px solid rgba(34,197,94,0.35);
+    border-radius: 18px;
+    padding: 18px 20px;
+  }
+  .done-card .head {
+    display: flex; align-items: center; gap: 10px;
+    margin-bottom: 14px;
+  }
+  .done-card .head .check {
+    width: 32px; height: 32px;
+    border-radius: 9999px;
+    background: #22c55e;
+    color: #052e16;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 800;
+  }
+  .done-card .head .title {
+    font-size: 11px; font-weight: 700;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    color: #86efac;
+  }
+  .done-card .head .sub {
+    font-size: 13px;
+    color: #fff;
+    margin-top: 2px;
+    font-weight: 600;
+  }
+  .done-row {
+    display: flex; align-items: center;
+    gap: 10px;
+    padding: 8px 0;
+    border-top: 1px solid rgba(255,255,255,0.06);
+    font-size: 13px;
+    color: rgba(255,255,255,0.85);
+  }
+  .done-row:first-of-type { border-top: none; }
+  .done-row .tick {
+    width: 18px; height: 18px;
+    border-radius: 9999px;
+    background: rgba(34,197,94,0.18);
+    color: #22c55e;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px;
+    flex-shrink: 0;
+  }
+  .done-row .meta {
+    color: rgba(255,255,255,0.45);
+    font-size: 11px;
+    margin-left: auto;
+    font-weight: 700;
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+  }
 </style>
 </head>
 <body>
@@ -1213,7 +1339,7 @@
         <div class="brand-row">
           <div class="wa-mark">W</div>
           <span class="name">Gemini Enterprise</span>
-          <span class="tag">Powered by Agentforce · Woolworths Group</span>
+          <span class="tag">Connected to Agentforce</span>
         </div>
 
         <div class="greeting">
@@ -1484,10 +1610,6 @@
                 </div>
               </div>
             </div>
-            <div class="fusion-foot">
-              <div class="pain">What this fixes</div>
-              Today HR Service Cloud is just an iframe widget over the Google KB — no employee context, no case history, no reasoning. The <b>HR Agent</b> now fuses both surfaces in one call, so it can spot patterns the KB alone can't.
-            </div>
           </div>`
       });
 
@@ -1520,7 +1642,7 @@
       html: `
         <div class="filter-chip">
           <div class="label">Salesforce Data 360 MCP · 1 call · zero-copy in Google</div>
-          <div><span class="k">employee</span> <span class="v">= "priya.singh@woolworths.com.au"</span></div>
+          <div><span class="k">employee</span> <span class="v">= "priya.singh@company.com"</span></div>
           <div><span class="k">return</span> <span class="v">workday.profile, successfactors.policy, sfcase.aggregates</span></div>
           <div><span class="k">aggregate</span> <span class="v">cases.by_floor(window=90d), cases.by_employee(window=90d)</span></div>
         </div>`
@@ -1871,6 +1993,114 @@
     setTimeout(() => { animating = false; }, 400);
   }
 
+  // ---------- Step 11: user confirms send → animated system check-ins ----------
+  let step11LoaderDone = false;
+  function runStep11() {
+    animating = true;
+    step11LoaderDone = false;
+
+    appendEntry({ kind: "user", text: "Looks good — confirm." });
+
+    const right = document.getElementById("rpRight");
+    if (!right) { animating = false; step11LoaderDone = true; return; }
+
+    right.innerHTML = `
+      <div class="rp-panel">
+        <div class="rp-head">
+          <div class="l">
+            <div style="width:32px;height:32px;border-radius:9px;display:flex;align-items:center;justify-content:center;background:rgba(124,58,237,0.18);color:#c4b5fd;">${iconSalesforce(18)}</div>
+            <div>
+              <div class="title">Committing Plan</div>
+              <div class="sub">Writing across each system and verifying receipt</div>
+            </div>
+          </div>
+          <span class="rp-pill">Working…</span>
+        </div>
+
+        <div class="rp-body">
+          <div class="sys-loader" id="sysLoader">
+            <div class="lh">System Check-ins</div>
+            <div class="row" data-i="0"><span class="spin"></span><span class="name">Salesforce Service Cloud</span><span class="id">Case #00045231</span></div>
+            <div class="row" data-i="1"><span class="spin"></span><span class="name">Workday</span><span class="id">PTO #WD-88412</span></div>
+            <div class="row" data-i="2"><span class="spin"></span><span class="name">Google Calendar</span><span class="id">Invite v2 sent</span></div>
+            <div class="row" data-i="3"><span class="spin"></span><span class="name">Google Chat</span><span class="id">EA notified</span></div>
+          </div>
+        </div>
+
+        <div class="rp-foot">
+          <span><span class="arch">Agentforce + Gemini</span> · 4 systems · 2-phase commit</span>
+          <span id="sysFootHint">Verifying…</span>
+        </div>
+      </div>`;
+
+    const rows = right.querySelectorAll(".sys-loader .row");
+    [0,1,2,3].forEach(i => setTimeout(() => rows[i] && rows[i].classList.add("in"), i * 100));
+    [600, 950, 1300, 1650].forEach((t, i) => setTimeout(() => rows[i] && rows[i].classList.add("done"), t));
+
+    setTimeout(() => {
+      const hint = document.getElementById("sysFootHint");
+      if (hint) hint.innerHTML = `<span style="color:#86efac;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;">All systems confirmed · click to finish →</span>`;
+      step11LoaderDone = true;
+      animating = false;
+    }, 2000);
+  }
+
+  // ---------- Step 12: done summary ----------
+  function runStep12() {
+    animating = true;
+
+    const right = document.getElementById("rpRight");
+    if (right) {
+      right.innerHTML = `
+        <div class="rp-panel">
+          <div class="rp-head">
+            <div class="l">
+              <div style="width:32px;height:32px;border-radius:9px;display:flex;align-items:center;justify-content:center;background:rgba(34,197,94,0.18);color:#86efac;font-weight:800;">✓</div>
+              <div>
+                <div class="title" style="color:#86efac;">All Done</div>
+                <div class="sub">4 of 4 actions complete</div>
+              </div>
+            </div>
+            <span class="rp-pill" style="background:rgba(34,197,94,0.14);color:#86efac;border-color:rgba(34,197,94,0.35);">Resolved</span>
+          </div>
+
+          <div class="rp-body">
+            <div class="done-card">
+              <div class="head">
+                <div class="check">✓</div>
+                <div>
+                  <div class="title">Summary</div>
+                  <div class="sub">Priya is set for the 10:30 readout</div>
+                </div>
+              </div>
+              <div class="done-row"><span class="tick">✓</span><span><b>Case escalated</b> to L7 Facilities Manager · #00045231</span><span class="meta">Service Cloud</span></div>
+              <div class="done-row"><span class="tick">✓</span><span><b>Meeting moved</b> to Boardroom L6-A · 6 attendees notified</span><span class="meta">Google Calendar</span></div>
+              <div class="done-row"><span class="tick">✓</span><span><b>PTO submitted</b> for Friday 22 May · awaiting Daniel R approval</span><span class="meta">Workday</span></div>
+              <div class="done-row"><span class="tick">✓</span><span><b>EA notified</b> with the room change</span><span class="meta">Google Chat</span></div>
+            </div>
+
+            <div style="padding:14px 16px;border:1px solid rgba(124,58,237,0.30);border-radius:12px;background:rgba(124,58,237,0.06);font-size:12.5px;color:rgba(255,255,255,0.85);line-height:1.6;">
+              <div style="font-size:10px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:#c4b5fd;margin-bottom:6px;">What just happened</div>
+              One conversation replaced <b>three legacy forms</b> (facilities case, room rebooking, PTO request).
+              The escalation decision was reasoned over the <b>Google KB</b>, <b>Service Cloud case history</b>, and Priya's <b>Data 360 panoramic</b> — context the legacy widget never had.
+            </div>
+          </div>
+
+          <div class="rp-foot">
+            <span><span class="arch">Gemini Enterprise + Agentforce</span> · Reasoned over Google KB + SF Cases + Data 360</span>
+            <span style="color:#86efac;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;">Click to restart</span>
+          </div>
+        </div>`;
+    }
+
+    appendEntry({
+      kind: "ai",
+      html: `<p>Done. Case escalated, room moved, PTO filed, EA looped in. Anything else?</p>`
+    });
+
+    setTimeout(() => { animating = false; }, 350);
+  }
+
   function render() {
     if (stepIndex <= 1) {
       chatMounted = false;
@@ -1970,13 +2200,29 @@
       return;
     }
 
-    // loop back for now (more steps to come)
-    if (stepIndex >= 10) {
+    if (stepIndex === 10) {
+      stepIndex = 11;
+      renderProgress();
+      runStep11();
+      return;
+    }
+
+    if (stepIndex === 11) {
+      if (!step11LoaderDone) return; // click-gate while loader animates
+      stepIndex = 12;
+      renderProgress();
+      runStep12();
+      return;
+    }
+
+    // step 12 → loop back
+    if (stepIndex >= 12) {
       stepIndex = 0;
       typed = "";
       chatLog = [];
       chatMounted = false;
       a2aTools = null;
+      step11LoaderDone = false;
       const right = document.getElementById("rpRight");
       if (right) right.remove();
       const left = document.getElementById("chatLeft");
