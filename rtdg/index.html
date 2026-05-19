@@ -1,0 +1,2384 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Gemini Enterprise × Data360 RTUPG — Demo</title>
+<style>
+  :root {
+    --bg: #050505;
+    --panel: #0e0e0e;
+    --panel-2: #1e1e1e;
+    --line: rgba(255,255,255,0.10);
+    --line-soft: rgba(255,255,255,0.05);
+    --text: #ffffff;
+    --text-dim: rgba(255,255,255,0.40);
+    --text-muted: rgba(255,255,255,0.20);
+    --blue: #3b82f6;
+    --purple: #a855f7;
+    --pink: #ec4899;
+    --teal: #14b8a6;
+    --sf-blue: #00a1e0;
+    --sf-cloud: #0d9dda;
+    --ms-purple: #5059c9;
+    --d360: #7c3aed;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+    padding: 32px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: default;
+    user-select: none;
+    overflow: hidden;
+    position: relative;
+  }
+  /* big blurred glow behind the panel */
+  .glow {
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 1000px; height: 600px;
+    background: rgba(37,99,235,0.05);
+    transform: translate(-50%, -50%);
+    filter: blur(120px);
+    border-radius: 9999px;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .hint {
+    position: absolute;
+    top: 40px;
+    display: flex; align-items: center; gap: 8px;
+    padding: 8px 24px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--line);
+    border-radius: 9999px;
+    font-size: 10px; font-weight: 700;
+    letter-spacing: 0.3em; text-transform: uppercase;
+    color: var(--text-dim);
+    animation: pulse 2.4s ease-in-out infinite;
+  }
+  @keyframes pulse { 0%,100% { opacity: 0.55; } 50% { opacity: 1; } }
+  .hint svg { stroke: currentColor; }
+
+  .stage {
+    width: 100%;
+    max-width: 1280px;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 48px;
+    overflow: hidden;
+    box-shadow: 0 0 120px rgba(0,0,0,1);
+    position: relative;
+    z-index: 1;
+  }
+  .frame {
+    height: 700px;
+    background: var(--panel);
+    color: var(--text);
+    display: flex;
+    overflow: hidden;
+  }
+
+  /* progress bar */
+  .progress {
+    margin-top: 48px;
+    display: flex;
+    gap: 12px;
+    width: 100%;
+    max-width: 1280px;
+    padding: 0 32px;
+    z-index: 1;
+  }
+  .progress .seg {
+    height: 2px;
+    flex: 1;
+    border-radius: 9999px;
+    background: rgba(255,255,255,0.05);
+    transition: all 700ms ease;
+  }
+  .progress .seg.active {
+    background: var(--blue);
+    box-shadow: 0 0 15px var(--blue);
+  }
+
+  /* shared chrome — top-right google chip */
+  .chip-tr {
+    position: absolute;
+    top: 32px; right: 32px;
+    display: flex; align-items: center; gap: 8px;
+    padding: 8px 16px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--line);
+    border-radius: 9999px;
+    z-index: 2;
+  }
+  .chip-tr .div { width: 1px; height: 16px; background: rgba(255,255,255,0.20); margin: 0 4px; }
+  .avatar {
+    width: 24px; height: 24px;
+    border-radius: 9999px;
+    background: var(--blue);
+    color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px; font-weight: 700;
+    overflow: hidden;
+  }
+
+  /* ======= STEP 0–1: Home / prompt screen ======= */
+  .home {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 48px;
+    position: relative;
+  }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+
+  .greeting { margin-bottom: 48px; }
+  .greeting h1 {
+    font-size: 48px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.90);
+    letter-spacing: -0.02em;
+    margin-bottom: 16px;
+  }
+  .greeting h2 {
+    font-size: 60px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    background: linear-gradient(90deg, #60a5fa 0%, #c084fc 50%, #f472b6 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    padding-bottom: 8px;
+  }
+
+  .promptbox {
+    width: 100%;
+    max-width: 672px;
+    background: var(--panel-2);
+    border: 1px solid var(--line);
+    border-radius: 40px;
+    padding: 20px;
+    box-shadow: 0 0 80px rgba(0,0,0,0.5);
+    transition: all 200ms ease;
+  }
+  .promptbox-row {
+    display: flex; align-items: center; gap: 16px;
+    padding: 8px 16px;
+    text-align: left;
+  }
+  .promptbox .plus { color: var(--text-dim); }
+  .promptbox .input {
+    flex: 1;
+    font-size: 20px;
+    color: var(--text);
+    line-height: 1.4;
+    min-height: 28px;
+  }
+  .promptbox .ph { color: var(--text-muted); }
+  .promptbox .caret {
+    display: inline-block;
+    width: 6px; height: 28px;
+    background: var(--blue);
+    margin-left: 4px;
+    vertical-align: middle;
+    animation: blink 1s step-end infinite;
+  }
+  @keyframes blink { 50% { opacity: 0; } }
+  .promptbox .meta {
+    display: flex; align-items: center; gap: 16px;
+    color: var(--text-dim);
+  }
+  .promptbox .meta .lbl {
+    font-size: 10px; font-weight: 700;
+    letter-spacing: 0.18em; text-transform: uppercase;
+  }
+  .promptbox .meta .send {
+    color: var(--text-dim);
+    transition: color 200ms;
+  }
+  .promptbox .meta .send.armed { color: var(--blue); }
+
+  /* ======= STEPS 2+: chat layout ======= */
+  .chat {
+    display: flex;
+    width: 100%;
+    height: 100%;
+  }
+  .chat-left {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid var(--line);
+    background: #0a0a0a;
+    transition: width 700ms ease;
+    min-height: 0;
+    height: 100%;
+  }
+  .chat-left.shrunk { width: 55%; }
+  .chat-right {
+    flex: 1 1 0;
+    min-width: 0;
+    min-height: 0;
+    height: 100%;
+    background: #0e0e0e;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .chat-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 24px;
+    border-bottom: 1px solid var(--line);
+  }
+  .chat-header .left {
+    display: flex; align-items: center; gap: 10px;
+  }
+  .chat-header .left .label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.7);
+  }
+  .chat-header .right {
+    display: flex; align-items: center; gap: 8px;
+    color: var(--text-dim);
+  }
+  .chat-header .right .avatar { background: var(--blue); }
+
+  .chat-scroll {
+    flex: 1 1 0;
+    min-height: 0;
+    overflow-y: auto;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  /* user bubble (right-aligned, bold) */
+  .bubble-user {
+    align-self: flex-end;
+    max-width: 85%;
+    background: #242424;
+    border: 1px solid var(--line-soft);
+    border-radius: 20px;
+    border-top-right-radius: 0;
+    padding: 14px 18px;
+    color: rgba(255,255,255,0.85);
+    font-size: 14px;
+    font-weight: 700;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.35);
+  }
+
+  /* gemini bubble (left, with logo) */
+  .bubble-ai {
+    align-self: flex-start;
+    max-width: 90%;
+    background: #242424;
+    border: 1px solid var(--line-soft);
+    border-radius: 24px;
+    border-top-left-radius: 0;
+    padding: 18px 20px;
+    color: rgba(255,255,255,0.92);
+    font-size: 14px;
+    line-height: 1.55;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.35);
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+  .bubble-ai .body { flex: 1; }
+  .bubble-ai .body p + p { margin-top: 8px; }
+
+  /* tool-call status list */
+  .tools {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-self: flex-start;
+    max-width: 90%;
+    width: 100%;
+  }
+  .tool {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 14px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--line-soft);
+    border-radius: 14px;
+    font-size: 13px;
+    color: rgba(255,255,255,0.85);
+    animation: slideIn 350ms ease;
+  }
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: none; }
+  }
+  .tool .badge {
+    width: 26px; height: 26px;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .tool .badge.slack { background: rgba(74,21,75,0.18); color: #e9b8ec; }
+  .tool .badge.gmail { background: rgba(234,67,53,0.15); color: #f87171; }
+  .tool .badge.sf { background: rgba(0,161,224,0.15); color: #4ec5ee; }
+  .tool .badge.d360 { background: rgba(124,58,237,0.18); color: #b794f6; }
+  .tool .body { flex: 1; }
+  .tool .body .name {
+    font-size: 11px; font-weight: 700;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    color: rgba(255,255,255,0.45);
+    margin-bottom: 2px;
+  }
+  .tool .body .text { color: rgba(255,255,255,0.92); }
+  .tool .status {
+    display: flex; align-items: center; gap: 6px;
+    font-size: 10px; font-weight: 700;
+    letter-spacing: 0.14em; text-transform: uppercase;
+    color: rgba(255,255,255,0.45);
+  }
+  .tool.done .status .dot { background: #34d399; box-shadow: 0 0 8px #34d399; }
+  .tool.running .status .dot { background: #fbbf24; box-shadow: 0 0 8px #fbbf24; animation: pulse 1.4s ease-in-out infinite; }
+  .tool .status .dot { width: 6px; height: 6px; border-radius: 9999px; }
+
+  /* result tile — shared shell */
+  .tile {
+    align-self: flex-start;
+    width: 100%;
+    max-width: 90%;
+    background: linear-gradient(180deg, #141414 0%, #0e0e0e 100%);
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    overflow: hidden;
+    animation: slideIn 400ms ease;
+    box-shadow: 0 12px 36px rgba(0,0,0,0.4);
+  }
+  .tile-head {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--line-soft);
+    background: rgba(255,255,255,0.02);
+  }
+  .tile-head .l { display: flex; align-items: center; gap: 10px; }
+  .tile-head .l .name {
+    font-size: 12px; font-weight: 700;
+    color: rgba(255,255,255,0.85);
+  }
+  .tile-head .l .sub {
+    font-size: 10px;
+    color: rgba(255,255,255,0.45);
+    margin-top: 2px;
+  }
+  .tile-head .badge-pill {
+    font-size: 9px; font-weight: 700;
+    letter-spacing: 0.16em; text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 9999px;
+    background: rgba(0,161,224,0.14);
+    color: #4ec5ee;
+    border: 1px solid rgba(0,161,224,0.3);
+  }
+  .tile-body { padding: 4px 0; }
+  .tile-row {
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    gap: 16px;
+    align-items: center;
+    padding: 12px 16px;
+    border-top: 1px solid var(--line-soft);
+    font-size: 13px;
+  }
+  .tile-row:first-child { border-top: none; }
+  .tile-row .acct { color: rgba(255,255,255,0.92); font-weight: 600; }
+  .tile-row .meta { color: rgba(255,255,255,0.45); font-size: 12px; }
+  .tile-row .amt { color: #4ade80; font-weight: 700; font-size: 13px; }
+  .tile-foot {
+    padding: 10px 16px;
+    border-top: 1px solid var(--line-soft);
+    font-size: 10px;
+    color: rgba(255,255,255,0.40);
+    letter-spacing: 0.08em;
+  }
+
+  /* prompt-style footer at bottom of chat */
+  .chat-footer {
+    padding: 16px 24px;
+    border-top: 1px solid var(--line);
+  }
+  .chat-footer .promptbox {
+    max-width: none;
+    border-radius: 24px;
+    padding: 12px;
+  }
+  .chat-footer .promptbox .input { font-size: 14px; }
+
+  /* MCP filter chip — shown under the Data360 tool call */
+  .filter-chip {
+    align-self: flex-start;
+    max-width: 90%;
+    background: rgba(124,58,237,0.06);
+    border: 1px dashed rgba(124,58,237,0.4);
+    border-radius: 12px;
+    padding: 10px 12px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 11px;
+    color: #c4b5fd;
+    line-height: 1.6;
+    animation: slideIn 350ms ease;
+  }
+  .filter-chip .k { color: rgba(255,255,255,0.45); }
+  .filter-chip .v { color: #e9d5ff; }
+  .filter-chip .label {
+    display: inline-block;
+    font-family: -apple-system, sans-serif;
+    font-size: 9px; font-weight: 700;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    color: #b794f6;
+    margin-bottom: 6px;
+  }
+
+  /* hero MCP highlight ring (for Data360 tool call) */
+  .tool.hero {
+    border-color: rgba(124,58,237,0.45);
+    background: linear-gradient(180deg, rgba(124,58,237,0.10) 0%, rgba(124,58,237,0.04) 100%);
+    box-shadow: 0 0 24px rgba(124,58,237,0.18);
+  }
+
+  /* RTUPG profile cards */
+  .rtupg-wrap {
+    align-self: stretch;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    animation: slideIn 400ms ease;
+  }
+  .rtupg-banner {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #c4b5fd;
+  }
+  .rtupg-banner .pulse {
+    width: 8px; height: 8px;
+    border-radius: 9999px;
+    background: #34d399;
+    box-shadow: 0 0 0 0 rgba(52,211,153,0.7);
+    animation: livepulse 1.6s ease-out infinite;
+  }
+  @keyframes livepulse {
+    0%   { box-shadow: 0 0 0 0 rgba(52,211,153,0.7); }
+    100% { box-shadow: 0 0 0 12px rgba(52,211,153,0); }
+  }
+  .rtupg-cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  .rtupg-card {
+    background: linear-gradient(180deg, #161324 0%, #0e0e1a 100%);
+    border: 1px solid rgba(124,58,237,0.35);
+    border-radius: 18px;
+    padding: 14px;
+    box-shadow: 0 12px 36px rgba(124,58,237,0.10);
+    position: relative;
+    overflow: hidden;
+  }
+  .rtupg-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 90% -20%, rgba(124,58,237,0.18), transparent 60%);
+    pointer-events: none;
+  }
+  .rtupg-card .head {
+    display: flex; align-items: center; gap: 10px;
+    margin-bottom: 10px;
+    position: relative;
+  }
+  .rtupg-card .ava {
+    width: 36px; height: 36px;
+    border-radius: 9999px;
+    background: linear-gradient(135deg, #7c3aed 0%, #ec4899 100%);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700;
+    flex-shrink: 0;
+  }
+  .rtupg-card .who .name { font-size: 13px; font-weight: 700; color: #fff; }
+  .rtupg-card .who .role { font-size: 11px; color: rgba(255,255,255,0.55); margin-top: 1px; }
+  .rtupg-card .live {
+    margin-left: auto;
+    display: flex; align-items: center; gap: 6px;
+    font-size: 9px; font-weight: 700;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    color: #34d399;
+  }
+  .rtupg-card .live .dot {
+    width: 6px; height: 6px;
+    border-radius: 9999px;
+    background: #34d399;
+    box-shadow: 0 0 8px #34d399;
+    animation: livepulse 1.6s ease-out infinite;
+  }
+  .rtupg-card .now {
+    background: rgba(124,58,237,0.10);
+    border: 1px solid rgba(124,58,237,0.25);
+    border-radius: 10px;
+    padding: 8px 10px;
+    margin-bottom: 10px;
+    font-size: 12px;
+    color: rgba(255,255,255,0.85);
+  }
+  .rtupg-card .now b { color: #c4b5fd; font-weight: 600; }
+  .rtupg-card .now .when {
+    display: block;
+    font-size: 10px;
+    color: rgba(255,255,255,0.45);
+    margin-top: 2px;
+    letter-spacing: 0.06em;
+  }
+  .rtupg-card .signals {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  .rtupg-card .sig {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 8px;
+    padding: 6px 8px;
+  }
+  .rtupg-card .sig .k {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.45);
+  }
+  .rtupg-card .sig .v {
+    font-size: 12px;
+    color: rgba(255,255,255,0.92);
+    margin-top: 2px;
+  }
+
+  /* recommended actions list */
+  .actions {
+    align-self: stretch;
+    width: 100%;
+    background: linear-gradient(180deg, #141414 0%, #0e0e0e 100%);
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    overflow: hidden;
+    animation: slideIn 350ms ease;
+    display: block;
+  }
+  .actions-head {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--line-soft);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .actions-head .title {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.7);
+  }
+  .actions-head .meta {
+    font-size: 10px;
+    color: rgba(255,255,255,0.40);
+    letter-spacing: 0.08em;
+  }
+  .action-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    border-top: 1px solid var(--line-soft);
+  }
+  .action-row .num {
+    width: 26px; height: 26px;
+    border-radius: 9999px;
+    background: rgba(255,255,255,0.06);
+    color: rgba(255,255,255,0.85);
+    font-size: 11px;
+    font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .action-row .body { flex: 1; min-width: 0; }
+  .action-row .body .what { font-size: 13px; color: rgba(255,255,255,0.92); }
+  .action-row .body .who {
+    font-size: 11px;
+    color: rgba(255,255,255,0.45);
+    margin-top: 2px;
+  }
+  .action-row .runner {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 4px 10px;
+    border-radius: 9999px;
+    font-size: 9px; font-weight: 700;
+    letter-spacing: 0.16em; text-transform: uppercase;
+    border: 1px solid;
+    flex-shrink: 0;
+    white-space: nowrap;
+  }
+  .action-row .runner.gemini {
+    color: #93c5fd;
+    border-color: rgba(96,165,250,0.35);
+    background: rgba(96,165,250,0.08);
+  }
+  .action-row .runner.agentforce {
+    color: #4ec5ee;
+    border-color: rgba(0,161,224,0.35);
+    background: rgba(0,161,224,0.08);
+  }
+
+  /* primary CTA — "yes, do it" */
+  .cta-row {
+    align-self: flex-end;
+    display: flex;
+    gap: 8px;
+  }
+  .cta {
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 700;
+    padding: 10px 18px;
+    border-radius: 9999px;
+    border: 1px solid;
+    transition: transform 150ms ease, box-shadow 150ms ease;
+  }
+  .cta.primary {
+    background: linear-gradient(90deg, #3b82f6 0%, #6366f1 100%);
+    color: #fff;
+    border-color: rgba(99,102,241,0.6);
+    box-shadow: 0 8px 24px rgba(59,130,246,0.25);
+  }
+  .cta.secondary {
+    background: rgba(255,255,255,0.03);
+    color: rgba(255,255,255,0.7);
+    border-color: var(--line);
+  }
+  .cta:hover { transform: translateY(-1px); }
+
+  /* ===== Right-hand panel: Agentforce + AXL email preview ===== */
+  .axl-panel {
+    width: 100%;
+    flex: 1 1 0;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    color: rgba(255,255,255,0.92);
+  }
+  .axl-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--line);
+    background: rgba(255,255,255,0.02);
+  }
+  .axl-head .l { display: flex; align-items: center; gap: 10px; }
+  .axl-head .l .title {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.85);
+  }
+  .axl-head .l .sub {
+    font-size: 10px;
+    color: rgba(255,255,255,0.45);
+    margin-top: 2px;
+    letter-spacing: 0.06em;
+  }
+  .axl-head .right {
+    display: flex; align-items: center; gap: 8px;
+  }
+  .axl-pill {
+    font-size: 9px; font-weight: 700;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    padding: 5px 12px;
+    border-radius: 9999px;
+    background: rgba(0,161,224,0.14);
+    color: #4ec5ee;
+    border: 1px solid rgba(0,161,224,0.35);
+  }
+  .axl-pill.draft {
+    background: rgba(124,58,237,0.14);
+    color: #c4b5fd;
+    border-color: rgba(124,58,237,0.35);
+  }
+  .axl-body {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  /* email preview shell */
+  .email {
+    background: #ffffff;
+    color: #1f2937;
+    border-radius: 14px;
+    border: 1px solid rgba(255,255,255,0.10);
+    overflow: hidden;
+    box-shadow: 0 16px 40px rgba(0,0,0,0.35);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  }
+  .email .meta {
+    padding: 14px 18px;
+    border-bottom: 1px solid #e5e7eb;
+    background: #f9fafb;
+    font-size: 12px;
+  }
+  .email .meta .row {
+    display: flex;
+    gap: 8px;
+    line-height: 1.6;
+  }
+  .email .meta .k {
+    color: #6b7280;
+    width: 56px;
+    flex-shrink: 0;
+    font-weight: 600;
+  }
+  .email .meta .v { color: #111827; }
+  .email .subject {
+    padding: 14px 18px 8px;
+    font-size: 16px;
+    font-weight: 700;
+    color: #111827;
+  }
+
+  /* AXL "Experience Slot" wrapper — visible inside the email mock */
+  .slot {
+    margin: 10px 18px 14px;
+    border: 1px dashed rgba(124,58,237,0.55);
+    border-radius: 10px;
+    background: rgba(124,58,237,0.04);
+    padding: 8px;
+    position: relative;
+  }
+  .slot-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: #6d28d9;
+    background: #f5f3ff;
+    border: 1px solid rgba(124,58,237,0.35);
+    padding: 3px 8px;
+    border-radius: 6px;
+    margin-bottom: 8px;
+  }
+  .slot-tag .sparkle { font-size: 10px; }
+  .slot-content { padding: 6px 8px; color: #1f2937; }
+
+  /* hero block inside slot */
+  .slot-hero {
+    height: 110px;
+    border-radius: 8px;
+    background:
+      radial-gradient(circle at 20% 30%, rgba(255,255,255,0.45), transparent 50%),
+      radial-gradient(circle at 80% 70%, rgba(255,255,255,0.25), transparent 60%),
+      linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #ec4899 100%);
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 14px 18px;
+  }
+  .slot-hero .eyebrow {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    opacity: 0.85;
+  }
+  .slot-hero .h {
+    font-size: 18px;
+    font-weight: 700;
+    margin-top: 4px;
+    line-height: 1.2;
+  }
+  .slot-hero .sub {
+    font-size: 11px;
+    opacity: 0.85;
+    margin-top: 4px;
+  }
+
+  .slot-body { font-size: 13px; line-height: 1.55; color: #1f2937; }
+  .slot-body p + p { margin-top: 8px; }
+
+  .slot-cta {
+    display: inline-block;
+    padding: 10px 16px;
+    background: #1f2937;
+    color: #fff;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+  }
+
+  /* webinar card variant */
+  .webinar {
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    padding: 12px 14px;
+    background: #fff;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .webinar .date {
+    width: 56px;
+    flex-shrink: 0;
+    background: #ede9fe;
+    border-radius: 8px;
+    padding: 6px 0;
+    text-align: center;
+  }
+  .webinar .date .m {
+    font-size: 9px;
+    font-weight: 700;
+    color: #6d28d9;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+  .webinar .date .d {
+    font-size: 22px;
+    font-weight: 800;
+    color: #1f2937;
+    line-height: 1;
+  }
+  .webinar .info .t {
+    font-size: 13px;
+    font-weight: 700;
+    color: #111827;
+  }
+  .webinar .info .s {
+    font-size: 11px;
+    color: #6b7280;
+    margin-top: 2px;
+  }
+
+  /* footer note */
+  .axl-footer {
+    padding: 12px 20px;
+    border-top: 1px solid var(--line);
+    font-size: 10px;
+    color: rgba(255,255,255,0.45);
+    letter-spacing: 0.08em;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(255,255,255,0.02);
+  }
+  .axl-footer .arch {
+    color: #c4b5fd;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+  }
+
+  /* ===== AXL standalone personalization widget (step 10) ===== */
+  .axl-widget {
+    border: 2px solid rgba(124,58,237,0.55);
+    border-radius: 16px;
+    background:
+      radial-gradient(circle at 100% 0%, rgba(124,58,237,0.16), transparent 50%),
+      #ffffff;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(124,58,237,0.20);
+    position: relative;
+  }
+  .axl-widget .powered-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 14px;
+    background: linear-gradient(90deg, #6d28d9 0%, #ec4899 100%);
+    color: #fff;
+  }
+  .axl-widget .powered-bar .l {
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .axl-widget .powered-bar .r {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    background: rgba(255,255,255,0.18);
+    padding: 4px 10px;
+    border-radius: 9999px;
+  }
+  .axl-widget .content-card {
+    padding: 16px 18px 18px;
+  }
+  .axl-widget .content-card .hero {
+    height: 130px;
+    border-radius: 10px;
+    background:
+      radial-gradient(circle at 20% 30%, rgba(255,255,255,0.45), transparent 50%),
+      radial-gradient(circle at 80% 70%, rgba(255,255,255,0.25), transparent 60%),
+      linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #ec4899 100%);
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 16px 18px;
+    margin-bottom: 14px;
+  }
+  .axl-widget .content-card .hero .eyebrow {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    opacity: 0.85;
+  }
+  .axl-widget .content-card .hero .h {
+    font-size: 18px;
+    font-weight: 700;
+    margin-top: 4px;
+    line-height: 1.25;
+  }
+  .axl-widget .content-card .hero .sub {
+    font-size: 11px;
+    opacity: 0.85;
+    margin-top: 6px;
+  }
+  .axl-widget .content-card .copy {
+    font-size: 13px;
+    line-height: 1.55;
+    color: #1f2937;
+    margin-bottom: 14px;
+  }
+  .axl-widget .content-card .cta {
+    display: inline-block;
+    padding: 10px 16px;
+    background: #1f2937;
+    color: #fff;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 700;
+  }
+
+  /* destination card — where the widget will be inserted */
+  .destination {
+    margin-top: 14px;
+    border: 1px solid rgba(255,255,255,0.10);
+    border-radius: 12px;
+    background: rgba(255,255,255,0.02);
+    padding: 14px 16px;
+    color: rgba(255,255,255,0.85);
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .destination .arrow {
+    width: 32px; height: 32px;
+    border-radius: 9px;
+    background: rgba(124,58,237,0.15);
+    color: #c4b5fd;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    font-size: 16px;
+    font-weight: 700;
+  }
+  .destination .info { flex: 1; }
+  .destination .info .label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.45);
+  }
+  .destination .info .what {
+    font-size: 13px;
+    color: #fff;
+    margin-top: 3px;
+    font-weight: 600;
+  }
+  .destination .info .when {
+    font-size: 11px;
+    color: rgba(255,255,255,0.55);
+    margin-top: 2px;
+  }
+  .destination .where-pill {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 9999px;
+    border: 1px solid rgba(0,161,224,0.35);
+    background: rgba(0,161,224,0.08);
+    color: #4ec5ee;
+  }
+
+  /* approve button */
+  .approve-row {
+    margin-top: 18px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+  }
+  .btn {
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 700;
+    padding: 10px 20px;
+    border-radius: 9999px;
+    border: 1px solid;
+    transition: transform 150ms ease, box-shadow 150ms ease;
+  }
+  .btn.primary {
+    background: linear-gradient(90deg, #7c3aed 0%, #ec4899 100%);
+    color: #fff;
+    border-color: rgba(124,58,237,0.6);
+    box-shadow: 0 8px 24px rgba(124,58,237,0.30);
+  }
+  .btn.ghost {
+    background: rgba(255,255,255,0.04);
+    color: rgba(255,255,255,0.7);
+    border-color: var(--line);
+  }
+  .btn:hover { transform: translateY(-1px); }
+
+  /* ===== Gmail-style draft compose (step 11) ===== */
+  .gmail-draft {
+    background: #ffffff;
+    color: #202124;
+    border-radius: 12px 12px 0 0;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.45);
+    font-family: "Google Sans", Roboto, -apple-system, sans-serif;
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 0;
+    min-height: 0;
+  }
+  .gmail-titlebar {
+    background: #404040;
+    color: #fff;
+    padding: 8px 14px;
+    font-size: 13px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .gmail-draft .gmail-titlebar .actions {
+    display: flex !important;
+    width: auto !important;
+    gap: 14px;
+    background: none !important;
+    border: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    color: rgba(255,255,255,0.85);
+    font-size: 14px;
+    font-weight: 400;
+    align-self: auto !important;
+    border-radius: 0 !important;
+    overflow: visible !important;
+    animation: none !important;
+  }
+  .gmail-draft .gmail-titlebar .actions span { cursor: pointer; }
+  .gmail-fields {
+    padding: 4px 16px 0;
+    font-size: 13px;
+    color: #5f6368;
+  }
+  .gmail-field {
+    display: flex;
+    border-bottom: 1px solid #e8eaed;
+    padding: 8px 0;
+    align-items: center;
+    gap: 10px;
+  }
+  .gmail-field .lbl { color: #5f6368; width: 50px; flex-shrink: 0; }
+  .gmail-field .val { color: #202124; }
+  .gmail-field .chip {
+    background: #e8eaed;
+    color: #202124;
+    border-radius: 9999px;
+    padding: 4px 10px 4px 4px;
+    font-size: 12px;
+    display: inline-flex; align-items: center; gap: 6px;
+  }
+  .gmail-field .chip .ava {
+    width: 22px; height: 22px;
+    border-radius: 9999px;
+    background: linear-gradient(135deg, #4285F4, #EA4335);
+    color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px;
+    font-weight: 700;
+  }
+  .gmail-field .subject-input {
+    color: #202124;
+    font-size: 13px;
+    flex: 1;
+  }
+  .gmail-body {
+    flex: 1 1 0;
+    min-height: 0;
+    overflow-y: auto;
+    padding: 16px 18px;
+    font-size: 13.5px;
+    line-height: 1.6;
+    color: #202124;
+  }
+  .gmail-body p + p { margin-top: 12px; }
+  .gmail-body .signature {
+    margin-top: 18px;
+    color: #5f6368;
+    font-size: 12.5px;
+  }
+  .gmail-event {
+    margin: 14px 0;
+    border: 1px solid #dadce0;
+    border-radius: 10px;
+    padding: 12px 14px;
+    display: flex; align-items: center; gap: 14px;
+    background: #f8f9fa;
+  }
+  .gmail-event .date {
+    width: 56px;
+    flex-shrink: 0;
+    background: #fff;
+    border: 1px solid #dadce0;
+    border-radius: 6px;
+    padding: 4px 0;
+    text-align: center;
+  }
+  .gmail-event .date .m {
+    font-size: 9px; font-weight: 700;
+    color: #d93025;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+  .gmail-event .date .d {
+    font-size: 22px; font-weight: 700; color: #202124; line-height: 1;
+  }
+  .gmail-event .info .t { font-size: 13px; font-weight: 600; color: #202124; }
+  .gmail-event .info .s { font-size: 12px; color: #5f6368; margin-top: 2px; }
+
+  .gmail-toolbar {
+    border-top: 1px solid #e8eaed;
+    padding: 10px 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #fff;
+    flex-shrink: 0;
+  }
+  .gmail-send {
+    background: #1a73e8;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 9px 22px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 1px 2px rgba(60,64,67,0.3);
+  }
+  .gmail-send:hover { background: #1765cc; }
+  .gmail-trash {
+    margin-left: auto;
+    color: #5f6368;
+    font-size: 18px;
+    cursor: pointer;
+  }
+
+  /* ===== Step 12 — dispatched / done summary ===== */
+  .done-card {
+    align-self: stretch;
+    width: 100%;
+    background: linear-gradient(180deg, rgba(34,197,94,0.10) 0%, rgba(20,20,20,0.4) 100%);
+    border: 1px solid rgba(34,197,94,0.35);
+    border-radius: 18px;
+    padding: 18px 20px;
+  }
+  .done-card .head {
+    display: flex; align-items: center; gap: 10px;
+    margin-bottom: 14px;
+  }
+  .done-card .head .check {
+    width: 32px; height: 32px;
+    border-radius: 9999px;
+    background: #22c55e;
+    color: #052e16;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 800;
+  }
+  .done-card .head .title {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #86efac;
+  }
+  .done-card .head .sub {
+    font-size: 13px;
+    color: #fff;
+    margin-top: 2px;
+    font-weight: 600;
+  }
+  .done-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 0;
+    border-top: 1px solid rgba(255,255,255,0.06);
+    font-size: 13px;
+    color: rgba(255,255,255,0.85);
+  }
+  .done-row:first-of-type { border-top: none; }
+  .done-row .tick {
+    width: 18px; height: 18px;
+    border-radius: 9999px;
+    background: rgba(34,197,94,0.18);
+    color: #22c55e;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px;
+    flex-shrink: 0;
+  }
+  .done-row .meta { color: rgba(255,255,255,0.45); font-size: 11px; margin-left: auto; }
+
+  /* mini click-activity bar chart (last 10 minutes) */
+  .clicks {
+    display: flex;
+    align-items: flex-end;
+    gap: 3px;
+    height: 22px;
+    margin-top: 8px;
+  }
+  .clicks .bar {
+    flex: 1;
+    background: linear-gradient(180deg, #a855f7 0%, #7c3aed 100%);
+    border-radius: 2px;
+    min-height: 2px;
+    opacity: 0.85;
+  }
+  .clicks .bar.zero { background: rgba(255,255,255,0.08); }
+  .clicks-cap {
+    display: flex;
+    justify-content: space-between;
+    font-size: 9px;
+    color: rgba(255,255,255,0.40);
+    letter-spacing: 0.08em;
+    margin-top: 4px;
+  }
+</style>
+</head>
+<body>
+
+<div class="glow"></div>
+
+<div class="hint">
+  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <path d="M4.037 4.688a.495.495 0 0 1 .651-.651l16 6.5a.5.5 0 0 1-.063.947l-6.124 1.58a2 2 0 0 0-1.438 1.435l-1.579 6.126a.5.5 0 0 1-.947.063z"/>
+  </svg>
+  Click anywhere to advance
+</div>
+
+<div class="stage">
+  <div class="frame" id="frame">
+    <!-- step content rendered here -->
+  </div>
+</div>
+
+<div class="progress" id="progress"></div>
+
+<!-- ============================================================
+     SVG ICONS (inline, reusable via <use> or via JS innerHTML)
+     ============================================================ -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <linearGradient id="gemini-grad" x1="0" y1="0" x2="100" y2="100" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#1C7DFF"/>
+      <stop offset="0.5" stop-color="#1C69FF"/>
+      <stop offset="1" stop-color="#F0428A"/>
+    </linearGradient>
+  </defs>
+</svg>
+
+<script>
+  // ---------- Icon helpers (return string of SVG markup) ----------
+  const iconGoogleG = (size = 24) => `
+    <svg viewBox="0 0 24 24" width="${size}" height="${size}" aria-hidden="true">
+      <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+      <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+      <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/>
+      <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.66l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+    </svg>`;
+
+  const iconGemini = (size = 14) => `
+    <svg viewBox="0 0 100 100" width="${size}" height="${size}" aria-hidden="true">
+      <path d="M50 0C50 27.6142 72.3858 50 100 50C72.3858 50 50 72.3858 50 100C50 72.3858 27.6142 50 0 50C27.6142 50 50 27.6142 50 0Z" fill="url(#gemini-grad)"/>
+    </svg>`;
+
+  const iconPlus = (size = 22) => `
+    <svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M5 12h14"/><path d="M12 5v14"/>
+    </svg>`;
+
+  const iconSend = (size = 24) => `
+    <svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z"/>
+      <path d="m21.854 2.147-10.94 10.939"/>
+    </svg>`;
+
+  // Slack glyph (simplified hash/octothorpe-like mark)
+  const iconSlack = (size = 16) => `
+    <svg viewBox="0 0 24 24" width="${size}" height="${size}" fill="currentColor" aria-hidden="true">
+      <path d="M6 13.5a1.5 1.5 0 1 1 0-3h1.5v3H6zm2.5 0a1.5 1.5 0 0 1 3 0v4a1.5 1.5 0 1 1-3 0v-4zM10 6a1.5 1.5 0 1 1 3 0v1.5h-3V6zm0 2.5a1.5 1.5 0 0 1 0 3H6a1.5 1.5 0 1 1 0-3h4zm0 5h4a1.5 1.5 0 1 1 0 3H10v-3zm5.5-1.5a1.5 1.5 0 1 1 0 3H14v-3h1.5zM14 10a1.5 1.5 0 0 1-1.5-1.5v-4a1.5 1.5 0 1 1 3 0v4A1.5 1.5 0 0 1 14 10zm-1.5 8a1.5 1.5 0 1 1 3 0v1.5h-1.5A1.5 1.5 0 0 1 12.5 18z"/>
+    </svg>`;
+
+  // Gmail glyph (simplified envelope-with-M)
+  const iconGmail = (size = 16) => `
+    <svg viewBox="0 0 24 24" width="${size}" height="${size}" fill="currentColor" aria-hidden="true">
+      <path d="M3 6.2A2.2 2.2 0 0 1 5.2 4h13.6A2.2 2.2 0 0 1 21 6.2V18a2 2 0 0 1-2 2h-2v-9.5l-5 3.6L7 10.5V20H5a2 2 0 0 1-2-2V6.2zM5.2 6 12 10.9 18.8 6H5.2z"/>
+    </svg>`;
+
+  // Salesforce cloud glyph (simplified)
+  const iconSalesforce = (size = 16) => `
+    <svg viewBox="0 0 24 24" width="${size}" height="${size}" fill="currentColor" aria-hidden="true">
+      <path d="M14 6.5a4.5 4.5 0 0 0-8.3-2.4A3.5 3.5 0 0 0 1 7.5a3.5 3.5 0 0 0 1.5 2.9A3 3 0 0 0 5 16h13.5A4.5 4.5 0 0 0 23 11.5a4.5 4.5 0 0 0-4.6-4.5A4.5 4.5 0 0 0 14 6.5z"/>
+    </svg>`;
+
+  // Data360 glyph — interlocking ring/graph mark
+  const iconD360 = (size = 16) => `
+    <svg viewBox="0 0 24 24" width="${size}" height="${size}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <circle cx="12" cy="12" r="9"/>
+      <circle cx="6" cy="12" r="2.4" fill="currentColor"/>
+      <circle cx="18" cy="12" r="2.4" fill="currentColor"/>
+      <circle cx="12" cy="6" r="2.4" fill="currentColor"/>
+      <circle cx="12" cy="18" r="2.4" fill="currentColor"/>
+      <path d="M6 12h12M12 6v12"/>
+    </svg>`;
+
+  // ---------- State ----------
+  const TOTAL_STEPS = 13;
+  const PROMPT_TEXT = "What are my top prospects doing that I should be taking action on?";
+  let stepIndex = 0;
+  let typed = "";          // current typed text on home screen
+  let typingTimer = null;  // interval id
+  let animating = false;   // block clicks while a sequence is running
+  let chatMounted = false; // chat shell exists in DOM
+  let entrySeq = 0;        // unique id generator for chat entries
+  // chat state for steps 2+
+  // each entry = { id, kind: 'user'|'ai'|'tools'|'tile', ...payload }
+  let chatLog = [];
+  // tool-call list state used while building a tools entry
+  // structure: { id, items: [{ system, name, text, status: 'running'|'done' }] }
+
+  // ---------- Render ----------
+  const frame = document.getElementById("frame");
+  const progress = document.getElementById("progress");
+
+  // build progress dots once
+  for (let i = 0; i < TOTAL_STEPS; i++) {
+    const d = document.createElement("div");
+    d.className = "seg";
+    progress.appendChild(d);
+  }
+  function renderProgress() {
+    [...progress.children].forEach((el, i) => {
+      el.classList.toggle("active", i <= stepIndex);
+    });
+  }
+
+  function renderHome() {
+    // Step 0: empty placeholder + caret
+    // Step 1: typed prompt + "Thinking" send state
+    const isTyping = stepIndex === 1 || (stepIndex === 0 && typed.length > 0);
+    const showSendArmed = stepIndex === 1;
+    frame.innerHTML = `
+      <div class="home">
+        <div class="chip-tr">
+          ${iconGoogleG(24)}
+          <div class="div"></div>
+          <div class="avatar">CC</div>
+        </div>
+
+        <div class="greeting">
+          <h1>Hi Chris</h1>
+          <h2>What should I focus on today?</h2>
+        </div>
+
+        <div class="promptbox">
+          <div class="promptbox-row">
+            <span class="plus">${iconPlus(22)}</span>
+            <div class="input">
+              ${
+                typed.length === 0
+                  ? `<span class="ph">Enter a prompt for Gemini</span>`
+                  : `<span>${escapeHtml(typed)}</span>`
+              }<span class="caret"></span>
+            </div>
+            <div class="meta">
+              <span class="lbl">${showSendArmed ? "Thinking" : "Thinking"}</span>
+              <span class="send ${showSendArmed ? "armed" : ""}">${iconSend(24)}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  function escapeHtml(s) {
+    return s.replace(/[&<>"']/g, c => ({
+      "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+    }[c]));
+  }
+
+  function mountChat() {
+    if (chatMounted) return;
+    frame.innerHTML = `
+      <div class="chat">
+        <div class="chat-left" id="chatLeft">
+          <div class="chat-header">
+            <div class="left">
+              ${iconGemini(20)}
+              <span class="label">Gemini Enterprise</span>
+            </div>
+            <div class="right">
+              ${iconGoogleG(18)}
+              <div class="avatar">CC</div>
+            </div>
+          </div>
+          <div class="chat-scroll" id="chatScroll"></div>
+          <div class="chat-footer">
+            <div class="promptbox">
+              <div class="promptbox-row">
+                <span class="plus">${iconPlus(18)}</span>
+                <div class="input">
+                  <span class="ph">Enter a prompt...</span>
+                </div>
+                <div class="meta">
+                  <span class="send">${iconSend(20)}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>`;
+    chatMounted = true;
+    // re-hydrate any existing log (e.g., after looping back)
+    chatLog.forEach(e => mountEntry(e));
+    scrollChatToEnd();
+  }
+
+  function scrollChatToEnd() {
+    const scroll = document.getElementById("chatScroll");
+    if (scroll) scroll.scrollTop = scroll.scrollHeight;
+  }
+
+  // Append a new entry to the live DOM and to chatLog.
+  function appendEntry(entry) {
+    entry.id = entry.id || `e${++entrySeq}`;
+    chatLog.push(entry);
+    mountEntry(entry);
+    scrollChatToEnd();
+    return entry;
+  }
+
+  function mountEntry(e) {
+    const scroll = document.getElementById("chatScroll");
+    if (!scroll) return;
+    const el = document.createElement("div");
+    el.id = e.id;
+    el.innerHTML = entryHtml(e);
+    // unwrap the single child so we keep our class structure flat
+    const child = el.firstElementChild;
+    if (child) {
+      child.id = e.id;
+      scroll.appendChild(child);
+    } else {
+      scroll.appendChild(el);
+    }
+  }
+
+  function entryHtml(e) {
+    if (e.kind === "user") {
+      return `<div class="bubble-user">${escapeHtml(e.text)}</div>`;
+    }
+    if (e.kind === "ai") {
+      return `
+        <div class="bubble-ai">
+          <span style="margin-top:2px">${iconGemini(18)}</span>
+          <div class="body">${e.html}</div>
+        </div>`;
+    }
+    if (e.kind === "tools") {
+      const inner = e.items.map(t => toolHtml(t)).join("");
+      return `<div class="tools" data-id="${e.id}">${inner}</div>`;
+    }
+    if (e.kind === "tile") {
+      return e.html;
+    }
+    return "<div></div>";
+  }
+
+  function toolHtml(t) {
+    const sysIcon = ({
+      slack: { svg: iconSlack(14), cls: "slack" },
+      gmail: { svg: iconGmail(14), cls: "gmail" },
+      salesforce: { svg: iconSalesforce(14), cls: "sf" },
+      data360: { svg: iconD360(14), cls: "d360" }
+    })[t.system] || { svg: "", cls: "" };
+    const statusLabel = t.status === "done" ? "Done" : "Running";
+    return `
+      <div class="tool ${t.status}" data-tool-id="${t.id}">
+        <div class="badge ${sysIcon.cls}">${sysIcon.svg}</div>
+        <div class="body">
+          <div class="name">${escapeHtml(t.name)}</div>
+          <div class="text">${escapeHtml(t.text)}</div>
+        </div>
+        <div class="status">
+          <span class="dot"></span>
+          <span class="lbl">${statusLabel}</span>
+        </div>
+      </div>`;
+  }
+
+  // Mutate just one tool item in place (no full re-render).
+  function updateToolStatus(toolsEntry, toolId, newStatus) {
+    const item = toolsEntry.items.find(t => t.id === toolId);
+    if (item) item.status = newStatus;
+    const el = document.querySelector(`[data-tool-id="${toolId}"]`);
+    if (el) {
+      el.classList.remove("running", "done");
+      el.classList.add(newStatus);
+      const lbl = el.querySelector(".status .lbl");
+      if (lbl) lbl.textContent = newStatus === "done" ? "Done" : "Running";
+    }
+  }
+
+  // Append a new tool item into an existing tools entry, in place.
+  function appendTool(toolsEntry, tool) {
+    tool.id = tool.id || `t${++entrySeq}`;
+    toolsEntry.items.push(tool);
+    const container = document.querySelector(`.tools[data-id="${toolsEntry.id}"]`);
+    if (container) {
+      const wrap = document.createElement("div");
+      wrap.innerHTML = toolHtml(tool);
+      container.appendChild(wrap.firstElementChild);
+      scrollChatToEnd();
+    }
+  }
+
+  // ---------- Animated step sequences ----------
+  // Step 2: fire Slack + Gmail + Salesforce MCP tool calls in sequence,
+  // ending with the Salesforce report tile. No AI response yet.
+  function runStep2() {
+    animating = true;
+    appendEntry({ kind: "user", text: PROMPT_TEXT });
+
+    const tools = appendEntry({ kind: "tools", items: [] });
+    const t1 = { id: `t${++entrySeq}`, system: "slack", name: "Slack MCP", text: "Searching Slack for prospect mentions…", status: "running" };
+    appendTool(tools, t1);
+
+    setTimeout(() => {
+      updateToolStatus(tools, t1.id, "done");
+      const t2 = { id: `t${++entrySeq}`, system: "gmail", name: "Gmail MCP", text: "Reading Gmail threads from this week…", status: "running" };
+      appendTool(tools, t2);
+
+      setTimeout(() => {
+        updateToolStatus(tools, t2.id, "done");
+        const t3 = { id: `t${++entrySeq}`, system: "salesforce", name: "Salesforce MCP", text: "Running Report → Top Open Opportunities (this quarter)…", status: "running" };
+        appendTool(tools, t3);
+
+        setTimeout(() => {
+          updateToolStatus(tools, t3.id, "done");
+          appendEntry({
+            kind: "tile",
+            html: `
+              <div class="tile">
+                <div class="tile-head">
+                  <div class="l">
+                    <div class="badge sf" style="width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;background:rgba(0,161,224,0.15);color:#4ec5ee">${iconSalesforce(16)}</div>
+                    <div>
+                      <div class="name">Report: Top Open Opportunities</div>
+                      <div class="sub">Salesforce · Standard SObject report · This quarter</div>
+                    </div>
+                  </div>
+                  <div class="badge-pill">Salesforce</div>
+                </div>
+                <div class="tile-body">
+                  <div class="tile-row">
+                    <div>
+                      <div class="acct">Acme Data Co</div>
+                      <div class="meta">Stage: Negotiation · Owner: P. Singh</div>
+                    </div>
+                    <div class="meta">Close 30 Jun</div>
+                    <div class="amt">$420K</div>
+                  </div>
+                  <div class="tile-row">
+                    <div>
+                      <div class="acct">Northwind Analytics</div>
+                      <div class="meta">Stage: Proposal · Owner: J. Reyes</div>
+                    </div>
+                    <div class="meta">Close 15 Jul</div>
+                    <div class="amt">$285K</div>
+                  </div>
+                  <div class="tile-row">
+                    <div>
+                      <div class="acct">Globex Logistics</div>
+                      <div class="meta">Stage: Discovery · Owner: M. O'Brien</div>
+                    </div>
+                    <div class="meta">Close 28 Aug</div>
+                    <div class="amt">$190K</div>
+                  </div>
+                </div>
+                <div class="tile-foot">3 of 12 results · sourced from Account, Opportunity</div>
+              </div>`
+          });
+          animating = false;
+        }, 1600);
+      }, 1500);
+    }, 1500);
+  }
+
+  // Step 3: combined AI response that synthesizes Slack + Gmail + Salesforce signals
+  // and pivots to the Data 360 RTUPG hero call.
+  function runStep3() {
+    animating = true;
+    appendEntry({
+      kind: "ai",
+      html: `<p><b>Acme Data Co</b> came up in <b>#deals-emea</b> on Monday — your AE flagged budget just freed up.</p>
+             <p><b>Northwind</b> sent a pricing question two weeks ago and then went quiet.</p>
+             <p>Both show up as your top open opportunities in the Salesforce report. Let me see what their decision-makers are doing right now…</p>`
+    });
+    setTimeout(() => { animating = false; }, 350);
+  }
+
+  // ---------- Step 4: hero MCP call to Data360 RTUPG ----------
+  function runStep4() {
+    animating = true;
+    const tools = appendEntry({ kind: "tools", items: [] });
+    const t1 = {
+      id: `t${++entrySeq}`,
+      system: "data360",
+      name: "Data360 MCP · Real-Time Unified Profile Graph",
+      text: "Querying live profile graph — identity + behavior + engagement…",
+      status: "running"
+    };
+    appendTool(tools, t1);
+    // mark hero styling
+    setTimeout(() => {
+      const el = document.querySelector(`[data-tool-id="${t1.id}"]`);
+      if (el) el.classList.add("hero");
+    }, 50);
+
+    // filter chip — appears just under the tool call to make the targeting obvious
+    appendEntry({
+      kind: "tile",
+      html: `
+        <div class="filter-chip">
+          <div class="label">Salesforce Data 360 MCP · 1 call</div>
+          <div><span class="k">profile.company</span> <span class="v">IN ("Acme Data Co", "Northwind Analytics")</span></div>
+          <div><span class="k">profile.persona</span> <span class="v">IN ("decision_maker", "economic_buyer")</span></div>
+          <div><span class="k">web.session.active</span> <span class="v">= true</span> <span class="k">AND last_event &lt;</span> <span class="v">10m</span></div>
+          <div><span class="k">return</span> <span class="v">identity, purchase_history, email_engagement, web_behavior</span></div>
+        </div>`
+    });
+
+    setTimeout(() => {
+      updateToolStatus(tools, t1.id, "done");
+      animating = false;
+    }, 2000);
+  }
+
+  // mini-bar chart helper for "clicks in last 10 min"
+  function clicksBars(values, max) {
+    const m = max || Math.max(...values, 1);
+    return values.map(v => {
+      const h = v === 0 ? 6 : Math.max(8, Math.round((v / m) * 100));
+      const cls = v === 0 ? "bar zero" : "bar";
+      return `<div class="${cls}" style="height:${h}%"></div>`;
+    }).join("");
+  }
+
+  // ---------- Step 5: RTUPG result — two live profile cards ----------
+  function runStep5() {
+    animating = true;
+
+    // Maya: most clicks in last 1–2 min
+    const mayaClicks = [0, 0, 0, 0, 1, 0, 2, 1, 3, 4];
+    // Devon: spread across last few min
+    const devonClicks = [0, 1, 0, 2, 1, 0, 1, 2, 1, 1];
+
+    appendEntry({
+      kind: "ai",
+      html: `<p>Two decision-makers from those accounts are <b>active on the site right now</b>.</p>`
+    });
+
+    appendEntry({
+      kind: "tile",
+      html: `
+        <div class="rtupg-wrap">
+          <div class="rtupg-banner">
+            <span class="pulse"></span>
+            <span style="color:#c4b5fd">Real-Time Unified Profile Graph · Data360</span>
+          </div>
+          <div class="rtupg-cards">
+            <!-- Maya -->
+            <div class="rtupg-card">
+              <div class="head">
+                <div class="ava">MC</div>
+                <div class="who">
+                  <div class="name">Maya Chen</div>
+                  <div class="role">VP Data · Acme Data Co</div>
+                </div>
+                <div class="live"><span class="dot"></span><span>Live</span></div>
+              </div>
+              <div class="now">
+                Viewing <b>/pricing/enterprise</b>
+                <span class="when">47 seconds ago · 4 pageviews in last 6 min</span>
+              </div>
+              <div class="signals">
+                <div class="sig"><div class="k">Email</div><div class="v">Opened last 3 nurtures</div></div>
+                <div class="sig"><div class="k">Tier</div><div class="v">Existing customer · Pro</div></div>
+                <div class="sig"><div class="k">Last purchase</div><div class="v">8 mo ago · $42K ARR</div></div>
+                <div class="sig"><div class="k">Persona</div><div class="v">Decision maker</div></div>
+              </div>
+              <div class="clicks">${clicksBars(mayaClicks)}</div>
+              <div class="clicks-cap"><span>10 min ago</span><span>Now</span></div>
+            </div>
+
+            <!-- Devon -->
+            <div class="rtupg-card">
+              <div class="head">
+                <div class="ava">DP</div>
+                <div class="who">
+                  <div class="name">Devon Park</div>
+                  <div class="role">Director of Analytics · Northwind</div>
+                </div>
+                <div class="live"><span class="dot"></span><span>Live</span></div>
+              </div>
+              <div class="now">
+                Viewing <b>/products/streaming-ingest</b>
+                <span class="when">2 minutes ago · returning visitor (3rd session this week)</span>
+              </div>
+              <div class="signals">
+                <div class="sig"><div class="k">Email</div><div class="v">Re-opened pricing thread today</div></div>
+                <div class="sig"><div class="k">Trial</div><div class="v">Abandoned signup · 9 days ago</div></div>
+                <div class="sig"><div class="k">Last purchase</div><div class="v">— (prospect)</div></div>
+                <div class="sig"><div class="k">Persona</div><div class="v">Economic buyer</div></div>
+              </div>
+              <div class="clicks">${clicksBars(devonClicks)}</div>
+              <div class="clicks-cap"><span>10 min ago</span><span>Now</span></div>
+            </div>
+          </div>
+        </div>`
+    });
+
+    setTimeout(() => { animating = false; }, 400);
+  }
+
+  // ---------- Step 6: four recommended actions ----------
+  function runStep6() {
+    animating = true;
+    appendEntry({
+      kind: "ai",
+      html: `<p>Here are four plays I'd recommend — none of them mention the live browsing, so the trigger stays internal:</p>`
+    });
+
+    const mkRow = (n, what, who, runner) => `
+      <div style="display:flex;align-items:center;gap:12px;padding:14px 16px;border-top:1px solid rgba(255,255,255,0.05);">
+        <div style="width:28px;height:28px;border-radius:9999px;background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.9);font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;">${n}</div>
+        <div style="flex:1;min-width:0;">
+          <div style="font-size:13px;color:rgba(255,255,255,0.92);line-height:1.4;">${what}</div>
+          <div style="font-size:11px;color:rgba(255,255,255,0.45);margin-top:3px;line-height:1.4;">${who}</div>
+        </div>
+        <span style="${runner === 'gemini'
+          ? 'color:#93c5fd;border:1px solid rgba(96,165,250,0.35);background:rgba(96,165,250,0.08);'
+          : 'color:#4ec5ee;border:1px solid rgba(0,161,224,0.35);background:rgba(0,161,224,0.08);'}padding:4px 10px;border-radius:9999px;font-size:9px;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;flex-shrink:0;white-space:nowrap;">${runner === 'gemini' ? 'Gemini' : 'Agentforce'}</span>
+      </div>`;
+
+    appendEntry({
+      kind: "tile",
+      html: `
+        <div style="align-self:stretch;width:100%;background:linear-gradient(180deg,#141414 0%,#0e0e0e 100%);border:1px solid rgba(255,255,255,0.10);border-radius:18px;">
+          <div style="padding:12px 16px;border-bottom:1px solid rgba(255,255,255,0.05);display:flex;align-items:center;justify-content:space-between;">
+            <span style="font-size:11px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:rgba(255,255,255,0.7);">Recommended Actions</span>
+            <span style="font-size:10px;color:rgba(255,255,255,0.40);letter-spacing:0.08em;">4 plays · approve to run</span>
+          </div>
+          ${mkRow(1, 'Reply on the existing pricing thread to <b>Devon Park</b>', 'Gmail · resurface the conversation he started 2 weeks ago', 'gemini')}
+          ${mkRow(2, 'Notify <b>P. Singh</b> (AE on Acme) in Slack', "Hand off Maya's context with a suggested next step", 'gemini')}
+          ${mkRow(3, "Personalize <b>Maya's</b> next nurture email", 'Swap in a streaming-ingest case study based on her signals', 'agentforce')}
+          ${mkRow(4, 'Invite <b>Devon</b> to the "Real-Time Data at Scale" roundtable', 'Next Thursday · sent through Marketing Cloud', 'agentforce')}
+        </div>`
+    });
+
+    appendEntry({
+      kind: "ai",
+      html: `<p>Want me to run all four?</p>`
+    });
+
+    setTimeout(() => { animating = false; }, 350);
+  }
+
+  // ---------- Step 7: user confirms ----------
+  function runStep7() {
+    animating = true;
+    appendEntry({ kind: "user", text: "Yes, do it." });
+    setTimeout(() => { animating = false; }, 350);
+  }
+
+  // ---------- Step 8: Gemini runs the two direct actions ----------
+  function runStep8() {
+    animating = true;
+    const tools = appendEntry({ kind: "tools", items: [] });
+
+    const t1 = { id: `t${++entrySeq}`, system: "gmail", name: "Gmail MCP", text: "Drafting reply on Devon's pricing thread…", status: "running" };
+    appendTool(tools, t1);
+
+    setTimeout(() => {
+      updateToolStatus(tools, t1.id, "done");
+      const t2 = { id: `t${++entrySeq}`, system: "slack", name: "Slack MCP", text: "Posting context to #ae-acme with @P.Singh…", status: "running" };
+      appendTool(tools, t2);
+
+      setTimeout(() => {
+        updateToolStatus(tools, t2.id, "done");
+        appendEntry({
+          kind: "ai",
+          html: `<p>Reply drafted in Gmail and Slack note posted. Now handing off the email personalization and webinar invite to Agentforce — those need orchestration across Marketing Cloud and Salesforce.</p>`
+        });
+        animating = false;
+      }, 1600);
+    }, 1600);
+  }
+
+  // ---------- Step 9: A2A delegation to Agentforce ----------
+  let a2aTools = null; // remember so step 10 can mark them done
+  let step11OrchestrationDone = false; // gate the gmail draft reveal in step 11
+  function runStep9() {
+    animating = true;
+    const tools = appendEntry({ kind: "tools", items: [] });
+    a2aTools = tools;
+
+    const t1 = {
+      id: `t${++entrySeq}`,
+      system: "salesforce",
+      name: "A2A · Agentforce Engagement Agent",
+      text: "Delegating to Agentforce Engagement Agent…",
+      status: "running"
+    };
+    appendTool(tools, t1);
+
+    setTimeout(() => {
+      updateToolStatus(tools, t1.id, "done");
+      const t2 = {
+        id: `t${++entrySeq}`,
+        system: "salesforce",
+        name: "A2A · Agentforce Engagement Agent",
+        text: "Awaiting A2A Result…",
+        status: "running"
+      };
+      appendTool(tools, t2);
+      tools._waitingId = t2.id;
+      // Leave the second one spinning — step 10 will resolve it.
+      animating = false;
+    }, 1500);
+  }
+
+  // ---------- Step 10: Agentforce returns a personalized content widget (AXL) ----------
+  // This is action #3 — Maya's NEXT nurture email, not a send-now.
+  // Agentforce produces a reusable dynamic content block (the AXL widget) that will
+  // be injected into the next scheduled nurture send.
+  function runStep10() {
+    animating = true;
+
+    // Resolve the spinning A2A "awaiting" tool call.
+    if (a2aTools && a2aTools._waitingId) {
+      updateToolStatus(a2aTools, a2aTools._waitingId, "done");
+    }
+
+    // Shrink the chat panel and mount the AXL panel on the right.
+    const chatLeft = document.getElementById("chatLeft");
+    const chat = document.querySelector(".chat");
+    if (chatLeft) chatLeft.classList.add("shrunk");
+
+    const right = document.createElement("div");
+    right.className = "chat-right";
+    right.id = "axlRight";
+    right.innerHTML = `
+      <div class="axl-panel">
+        <div class="axl-head">
+          <div class="l">
+            <div style="width:32px;height:32px;border-radius:9px;display:flex;align-items:center;justify-content:center;background:rgba(0,161,224,0.15);color:#4ec5ee;">${iconSalesforce(18)}</div>
+            <div>
+              <div class="title">Action 3 · Personalize Maya's Next Nurture</div>
+              <div class="sub">Agentforce returned a dynamic content block — to be injected at next send</div>
+            </div>
+          </div>
+          <div class="right">
+            <span class="axl-pill draft">Pending Approval</span>
+          </div>
+        </div>
+
+        <div class="axl-body">
+
+          <!-- The AXL widget itself, called out as a standalone object -->
+          <div class="axl-widget">
+            <div class="powered-bar">
+              <div class="l"><span style="font-size:14px">✨</span> Powered by AXL · Agentforce Experience Layer</div>
+              <div class="r">Dynamic Content Block</div>
+            </div>
+            <div class="content-card">
+              <div class="hero">
+                <div class="eyebrow">Customer Story · matched to live profile</div>
+                <div class="h">How Globex cut ingest latency 4× with streaming pipelines</div>
+                <div class="sub">Selected because Maya is researching enterprise pricing for streaming ingest</div>
+              </div>
+              <div class="copy">
+                Your team's been evaluating the enterprise tier. Here's how a similar data org
+                rolled out streaming ingest without a re-platform — including how they justified the spend.
+              </div>
+              <div class="cta">See the enterprise tier breakdown →</div>
+            </div>
+          </div>
+
+          <!-- Where it's going -->
+          <div class="destination">
+            <div class="arrow">↳</div>
+            <div class="info">
+              <div class="label">Will be inserted into</div>
+              <div class="what">Maya Chen's next scheduled nurture email</div>
+              <div class="when">Sends Thursday 9:00am · "Acme Q3 — Data Platform Digest" · dynamic content slot 2 of 4</div>
+            </div>
+            <span class="where-pill">Marketing Cloud</span>
+          </div>
+
+          <div style="margin-top:14px;padding:12px 14px;border:1px solid rgba(255,255,255,0.08);border-radius:10px;background:rgba(255,255,255,0.02);font-size:11px;color:rgba(255,255,255,0.55);line-height:1.6;">
+            <b style="color:#c4b5fd;letter-spacing:0.12em;text-transform:uppercase;font-size:10px;">How AXL decided:</b><br>
+            Pulled signals from <b style="color:#fff">Real-Time Unified Profile Graph</b> — page <code style="color:#c4b5fd">/pricing/enterprise</code>,
+            persona <code style="color:#c4b5fd">decision_maker</code>, recent product interest <code style="color:#c4b5fd">streaming_ingest</code> — then selected
+            the matching content tile from the asset library.
+          </div>
+
+          <div class="approve-row">
+            <span class="btn ghost">Edit</span>
+            <span class="btn primary" id="approveAxlBtn">Approve & queue for next send →</span>
+          </div>
+
+        </div>
+      </div>`;
+
+    if (chat && !document.getElementById("axlRight")) {
+      chat.appendChild(right);
+    }
+
+    appendEntry({
+      kind: "ai",
+      html: `<p>Action 3 done. Agentforce built a personalized content block — <b>powered by AXL</b> — that will be injected into Maya's next scheduled nurture email. Approve it on the right and I'll move on to action 4 (Devon's webinar invite).</p>`
+    });
+
+    setTimeout(() => { animating = false; }, 400);
+  }
+
+  // ---------- Step 11: Action 4 — Agentforce orchestrates the webinar invite ----------
+  // Agentforce is doing the multi-system work: choosing the webinar variant
+  // from Devon's RTUPG signals, registering him in Marketing Cloud, generating
+  // a tracked save-my-seat link, logging the SFDC campaign member, and *then*
+  // handing the prepared draft to Gmail. The Gmail draft is just the final surface.
+  function runStep11() {
+    animating = true;
+
+    const right = document.getElementById("axlRight");
+    if (!right) { animating = false; return; }
+
+    // ----- Phase 1: Agentforce orchestration loading screen (~2s) -----
+    right.innerHTML = `
+      <div style="padding:14px 20px;border-bottom:1px solid var(--line);background:rgba(255,255,255,0.02);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;">
+        <div>
+          <div style="font-size:12px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:rgba(255,255,255,0.85);">Action 4 · Webinar Invite to Devon</div>
+          <div style="font-size:10px;color:rgba(255,255,255,0.45);margin-top:3px;letter-spacing:0.06em;">Agentforce Engagement Agent · orchestrating across Marketing Cloud, SFDC, Gmail</div>
+        </div>
+        <span class="axl-pill draft" style="background:rgba(124,58,237,0.14);color:#c4b5fd;border-color:rgba(124,58,237,0.35;">Working…</span>
+      </div>
+
+      <div id="afOrchestrate" style="flex:1 1 0;min-height:0;overflow-y:auto;padding:24px;display:flex;flex-direction:column;gap:10px;">
+        <div style="font-size:11px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:#c4b5fd;margin-bottom:4px;">Agentforce subtasks</div>
+        <div class="af-step" data-i="0"><span class="af-spin"></span><span class="af-text">Selecting webinar variant from Devon's RTUPG signals (streaming-ingest · returning visitor)…</span></div>
+        <div class="af-step" data-i="1"><span class="af-spin"></span><span class="af-text">Registering attendee in Marketing Cloud event campaign…</span></div>
+        <div class="af-step" data-i="2"><span class="af-spin"></span><span class="af-text">Generating tracked save-my-seat link · UTM bound to Devon's profile…</span></div>
+        <div class="af-step" data-i="3"><span class="af-spin"></span><span class="af-text">Logging Campaign Member on Northwind opportunity…</span></div>
+        <div class="af-step" data-i="4"><span class="af-spin"></span><span class="af-text">Drafting body copy from AXL content tile · handing to Gmail…</span></div>
+      </div>`;
+
+    // simple inline styles for the loading rows (added dynamically so we don't bloat <style>)
+    const style = document.createElement("style");
+    style.id = "afOrchestrateStyles";
+    style.textContent = `
+      .af-step {
+        display: flex; align-items: center; gap: 12px;
+        padding: 12px 14px;
+        background: rgba(255,255,255,0.03);
+        border: 1px solid rgba(255,255,255,0.06);
+        border-radius: 12px;
+        font-size: 13px;
+        color: rgba(255,255,255,0.55);
+        opacity: 0.4;
+        transform: translateY(4px);
+        transition: opacity 250ms ease, transform 250ms ease;
+      }
+      .af-step.in { opacity: 1; transform: none; }
+      .af-step.done { color: rgba(255,255,255,0.92); border-color: rgba(34,197,94,0.30); background: rgba(34,197,94,0.06); }
+      .af-spin {
+        width: 14px; height: 14px;
+        border-radius: 9999px;
+        border: 2px solid rgba(196,181,253,0.25);
+        border-top-color: #c4b5fd;
+        animation: afspin 0.9s linear infinite;
+        flex-shrink: 0;
+      }
+      .af-step.done .af-spin {
+        border: none;
+        background: #22c55e;
+        animation: none;
+        position: relative;
+      }
+      .af-step.done .af-spin::after {
+        content: "✓";
+        position: absolute;
+        inset: 0;
+        display: flex; align-items: center; justify-content: center;
+        color: #052e16;
+        font-size: 10px;
+        font-weight: 800;
+      }
+      @keyframes afspin { to { transform: rotate(360deg); } }
+    `;
+    if (!document.getElementById("afOrchestrateStyles")) document.head.appendChild(style);
+
+    // animate steps in & complete them progressively over ~2s
+    const stepEls = right.querySelectorAll(".af-step");
+    const reveal = (i) => { if (stepEls[i]) stepEls[i].classList.add("in"); };
+    const complete = (i) => { if (stepEls[i]) stepEls[i].classList.add("done"); };
+    [0,1,2,3,4].forEach(i => setTimeout(() => reveal(i), i * 120));
+    [700, 950, 1200, 1500, 1800].forEach((t, i) => setTimeout(() => complete(i), t));
+
+    // When orchestration finishes, surface a hint that the next click reveals the draft.
+    setTimeout(() => {
+      const list = document.getElementById("afOrchestrate");
+      if (list) {
+        const hint = document.createElement("div");
+        hint.id = "afReadyHint";
+        hint.style.cssText = "margin-top:14px;padding:12px 14px;border:1px solid rgba(34,197,94,0.35);background:rgba(34,197,94,0.08);border-radius:12px;font-size:12px;color:#86efac;letter-spacing:0.06em;display:flex;align-items:center;justify-content:space-between;";
+        hint.innerHTML = `<span><b>Orchestration complete</b> — draft handed to Gmail.</span><span style="color:rgba(255,255,255,0.55);font-size:10px;letter-spacing:0.18em;text-transform:uppercase;">Click to open →</span>`;
+        list.appendChild(hint);
+      }
+      step11OrchestrationDone = true;
+      animating = false;
+    }, 2100);
+
+    appendEntry({
+      kind: "ai",
+      html: `<p>Action 4 — Agentforce is orchestrating the invite: registering Devon in the Marketing Cloud event, generating a tracked link, logging the SFDC campaign member, and drafting the Gmail body. Once it lands, you can open the draft.</p>`
+    });
+  }
+
+  // ---------- Step 11b: open the Gmail draft (revealed on next click) ----------
+  function runStep11b() {
+    animating = true;
+    const r = document.getElementById("axlRight");
+    if (!r) { animating = false; return; }
+    r.innerHTML = `
+      <div style="padding:14px 20px;border-bottom:1px solid var(--line);background:rgba(255,255,255,0.02);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;">
+        <div>
+          <div style="font-size:12px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:rgba(255,255,255,0.85);">Action 4 · Webinar Invite to Devon</div>
+          <div style="font-size:10px;color:rgba(255,255,255,0.45);margin-top:3px;letter-spacing:0.06em;">Agentforce orchestration complete · draft handed to Gmail for final review</div>
+        </div>
+        <span class="axl-pill draft" style="background:rgba(124,58,237,0.14);color:#c4b5fd;border-color:rgba(124,58,237,0.35);">Ready to Send</span>
+      </div>
+
+      <div style="flex:1 1 0;min-height:0;display:flex;flex-direction:column;padding:18px 18px 0;background:#0e0e0e;">
+        <div class="gmail-draft">
+          <div class="gmail-titlebar">
+            <span>New Message</span>
+            <div class="actions"><span>—</span><span>⤢</span><span>×</span></div>
+          </div>
+          <div class="gmail-fields">
+            <div class="gmail-field">
+              <span class="lbl">To</span>
+              <span class="chip"><span class="ava">DP</span>Devon Park &lt;devon.park@northwind.io&gt;</span>
+            </div>
+            <div class="gmail-field">
+              <span class="lbl">From</span>
+              <span class="val">Chris Charalambous &lt;chris@yourcompany.com&gt;</span>
+            </div>
+            <div class="gmail-field">
+              <span class="lbl">Subject</span>
+              <span class="subject-input">Devon — quick invite to next Thursday's roundtable</span>
+            </div>
+          </div>
+          <div class="gmail-body">
+            <p>Hi Devon,</p>
+            <p>We're running our <b>Real-Time Data at Scale</b> roundtable again next Thursday — small group, practitioner-led, focused on moving from batch to streaming without rebuilding the warehouse.</p>
+            <div class="gmail-event">
+              <div class="date">
+                <div class="m">Thu</div>
+                <div class="d">23</div>
+              </div>
+              <div class="info">
+                <div class="t">Real-Time Data at Scale — practitioner roundtable</div>
+                <div class="s">45 min · registered via Marketing Cloud · save-my-seat link tracked</div>
+              </div>
+            </div>
+            <p>You came to the March session — I think the streaming-ingest content this time round will land well for what Northwind is working on.</p>
+            <p>Let me know if you can make it; your seat is held.</p>
+            <div class="signature">
+              Best,<br>
+              Chris<br>
+              <span style="color:#9aa0a6">Acme · BDR Team</span>
+            </div>
+          </div>
+          <div class="gmail-toolbar">
+            <button class="gmail-send" id="gmailSendBtn">Send</button>
+            <span style="color:#5f6368;font-size:13px;">Saved · Draft</span>
+            <span class="gmail-trash">🗑</span>
+          </div>
+        </div>
+      </div>`;
+    setTimeout(() => { animating = false; }, 250);
+  }
+
+  // ---------- Step 12: All four actions complete ----------
+  function runStep12() {
+    animating = true;
+
+    appendEntry({ kind: "user", text: "Send it." });
+
+    // Replace the right panel with a clean "all done" summary.
+    const right = document.getElementById("axlRight");
+    if (right) {
+      right.innerHTML = `
+        <div style="padding:14px 20px;border-bottom:1px solid var(--line);background:rgba(255,255,255,0.02);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;">
+          <div>
+            <div style="font-size:12px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:#86efac;">Engagements Dispatched</div>
+            <div style="font-size:10px;color:rgba(255,255,255,0.45);margin-top:3px;letter-spacing:0.06em;">All 4 actions complete · Salesforce updated</div>
+          </div>
+          <span class="axl-pill" style="background:rgba(34,197,94,0.14);color:#86efac;border-color:rgba(34,197,94,0.35);">Done</span>
+        </div>
+
+        <div style="flex:1 1 0;min-height:0;overflow-y:auto;padding:18px 20px;display:flex;flex-direction:column;gap:14px;">
+
+          <div class="done-card">
+            <div class="head">
+              <div class="check">✓</div>
+              <div>
+                <div class="title">Summary</div>
+                <div class="sub">4 of 4 plays executed</div>
+              </div>
+            </div>
+            <div class="done-row"><span class="tick">✓</span><span><b>Reply drafted</b> on Devon's pricing thread <span class="meta">Gmail</span></span></div>
+            <div class="done-row"><span class="tick">✓</span><span><b>Slack note</b> posted to #ae-acme · @P.Singh notified <span class="meta">Slack</span></span></div>
+            <div class="done-row"><span class="tick">✓</span><span><b>AXL content block</b> queued for Maya's next nurture (Thu 9am) <span class="meta">Marketing Cloud</span></span></div>
+            <div class="done-row"><span class="tick">✓</span><span><b>Webinar invite sent</b> to Devon Park <span class="meta">Gmail</span></span></div>
+          </div>
+
+          <div style="padding:14px 16px;border:1px solid rgba(0,161,224,0.30);border-radius:12px;background:rgba(0,161,224,0.06);font-size:13px;color:rgba(255,255,255,0.9);line-height:1.55;">
+            <div style="font-size:10px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:#4ec5ee;margin-bottom:6px;">Salesforce Updated</div>
+            2 contacts added to <b>Campaign: Real-Time Data Roundtable Q3</b><br>
+            1 dynamic content block bound to <b>Maya Chen's</b> profile · variant B<br>
+            Activity logged on Acme Data Co + Northwind Analytics opportunities
+          </div>
+
+        </div>`;
+    }
+
+    appendEntry({
+      kind: "ai",
+      html: `<p>All four actions are done. Two customer-facing touches went out, the AXL block is queued for Maya's next nurture, and Salesforce is in sync. Want me to keep watching these accounts?</p>`
+    });
+
+    setTimeout(() => { animating = false; }, 400);
+  }
+
+  function render() {
+    if (stepIndex <= 1) {
+      chatMounted = false;
+      renderHome();
+    } else {
+      mountChat();
+    }
+    renderProgress();
+  }
+
+  // ---------- Click-to-advance ----------
+  document.addEventListener("click", () => {
+    if (typingTimer || animating) return;
+
+    if (stepIndex === 0) {
+      const inputEl = document.querySelector(".promptbox .input");
+      const sendEl = document.querySelector(".promptbox .send");
+      let i = 0;
+      typingTimer = setInterval(() => {
+        i++;
+        typed = PROMPT_TEXT.slice(0, i);
+        if (inputEl) {
+          inputEl.innerHTML = `<span>${escapeHtml(typed)}</span><span class="caret"></span>`;
+        }
+        if (i === PROMPT_TEXT.length) {
+          clearInterval(typingTimer);
+          typingTimer = null;
+          if (sendEl) sendEl.classList.add("armed");
+          stepIndex = 1;
+          renderProgress();
+        }
+      }, 25);
+      return;
+    }
+
+    if (stepIndex === 1) {
+      stepIndex = 2;
+      mountChat();
+      renderProgress();
+      runStep2();
+      return;
+    }
+
+    if (stepIndex === 2) {
+      stepIndex = 3;
+      renderProgress();
+      runStep3();
+      return;
+    }
+
+    if (stepIndex === 3) {
+      stepIndex = 4;
+      renderProgress();
+      runStep4();
+      return;
+    }
+
+    if (stepIndex === 4) {
+      stepIndex = 5;
+      renderProgress();
+      runStep5();
+      return;
+    }
+
+    if (stepIndex === 5) {
+      stepIndex = 6;
+      renderProgress();
+      runStep6();
+      return;
+    }
+
+    if (stepIndex === 6) {
+      stepIndex = 7;
+      renderProgress();
+      runStep7();
+      return;
+    }
+
+    if (stepIndex === 7) {
+      stepIndex = 8;
+      renderProgress();
+      runStep8();
+      return;
+    }
+
+    if (stepIndex === 8) {
+      stepIndex = 9;
+      renderProgress();
+      runStep9();
+      return;
+    }
+
+    if (stepIndex === 9) {
+      stepIndex = 10;
+      renderProgress();
+      runStep10();
+      return;
+    }
+
+    if (stepIndex === 10) {
+      stepIndex = 11;
+      step11OrchestrationDone = false;
+      renderProgress();
+      runStep11();
+      return;
+    }
+
+    if (stepIndex === 11) {
+      // First click after orchestration → reveal the gmail draft.
+      // Second click → advance to step 12.
+      if (!step11OrchestrationDone) return; // still loading; ignore
+      const draftAlreadyShown = !!document.querySelector("#axlRight .gmail-draft");
+      if (!draftAlreadyShown) {
+        runStep11b();
+        return;
+      }
+      stepIndex = 12;
+      renderProgress();
+      runStep12();
+      return;
+    }
+
+    // step 12 → loop back to home
+    if (stepIndex >= 12) {
+      stepIndex = 0;
+      typed = "";
+      chatLog = [];
+      chatMounted = false;
+      a2aTools = null;
+      const right = document.getElementById("axlRight");
+      if (right) right.remove();
+      const left = document.getElementById("chatLeft");
+      if (left) left.classList.remove("shrunk");
+      render();
+    }
+  });
+
+  // initial paint
+  render();
+</script>
+
+</body>
+</html>
