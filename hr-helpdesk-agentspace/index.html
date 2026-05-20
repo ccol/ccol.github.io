@@ -1,0 +1,2911 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Agentspace × Agentforce × Data 360 — Demo</title>
+<style>
+  :root {
+    --bg: #f8f9fa;
+    --panel: #ffffff;
+    --panel-2: #f1f3f4;
+    --line: #dadce0;
+    --line-soft: #e8eaed;
+    --text: #202124;
+    --text-dim: #5f6368;
+    --text-muted: #80868b;
+    --blue: #3b82f6;
+    --purple: #a855f7;
+    --pink: #ec4899;
+    --teal: #14b8a6;
+    --sf-blue: #00a1e0;
+    --d360: #7c3aed;
+    --workday: #f38b00;
+    --google-blue: #4285F4;
+    --google-green: #34A853;
+    --google-yellow: #FBBC05;
+    --google-red: #EA4335;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: "Google Sans", "Roboto", -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+    padding: 32px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: default;
+    user-select: none;
+    overflow: hidden;
+    position: relative;
+  }
+  .glow {
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 1000px; height: 600px;
+    background: rgba(26,115,232,0.05);
+    transform: translate(-50%, -50%);
+    filter: blur(120px);
+    border-radius: 9999px;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .hint {
+    position: absolute;
+    top: 40px;
+    display: flex; align-items: center; gap: 8px;
+    padding: 8px 24px;
+    background: #ffffff;
+    border: 1px solid var(--line);
+    border-radius: 9999px;
+    font-size: 10px; font-weight: 600;
+    letter-spacing: 0.3em; text-transform: uppercase;
+    color: var(--text-dim);
+    animation: pulse 2.4s ease-in-out infinite;
+    box-shadow: 0 1px 3px rgba(60,64,67,0.10);
+  }
+  @keyframes pulse { 0%,100% { opacity: 0.55; } 50% { opacity: 1; } }
+  .hint svg { stroke: currentColor; }
+
+  .stage {
+    width: 100%;
+    max-width: 1280px;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 0 8px 40px rgba(60,64,67,0.18);
+    position: relative;
+    z-index: 1;
+  }
+  .frame {
+    height: 720px;
+    background: var(--panel);
+    color: var(--text);
+    display: flex;
+    overflow: hidden;
+  }
+
+  /* progress bar */
+  .progress {
+    margin-top: 48px;
+    display: flex;
+    gap: 12px;
+    width: 100%;
+    max-width: 1280px;
+    padding: 0 32px;
+    z-index: 1;
+  }
+  .progress .seg {
+    height: 2px;
+    flex: 1;
+    border-radius: 9999px;
+    background: #e8eaed;
+    transition: all 700ms ease;
+  }
+  .progress .seg.active {
+    background: #1a73e8;
+    box-shadow: 0 0 8px rgba(26,115,232,0.35);
+  }
+
+  /* top-right chip */
+  .chip-tr {
+    position: absolute;
+    top: 32px; right: 32px;
+    display: flex; align-items: center; gap: 8px;
+    padding: 8px 16px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--line);
+    border-radius: 9999px;
+    z-index: 2;
+  }
+  .chip-tr .div { width: 1px; height: 16px; background: rgba(255,255,255,0.20); margin: 0 4px; }
+  .avatar {
+    width: 24px; height: 24px;
+    border-radius: 9999px;
+    background: linear-gradient(135deg, #7c3aed 0%, #ec4899 100%);
+    color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px; font-weight: 700;
+    overflow: hidden;
+  }
+
+  /* ===== Agentspace home (steps 0–1) ===== */
+  .as-home {
+    width: 100%;
+    height: 100%;
+    background: #f8f9fa;
+    color: #1f1f1f;
+    font-family: "Google Sans", "Roboto", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    display: grid;
+    grid-template-columns: 248px 1fr;
+    grid-template-rows: 56px 1fr;
+    overflow: hidden;
+  }
+  .as-topbar {
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 0 20px;
+    background: #ffffff;
+    border-bottom: 1px solid #dadce0;
+  }
+  .as-topbar .brand {
+    display: flex; align-items: center; gap: 10px;
+    width: 228px;
+  }
+  .as-topbar .brand .word {
+    font-size: 20px; font-weight: 500;
+    color: #1f1f1f;
+    letter-spacing: -0.01em;
+  }
+  .as-topbar .search {
+    flex: 1;
+    max-width: 720px;
+    display: flex; align-items: center; gap: 12px;
+    background: #f1f3f4;
+    border: 1px solid transparent;
+    border-radius: 999px;
+    padding: 8px 18px;
+    color: #5f6368;
+    font-size: 14px;
+    transition: background 150ms, border-color 150ms;
+  }
+  .as-topbar .search:hover { background: #e8eaed; }
+  .as-topbar .search .ph { color: #5f6368; flex: 1; }
+  .as-topbar .acct {
+    margin-left: auto;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .as-topbar .acct .name {
+    font-size: 13px; color: #3c4043; font-weight: 500;
+  }
+  .as-topbar .acct .ava {
+    width: 32px; height: 32px;
+    border-radius: 999px;
+    background: linear-gradient(135deg, #1a73e8 0%, #4285f4 100%);
+    color: #fff;
+    font-size: 12px; font-weight: 600;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  /* Left rail */
+  .as-rail {
+    background: #ffffff;
+    border-right: 1px solid #dadce0;
+    padding: 16px 8px;
+    overflow-y: auto;
+    display: flex; flex-direction: column; gap: 4px;
+  }
+  .as-rail .group-label {
+    font-size: 11px; font-weight: 500;
+    color: #5f6368;
+    letter-spacing: 0.04em;
+    padding: 12px 16px 6px;
+    text-transform: none;
+  }
+  .as-rail .item {
+    display: flex; align-items: center; gap: 12px;
+    padding: 8px 16px;
+    border-radius: 0 999px 999px 0;
+    margin-right: 8px;
+    color: #3c4043;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: default;
+  }
+  .as-rail .item:hover { background: #f1f3f4; }
+  .as-rail .item.active {
+    background: #e8f0fe;
+    color: #1967d2;
+  }
+  .as-rail .item .ic {
+    width: 18px; height: 18px;
+    flex-shrink: 0;
+    color: currentColor;
+  }
+  .as-rail .item .dot {
+    width: 8px; height: 8px;
+    border-radius: 999px;
+    flex-shrink: 0;
+  }
+  .as-rail .pinned-list {
+    display: flex; flex-direction: column;
+    gap: 2px;
+  }
+
+  /* Center workspace */
+  .as-main {
+    overflow-y: auto;
+    padding: 40px 48px;
+  }
+  .as-hero {
+    max-width: 760px;
+    margin: 0 auto 36px;
+    text-align: center;
+  }
+  .as-hero h1 {
+    font-size: 40px;
+    font-weight: 400;
+    color: #202124;
+    letter-spacing: -0.01em;
+    margin-bottom: 28px;
+  }
+  .as-hero h1 .grad {
+    background: linear-gradient(90deg, #4285F4 0%, #9b72cb 35%, #d96570 70%, #f9ab00 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    font-weight: 500;
+  }
+  .as-search-big {
+    display: flex; align-items: center; gap: 12px;
+    background: #ffffff;
+    border: 1px solid #dadce0;
+    border-radius: 28px;
+    padding: 14px 22px;
+    box-shadow: 0 1px 6px rgba(32,33,36,0.06);
+    transition: box-shadow 150ms, border-color 150ms;
+  }
+  .as-search-big:hover {
+    box-shadow: 0 1px 10px rgba(32,33,36,0.12);
+    border-color: #c4c7c5;
+  }
+  .as-search-big .ph {
+    flex: 1; color: #5f6368; font-size: 16px;
+    text-align: left;
+  }
+  .as-search-big .icbtn {
+    width: 32px; height: 32px;
+    border-radius: 999px;
+    color: #5f6368;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .as-quickchips {
+    display: flex; gap: 10px; flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 18px;
+  }
+  .as-quickchips .chip {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 8px 16px;
+    background: #ffffff;
+    border: 1px solid #dadce0;
+    border-radius: 999px;
+    font-size: 13px;
+    color: #3c4043;
+    font-weight: 500;
+  }
+  .as-quickchips .chip:hover { background: #f8f9fa; }
+
+  /* Agent gallery */
+  .as-section-title {
+    max-width: 1080px; margin: 28px auto 14px;
+    font-size: 14px; font-weight: 500;
+    color: #3c4043;
+    display: flex; align-items: baseline; justify-content: space-between;
+  }
+  .as-section-title .more {
+    font-size: 13px; color: #1a73e8; font-weight: 500;
+  }
+  .as-gallery {
+    max-width: 1080px; margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+  }
+  .agent-tile {
+    background: #ffffff;
+    border: 1px solid #dadce0;
+    border-radius: 14px;
+    padding: 16px;
+    cursor: pointer;
+    transition: box-shadow 200ms, transform 200ms, border-color 200ms;
+    display: flex; flex-direction: column; gap: 10px;
+    min-height: 140px;
+    position: relative;
+  }
+  .agent-tile:hover {
+    box-shadow: 0 1px 8px rgba(32,33,36,0.10);
+    border-color: #c4c7c5;
+  }
+  .agent-tile.featured {
+    border-color: #1a73e8;
+    box-shadow: 0 0 0 1px #1a73e8 inset, 0 4px 16px rgba(26,115,232,0.12);
+    animation: pulseRing 2.4s ease-in-out infinite;
+  }
+  @keyframes pulseRing {
+    0%,100% { box-shadow: 0 0 0 1px #1a73e8 inset, 0 4px 16px rgba(26,115,232,0.10); }
+    50%     { box-shadow: 0 0 0 1px #1a73e8 inset, 0 6px 22px rgba(26,115,232,0.30); }
+  }
+  .agent-tile .head {
+    display: flex; align-items: center; gap: 12px;
+  }
+  .agent-tile .head .icon {
+    width: 36px; height: 36px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    color: #fff;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+  .agent-tile .head .icon.hr      { background: #1a73e8; }
+  .agent-tile .head .icon.it      { background: #5f6368; }
+  .agent-tile .head .icon.travel  { background: #f9ab00; color: #202124; }
+  .agent-tile .head .icon.sales   { background: #0f9d58; }
+  .agent-tile .head .icon.proc    { background: #d93025; }
+  .agent-tile .head .icon.notebook{ background: #9334e6; }
+  .agent-tile .head .name {
+    font-size: 15px; font-weight: 500; color: #202124;
+    line-height: 1.2;
+  }
+  .agent-tile .head .owner {
+    font-size: 12px; color: #5f6368; margin-top: 2px;
+  }
+  .agent-tile .desc {
+    font-size: 13px; color: #3c4043; line-height: 1.45;
+    flex: 1;
+  }
+  .agent-tile .systems {
+    display: flex; gap: 5px; flex-wrap: wrap;
+  }
+  .agent-tile .sys-chip {
+    font-size: 10px; font-weight: 500;
+    padding: 3px 8px;
+    border-radius: 999px;
+    background: #f1f3f4;
+    color: #3c4043;
+    border: 1px solid #e8eaed;
+  }
+  .agent-tile .pinned-flag {
+    position: absolute; top: 12px; right: 12px;
+    font-size: 10px; font-weight: 500;
+    color: #1a73e8;
+    background: #e8f0fe;
+    padding: 2px 8px;
+    border-radius: 999px;
+    letter-spacing: 0.02em;
+  }
+
+  /* Step 1: agent conversation surface */
+  .as-agent-surface {
+    max-width: 880px;
+    margin: 0 auto;
+    background: #ffffff;
+    border: 1px solid #dadce0;
+    border-radius: 16px;
+    overflow: hidden;
+    animation: slideUpFade 350ms ease;
+    box-shadow: 0 1px 8px rgba(32,33,36,0.08);
+  }
+  @keyframes slideUpFade {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: none; }
+  }
+  .as-agent-head {
+    display: flex; align-items: center; gap: 14px;
+    padding: 18px 22px;
+    border-bottom: 1px solid #e8eaed;
+  }
+  .as-agent-head .icon {
+    width: 42px; height: 42px;
+    border-radius: 12px;
+    background: #1a73e8;
+    color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+  .as-agent-head .meta { flex: 1; min-width: 0; }
+  .as-agent-head .meta .name {
+    font-size: 17px; font-weight: 500; color: #202124;
+  }
+  .as-agent-head .meta .owner {
+    font-size: 12px; color: #5f6368; margin-top: 2px;
+  }
+  .as-agent-head .systems {
+    display: flex; gap: 5px; flex-wrap: wrap;
+    margin-left: auto;
+  }
+  .as-agent-head .systems .sys-chip {
+    font-size: 10px; font-weight: 500;
+    padding: 3px 8px;
+    border-radius: 999px;
+    background: #f1f3f4;
+    color: #3c4043;
+    border: 1px solid #e8eaed;
+  }
+  .as-agent-body {
+    min-height: 240px;
+    padding: 32px 24px;
+    display: flex; align-items: center; justify-content: center;
+    color: #5f6368;
+    font-size: 13px;
+  }
+  .as-agent-body .empty {
+    text-align: center;
+    color: #80868b;
+  }
+  .as-agent-body .empty .lbl {
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    margin-bottom: 4px;
+  }
+  .as-agent-foot {
+    padding: 14px 18px;
+    border-top: 1px solid #e8eaed;
+    background: #f8f9fa;
+  }
+  .as-prompt {
+    display: flex; align-items: center; gap: 12px;
+    background: #ffffff;
+    border: 1px solid #dadce0;
+    border-radius: 24px;
+    padding: 10px 18px;
+    transition: border-color 150ms, box-shadow 150ms;
+  }
+  .as-prompt.armed {
+    border-color: #1a73e8;
+    box-shadow: 0 0 0 3px rgba(26,115,232,0.12);
+  }
+  .as-prompt .plus { color: #5f6368; }
+  .as-prompt .input {
+    flex: 1; font-size: 14px; color: #202124;
+    line-height: 1.4; min-height: 22px;
+    text-align: left;
+  }
+  .as-prompt .ph { color: #80868b; }
+  .as-prompt .caret {
+    display: inline-block;
+    width: 2px; height: 18px;
+    background: #1a73e8;
+    margin-left: 2px;
+    vertical-align: middle;
+    animation: blink 1s step-end infinite;
+  }
+  .as-prompt .send {
+    color: #5f6368;
+    transition: color 150ms;
+  }
+  .as-prompt .send.armed { color: #1a73e8; }
+
+  /* ===== STEP 0–1: home screen ===== */
+  .home {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 48px;
+    position: relative;
+  }
+  .greeting { margin-bottom: 48px; }
+  .greeting h1 {
+    font-size: 48px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.90);
+    letter-spacing: -0.02em;
+    margin-bottom: 16px;
+  }
+  .greeting h2 {
+    font-size: 56px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    background: linear-gradient(90deg, #a78bfa 0%, #f0abfc 50%, #fb7185 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    padding-bottom: 8px;
+  }
+
+  .promptbox {
+    width: 100%;
+    max-width: 720px;
+    background: var(--panel-2);
+    border: 1px solid var(--line);
+    border-radius: 40px;
+    padding: 20px;
+    box-shadow: 0 0 80px rgba(0,0,0,0.5);
+    transition: all 200ms ease;
+  }
+  .promptbox-row {
+    display: flex; align-items: center; gap: 16px;
+    padding: 8px 16px;
+    text-align: left;
+  }
+  .promptbox .plus { color: var(--text-dim); }
+  .promptbox .input {
+    flex: 1;
+    font-size: 19px;
+    color: var(--text);
+    line-height: 1.4;
+    min-height: 28px;
+  }
+  .promptbox .ph { color: var(--text-muted); }
+  .promptbox .caret {
+    display: inline-block;
+    width: 6px; height: 24px;
+    background: var(--purple);
+    margin-left: 4px;
+    vertical-align: middle;
+    animation: blink 1s step-end infinite;
+  }
+  @keyframes blink { 50% { opacity: 0; } }
+  .promptbox .meta {
+    display: flex; align-items: center; gap: 16px;
+    color: var(--text-dim);
+  }
+  .promptbox .meta .lbl {
+    font-size: 10px; font-weight: 700;
+    letter-spacing: 0.18em; text-transform: uppercase;
+  }
+  .promptbox .meta .send {
+    color: var(--text-dim);
+    transition: color 200ms;
+  }
+  .promptbox .meta .send.armed { color: var(--purple); }
+
+  /* Gemini Enterprise brand mark */
+  .wa-mark {
+    width: 28px; height: 28px;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #00a1e0 0%, #7c3aed 60%, #ec4899 100%);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 800; color: #fff;
+    letter-spacing: -0.04em;
+  }
+  .brand-row {
+    display: flex; align-items: center; gap: 10px;
+    padding: 6px 14px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--line);
+    border-radius: 9999px;
+    margin-bottom: 28px;
+  }
+  .brand-row .name {
+    font-size: 11px; font-weight: 700;
+    letter-spacing: 0.20em; text-transform: uppercase;
+    color: rgba(255,255,255,0.78);
+  }
+  .brand-row .tag {
+    font-size: 10px; font-weight: 600;
+    letter-spacing: 0.06em;
+    color: rgba(255,255,255,0.45);
+    border-left: 1px solid rgba(255,255,255,0.15);
+    padding-left: 10px;
+  }
+
+  /* ===== STEPS 2+: chat layout (Agentspace light) ===== */
+  .chat { display: flex; width: 100%; height: 100%; font-family: "Google Sans", "Roboto", -apple-system, system-ui, sans-serif; }
+  .chat-left {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid var(--line);
+    background: #ffffff;
+    transition: width 700ms ease;
+    min-height: 0;
+    height: 100%;
+  }
+  .chat-left.shrunk { width: 58%; }
+  .chat-right {
+    flex: 1 1 0;
+    min-width: 0;
+    min-height: 0;
+    height: 100%;
+    background: #f8f9fa;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  .chat-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 22px;
+    border-bottom: 1px solid var(--line);
+    background: #ffffff;
+  }
+  .chat-header .left { display: flex; align-items: center; gap: 12px; }
+  .chat-header .left .agent-icon {
+    width: 32px; height: 32px;
+    border-radius: 10px;
+    background: #1a73e8;
+    color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .chat-header .left .label {
+    font-size: 14px; font-weight: 500;
+    color: #202124;
+    letter-spacing: 0;
+    text-transform: none;
+  }
+  .chat-header .left .sub {
+    font-size: 11px; color: #5f6368;
+    margin-top: 1px;
+  }
+  .chat-header .right {
+    display: flex; align-items: center; gap: 10px;
+    color: var(--text-dim);
+  }
+  .chat-header .right .ava {
+    width: 28px; height: 28px;
+    border-radius: 999px;
+    background: linear-gradient(135deg, #1a73e8 0%, #4285f4 100%);
+    color: #fff;
+    font-size: 11px; font-weight: 600;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .chat-scroll {
+    flex: 1 1 0;
+    min-height: 0;
+    overflow-y: auto;
+    padding: 24px 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    background: #ffffff;
+  }
+  .bubble-user {
+    align-self: flex-end;
+    max-width: 85%;
+    background: #e8f0fe;
+    border: 1px solid #d2e3fc;
+    border-radius: 18px;
+    border-top-right-radius: 4px;
+    padding: 12px 16px;
+    color: #1f1f1f;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.5;
+  }
+  .bubble-ai {
+    align-self: flex-start;
+    max-width: 92%;
+    background: #ffffff;
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    border-top-left-radius: 4px;
+    padding: 14px 16px;
+    color: #1f1f1f;
+    font-size: 14px;
+    line-height: 1.55;
+    box-shadow: 0 1px 2px rgba(60,64,67,0.06);
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+  .bubble-ai .body { flex: 1; }
+  .bubble-ai .body p + p { margin-top: 8px; }
+  .bubble-ai .agent-mark {
+    width: 28px; height: 28px;
+    border-radius: 8px;
+    background: #1a73e8;
+    color: #fff;
+    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .bubble-ai .citations {
+    display: flex; flex-wrap: wrap; gap: 6px;
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid #e8eaed;
+  }
+  .bubble-ai .citation {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 11px;
+    padding: 3px 9px;
+    border-radius: 999px;
+    background: #f1f3f4;
+    color: #3c4043;
+    border: 1px solid #e8eaed;
+  }
+  .bubble-ai .citation .cdot {
+    width: 6px; height: 6px; border-radius: 999px;
+  }
+
+  .tools {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-self: flex-start;
+    max-width: 92%;
+    width: 100%;
+  }
+  .tool {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 14px;
+    background: #ffffff;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    font-size: 13px;
+    color: #1f1f1f;
+    animation: slideIn 350ms ease;
+    box-shadow: 0 1px 2px rgba(60,64,67,0.04);
+  }
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: none; }
+  }
+  .tool .badge {
+    width: 30px; height: 30px;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .tool .badge.gcal    { background: #e8f0fe; color: #1a73e8; }
+  .tool .badge.gpeople { background: #e6f4ea; color: #0f9d58; }
+  .tool .badge.grooms  { background: #fef7e0; color: #b06000; }
+  .tool .badge.sf      { background: #e1f5fe; color: #0277bd; }
+  .tool .badge.gkb     { background: #fce8e6; color: #c5221f; }
+  .tool .badge.d360    { background: #f3e8fd; color: #7c3aed; }
+  .tool .body { flex: 1; min-width: 0; }
+  .tool .body .name {
+    font-size: 11px; font-weight: 500;
+    letter-spacing: 0.02em; text-transform: none;
+    color: #5f6368;
+    margin-bottom: 2px;
+  }
+  .tool .body .text { color: #1f1f1f; }
+  .tool .body .text b { color: #202124; font-weight: 600; }
+  .tool .status {
+    display: flex; align-items: center; gap: 6px;
+    font-size: 10px; font-weight: 600;
+    letter-spacing: 0.10em; text-transform: uppercase;
+    color: #5f6368;
+    flex-shrink: 0;
+  }
+  .tool.done    .status .dot { background: #0f9d58; box-shadow: 0 0 0 3px rgba(15,157,88,0.12); }
+  .tool.running .status .dot { background: #1a73e8; box-shadow: 0 0 0 3px rgba(26,115,232,0.18); animation: pulse 1.4s ease-in-out infinite; }
+  .tool .status .dot { width: 6px; height: 6px; border-radius: 9999px; }
+
+  /* hero ring for the Agentforce KB-fusion call */
+  .tool.fusion {
+    border-color: #b3e0f6;
+    background: #f0f9ff;
+    box-shadow: 0 1px 3px rgba(2,119,189,0.10);
+  }
+  /* hero ring for the Data 360 panoramic call */
+  .tool.d360-hero {
+    border-color: #d6c2fb;
+    background: #faf5ff;
+    box-shadow: 0 1px 3px rgba(124,58,237,0.10);
+  }
+
+  /* chat footer prompt stub */
+  .chat-footer {
+    padding: 14px 22px;
+    border-top: 1px solid var(--line);
+    background: #f8f9fa;
+  }
+  .chat-footer .as-prompt {
+    background: #ffffff;
+  }
+
+  /* ===== KB + Case Fusion two-pane tile (step 3) — light Material ===== */
+  .fusion-tile {
+    align-self: stretch;
+    width: 100%;
+    background: #ffffff;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    animation: slideIn 400ms ease;
+    box-shadow: 0 1px 3px rgba(60,64,67,0.08);
+  }
+  .fusion-head {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--line-soft);
+    background: #f0f9ff;
+  }
+  .fusion-head .l { display: flex; align-items: center; gap: 10px; }
+  .fusion-head .name {
+    font-size: 13px; font-weight: 500; color: #202124;
+  }
+  .fusion-head .sub {
+    font-size: 11px; color: #5f6368;
+    margin-top: 2px;
+  }
+  .fusion-pill {
+    font-size: 10px; font-weight: 500;
+    letter-spacing: 0.04em; text-transform: none;
+    padding: 4px 10px;
+    border-radius: 9999px;
+    background: #e1f5fe;
+    color: #0277bd;
+    border: 1px solid #b3e0f6;
+  }
+  .fusion-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+  }
+  .fusion-col { padding: 14px 16px; }
+  .fusion-col + .fusion-col {
+    border-left: 1px solid var(--line-soft);
+  }
+  .fusion-col .col-head {
+    display: flex; align-items: center; gap: 8px;
+    margin-bottom: 10px;
+  }
+  .fusion-col .col-head .src {
+    font-size: 11px; font-weight: 500;
+    letter-spacing: 0.02em; text-transform: none;
+    color: #5f6368;
+  }
+  .fusion-col .col-head .src-logo {
+    width: 20px; height: 20px;
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .fusion-col .col-head .src-logo.kb { background: #fce8e6; color: #c5221f; }
+  .fusion-col .col-head .src-logo.sf { background: #e1f5fe; color: #0277bd; }
+  .kb-card {
+    background: #f8f9fa;
+    border: 1px solid #e8eaed;
+    border-radius: 10px;
+    padding: 12px;
+  }
+  .kb-card .id {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 11px;
+    color: #c5221f;
+    letter-spacing: 0.02em;
+    margin-bottom: 4px;
+  }
+  .kb-card .title {
+    font-size: 13px; font-weight: 500; color: #202124;
+    margin-bottom: 8px;
+  }
+  .kb-card .steps {
+    font-size: 12px; color: #3c4043;
+    line-height: 1.6;
+    list-style: none;
+    padding: 0;
+  }
+  .kb-card .steps li {
+    padding: 3px 0;
+    display: flex; gap: 8px;
+  }
+  .kb-card .steps li .step-n {
+    color: #c5221f;
+    font-weight: 600;
+    flex-shrink: 0;
+  }
+  .kb-card .meta-line {
+    margin-top: 10px;
+    font-size: 11px;
+    color: #5f6368;
+    letter-spacing: 0;
+  }
+  .case-list { display: flex; flex-direction: column; gap: 8px; }
+  .case-row {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 10px;
+    align-items: center;
+    padding: 8px 10px;
+    background: #f8f9fa;
+    border: 1px solid #e8eaed;
+    border-radius: 8px;
+    font-size: 12px;
+  }
+  .case-row .cnum {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 11px; color: #0277bd;
+  }
+  .case-row .cwhat { color: #3c4043; font-size: 12px; }
+  .case-row .cstatus {
+    font-size: 10px; font-weight: 500;
+    letter-spacing: 0.02em; text-transform: none;
+    padding: 2px 8px;
+    border-radius: 9999px;
+    background: #fef7e0;
+    color: #b06000;
+    border: 1px solid #feefc3;
+  }
+  .case-row .cstatus.reopened {
+    background: #fce8e6;
+    color: #c5221f;
+    border-color: #f6c8c4;
+  }
+  .pattern-callout {
+    margin-top: 12px;
+    padding: 10px 12px;
+    background: #fce8e6;
+    border: 1px solid #f6c8c4;
+    border-radius: 8px;
+    font-size: 12px;
+    color: #b3261e;
+    line-height: 1.5;
+  }
+  .pattern-callout b { color: #b3261e; font-weight: 600; }
+  .fusion-foot {
+    padding: 12px 16px;
+    border-top: 1px solid var(--line-soft);
+    background: #f8f9fa;
+    font-size: 12px;
+    color: #3c4043;
+    line-height: 1.55;
+  }
+  .fusion-foot b { color: #1a73e8; font-weight: 500; }
+
+  /* ===== Step 4 — D360 NotebookLM-style citation card ===== */
+  .filter-chip {
+    align-self: stretch;
+    width: 100%;
+    background: #faf5ff;
+    border: 1px solid #e1d2fa;
+    border-radius: 12px;
+    padding: 12px 14px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 12px;
+    color: #4a148c;
+    line-height: 1.7;
+    animation: slideIn 350ms ease;
+  }
+  .filter-chip .label {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-family: "Google Sans", "Roboto", -apple-system, sans-serif;
+    font-size: 11px; font-weight: 500;
+    letter-spacing: 0.02em; text-transform: none;
+    color: #5f6368;
+    margin-bottom: 10px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #e1d2fa;
+    width: 100%;
+  }
+  .filter-chip .label::before {
+    content: "";
+    width: 8px; height: 8px;
+    border-radius: 999px;
+    background: #7c3aed;
+  }
+  .filter-chip .label .src-tag {
+    margin-left: auto;
+    padding: 2px 8px;
+    border-radius: 999px;
+    background: #f3e8fd;
+    color: #7c3aed;
+    font-weight: 500;
+    font-size: 10px;
+  }
+  .filter-chip .k { color: #80868b; }
+  .filter-chip .v { color: #4a148c; }
+
+  /* ===== Step 5 — D360 Employee Panoramic ===== */
+  .pano-wrap {
+    align-self: stretch;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    animation: slideIn 400ms ease;
+  }
+  .pano-banner {
+    display: flex; align-items: center; gap: 10px;
+    font-size: 10px; font-weight: 700;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    color: #c4b5fd;
+  }
+  .pano-banner .pulse {
+    width: 8px; height: 8px;
+    border-radius: 9999px;
+    background: #a855f7;
+    box-shadow: 0 0 0 0 rgba(168,85,247,0.7);
+    animation: livepulse 1.6s ease-out infinite;
+  }
+  @keyframes livepulse {
+    0%   { box-shadow: 0 0 0 0 rgba(168,85,247,0.7); }
+    100% { box-shadow: 0 0 0 12px rgba(168,85,247,0); }
+  }
+  .pano-banner-inline {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 16px;
+    font-size: 11px; font-weight: 500;
+    letter-spacing: 0.04em; text-transform: none;
+    color: #5e35b1;
+    background: #faf5ff;
+    border-bottom: 1px solid #e1d2fa;
+  }
+  .pano-banner-inline .pulse {
+    width: 8px; height: 8px;
+    border-radius: 9999px;
+    background: #7c3aed;
+    box-shadow: 0 0 0 0 rgba(124,58,237,0.5);
+    animation: livepulse 1.6s ease-out infinite;
+  }
+  .pano-card {
+    background: #ffffff;
+    border: 1px solid #e1d2fa;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(60,64,67,0.08);
+    position: relative;
+  }
+  .pano-head {
+    display: flex; align-items: center; gap: 12px;
+    padding: 14px 16px;
+    border-bottom: 1px solid #f1f3f4;
+    position: relative;
+  }
+  .pano-head .ava {
+    width: 40px; height: 40px;
+    border-radius: 9999px;
+    background: linear-gradient(135deg, #7c3aed 0%, #d96570 100%);
+    color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 600;
+    flex-shrink: 0;
+  }
+  .pano-head .who .name { font-size: 15px; font-weight: 500; color: #202124; }
+  .pano-head .who .role { font-size: 12px; color: #5f6368; margin-top: 2px; }
+  .pano-head .live {
+    margin-left: auto;
+    display: flex; align-items: center; gap: 6px;
+    font-size: 10px; font-weight: 500;
+    letter-spacing: 0.04em;
+    color: #5e35b1;
+  }
+  .pano-head .live .dot {
+    width: 6px; height: 6px;
+    border-radius: 9999px;
+    background: #7c3aed;
+    box-shadow: 0 0 6px rgba(124,58,237,0.6);
+    animation: livepulse 1.6s ease-out infinite;
+  }
+  .pano-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 0;
+    position: relative;
+  }
+  .pano-facet {
+    padding: 14px;
+    border-right: 1px solid #f1f3f4;
+  }
+  .pano-facet:last-child { border-right: none; }
+  .pano-facet .src {
+    display: flex; align-items: center; gap: 8px;
+    margin-bottom: 12px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #f1f3f4;
+  }
+  .pano-facet .src .lg {
+    width: 24px; height: 24px;
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 700;
+    flex-shrink: 0;
+  }
+  .pano-facet .src .lg.workday { background: #f38b00; color: #fff; }
+  .pano-facet .src .lg.sap     { background: #0faaff; color: #fff; }
+  .pano-facet .src .lg.sfcase  { background: #e1f5fe; color: #0277bd; }
+  .pano-facet .src .name {
+    font-size: 11px; font-weight: 500;
+    letter-spacing: 0.02em; text-transform: none;
+    color: #3c4043;
+  }
+  .pano-facet .src .stack {
+    font-size: 10px;
+    color: #80868b;
+    margin-top: 2px;
+  }
+  .pano-facet .field {
+    display: flex; flex-direction: column;
+    padding: 6px 0;
+  }
+  .pano-facet .field + .field {
+    border-top: 1px solid #f1f3f4;
+  }
+  .pano-facet .field .k {
+    font-size: 10px; font-weight: 500;
+    letter-spacing: 0.02em; text-transform: none;
+    color: #80868b;
+  }
+  .pano-facet .field .v {
+    font-size: 13px;
+    color: #1f1f1f;
+    margin-top: 2px;
+    line-height: 1.4;
+  }
+  .pano-facet .field .v b { color: #202124; font-weight: 600; }
+  .pano-facet .field .v.warn   { color: #b06000; }
+  .pano-facet .field .v.danger { color: #c5221f; }
+  .pano-facet .field .v.warn b   { color: #b06000; }
+  .pano-facet .field .v.danger b { color: #c5221f; }
+  .pano-facet .chain {
+    display: flex; align-items: center; flex-wrap: wrap;
+    gap: 4px 6px;
+    font-size: 12px;
+    color: #3c4043;
+  }
+  .pano-facet .chain .arr { color: #80868b; }
+  .pano-facet .agg-bar {
+    height: 6px;
+    background: #f1f3f4;
+    border-radius: 9999px;
+    overflow: hidden;
+    margin-top: 6px;
+  }
+  .pano-facet .agg-bar .fill {
+    height: 100%;
+    background: linear-gradient(90deg, #f9ab00 0%, #d93025 100%);
+    border-radius: 9999px;
+  }
+  .pano-foot {
+    padding: 12px 16px;
+    background: #faf5ff;
+    border-top: 1px solid #e1d2fa;
+    font-size: 12px;
+    color: #3c4043;
+    line-height: 1.55;
+  }
+  .pano-foot b { color: #5e35b1; font-weight: 500; }
+
+  /* ===== Step 6 — agent reasoning bubble + actions ===== */
+  .reasoning {
+    align-self: stretch;
+    width: 100%;
+    background: #fef7e0;
+    border: 1px solid #feefc3;
+    border-left: 3px solid #f9ab00;
+    border-radius: 12px;
+    padding: 14px 16px;
+    animation: slideIn 350ms ease;
+  }
+  .reasoning .head {
+    display: flex; align-items: center; gap: 10px;
+    margin-bottom: 10px;
+  }
+  .reasoning .head .icon {
+    width: 28px; height: 28px;
+    border-radius: 8px;
+    background: #f9ab00;
+    color: #ffffff;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+  .reasoning .head .label {
+    font-size: 12px; font-weight: 500;
+    letter-spacing: 0.02em; text-transform: none;
+    color: #6b4d00;
+  }
+  .reasoning .body {
+    font-size: 13.5px;
+    color: #3c4043;
+    line-height: 1.6;
+  }
+  .reasoning .body b { color: #202124; font-weight: 600; }
+  .reasoning .body .conclude {
+    display: block;
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px dashed #f0d57a;
+    color: #6b4d00;
+    font-weight: 500;
+  }
+
+  /* actions list — Agentspace light Material */
+  .actions-tile {
+    align-self: stretch;
+    width: 100%;
+    background: #ffffff;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    animation: slideIn 350ms ease;
+    box-shadow: 0 1px 3px rgba(60,64,67,0.08);
+    position: relative;
+  }
+  .actions-tile::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #4285F4 0%, #9b72cb 35%, #d96570 70%, #f9ab00 100%);
+  }
+  .actions-head {
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--line-soft);
+    display: flex; align-items: center; justify-content: space-between;
+    background: #f8f9fa;
+  }
+  .actions-head .title {
+    font-size: 13px; font-weight: 500;
+    letter-spacing: 0; text-transform: none;
+    color: #202124;
+  }
+  .actions-head .meta {
+    font-size: 11px;
+    color: #5f6368;
+    font-weight: 500;
+  }
+  .action-row {
+    display: flex; align-items: center; gap: 14px;
+    padding: 14px 18px;
+    border-top: 1px solid var(--line-soft);
+    background: #ffffff;
+    transition: background 150ms;
+  }
+  .action-row:hover { background: #f8f9fa; }
+  .action-row .num {
+    width: 28px; height: 28px;
+    border-radius: 9999px;
+    background: #e8f0fe;
+    color: #1a73e8;
+    font-size: 12px; font-weight: 600;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .action-row .body { flex: 1; min-width: 0; }
+  .action-row .body .what {
+    font-size: 13.5px;
+    color: #1f1f1f;
+    line-height: 1.45;
+  }
+  .action-row .body .what b { color: #202124; font-weight: 600; }
+  .action-row .body .who {
+    font-size: 12px;
+    color: #5f6368;
+    margin-top: 4px;
+    line-height: 1.4;
+  }
+  .action-row .runner {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 5px 12px;
+    border-radius: 9999px;
+    font-size: 11px; font-weight: 500;
+    letter-spacing: 0; text-transform: none;
+    border: 1px solid;
+    flex-shrink: 0;
+    white-space: nowrap;
+  }
+  .action-row .runner::before {
+    content: "";
+    width: 6px; height: 6px;
+    border-radius: 999px;
+    background: currentColor;
+  }
+  .action-row .runner.wa,
+  .action-row .runner.gemini {
+    color: #1a73e8;
+    border-color: #d2e3fc;
+    background: #e8f0fe;
+  }
+  .action-row .runner.agentforce {
+    color: #0277bd;
+    border-color: #b3e0f6;
+    background: #e1f5fe;
+  }
+  .action-row .escalate-flag {
+    display: inline-block;
+    margin-left: 8px;
+    padding: 2px 8px;
+    border-radius: 9999px;
+    font-size: 10px; font-weight: 500;
+    letter-spacing: 0; text-transform: none;
+    background: #fce8e6;
+    color: #c5221f;
+    border: 1px solid #f6c8c4;
+    vertical-align: middle;
+  }
+
+  /* CTA buttons */
+  .cta-row {
+    align-self: flex-end;
+    display: flex;
+    gap: 8px;
+  }
+  .cta {
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 700;
+    padding: 10px 18px;
+    border-radius: 9999px;
+    border: 1px solid;
+    transition: transform 150ms ease;
+  }
+  .cta.primary {
+    background: #1a73e8;
+    color: #ffffff;
+    border-color: #1a73e8;
+    box-shadow: 0 1px 2px rgba(26,115,232,0.20);
+  }
+  .cta.secondary {
+    background: #ffffff;
+    color: #3c4043;
+    border-color: var(--line);
+  }
+  .cta:hover { transform: translateY(-1px); }
+
+  /* ===== Step 8 — Google Chat / Google Calendar tool icons (we already have them) ===== */
+  .tool .badge.gchat { background: #e6f4ea; color: #0f9d58; }
+
+  /* ===== Step 10 — Resolution Plan right-hand panel (Agentspace light) ===== */
+  .rp-panel {
+    width: 100%;
+    flex: 1 1 0;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    color: #1f1f1f;
+    font-family: "Google Sans", "Roboto", -apple-system, system-ui, sans-serif;
+  }
+  .rp-head {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--line);
+    background: #ffffff;
+  }
+  .rp-head .l { display: flex; align-items: center; gap: 12px; }
+  .rp-head .l .title {
+    font-size: 14px; font-weight: 500;
+    letter-spacing: 0; text-transform: none;
+    color: #202124;
+  }
+  .rp-head .l .sub {
+    font-size: 12px; color: #5f6368;
+    margin-top: 2px; letter-spacing: 0;
+  }
+  .rp-pill {
+    font-size: 11px; font-weight: 500;
+    letter-spacing: 0.02em; text-transform: none;
+    padding: 5px 12px;
+    border-radius: 9999px;
+    background: #f3e8fd;
+    color: #5e35b1;
+    border: 1px solid #e1d2fa;
+  }
+  .rp-body {
+    flex: 1; min-height: 0;
+    overflow-y: auto;
+    padding: 18px 20px;
+    display: flex; flex-direction: column;
+    gap: 14px;
+    background: #f8f9fa;
+  }
+  .rp-block {
+    background: #ffffff;
+    border: 1px solid var(--line);
+    border-left: 3px solid #1a73e8;
+    border-radius: 12px;
+    padding: 14px 16px;
+    position: relative;
+    box-shadow: 0 1px 2px rgba(60,64,67,0.06);
+  }
+  .rp-block.escalated {
+    border-color: var(--line);
+    border-left-color: #d93025;
+    background: #ffffff;
+  }
+  .rp-block .head {
+    display: flex; align-items: center; gap: 10px;
+    margin-bottom: 10px;
+    position: relative;
+  }
+  .rp-block .head .check {
+    width: 22px; height: 22px;
+    border-radius: 9999px;
+    background: #0f9d58;
+    color: #ffffff;
+    font-size: 12px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .rp-block .head .title {
+    font-size: 13.5px; font-weight: 500; color: #202124;
+    flex: 1;
+    line-height: 1.35;
+  }
+  .rp-block .head .badge {
+    font-size: 10px; font-weight: 500;
+    letter-spacing: 0; text-transform: none;
+    padding: 3px 9px;
+    border-radius: 9999px;
+    border: 1px solid;
+    flex-shrink: 0;
+  }
+  .rp-block .head .badge.esc {
+    background: #fce8e6;
+    color: #c5221f;
+    border-color: #f6c8c4;
+  }
+  .rp-block .meta-line {
+    font-size: 12.5px; color: #3c4043;
+    line-height: 1.55;
+    margin-bottom: 8px;
+  }
+  .rp-block .meta-line b { color: #202124; font-weight: 600; }
+  .rp-block .systems {
+    display: flex; align-items: center; flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 8px;
+  }
+  .rp-block .sys-chip {
+    font-size: 10px; font-weight: 500;
+    letter-spacing: 0; text-transform: none;
+    padding: 3px 9px;
+    border-radius: 9999px;
+    background: #f1f3f4;
+    border: 1px solid #e8eaed;
+    color: #3c4043;
+  }
+  .rp-block .rationale {
+    margin-top: 10px;
+    padding: 10px 12px;
+    background: #fce8e6;
+    border: 1px solid #f6c8c4;
+    border-radius: 8px;
+    font-size: 12px;
+    color: #b3261e;
+    line-height: 1.5;
+  }
+  .rp-block .rationale b { color: #b3261e; font-weight: 600; }
+  .rp-foot {
+    padding: 12px 20px;
+    border-top: 1px solid var(--line);
+    font-size: 12px;
+    color: #5f6368;
+    letter-spacing: 0;
+    background: #ffffff;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .rp-foot .arch {
+    color: #1a73e8;
+    font-weight: 500;
+    letter-spacing: 0;
+  }
+
+  /* ===== Step 11 — confirm + system check-in loader ===== */
+  .confirm-row {
+    align-self: flex-end;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+  .confirm-row .lbl {
+    font-size: 11px;
+    color: rgba(255,255,255,0.55);
+    letter-spacing: 0.04em;
+    margin-right: 6px;
+  }
+  .sys-loader {
+    align-self: stretch;
+    width: 100%;
+    background: #ffffff;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 14px 16px;
+    animation: slideIn 350ms ease;
+    box-shadow: 0 1px 2px rgba(60,64,67,0.06);
+  }
+  .sys-loader .lh {
+    font-size: 12px; font-weight: 500;
+    letter-spacing: 0; text-transform: none;
+    color: #5f6368;
+    margin-bottom: 10px;
+  }
+  .sys-loader .row {
+    display: flex; align-items: center; gap: 12px;
+    padding: 8px 0;
+    font-size: 13px;
+    color: #80868b;
+    opacity: 0.45;
+    transform: translateY(4px);
+    transition: opacity 250ms ease, transform 250ms ease, color 200ms ease;
+  }
+  .sys-loader .row.in { opacity: 1; transform: none; }
+  .sys-loader .row.done { color: #202124; }
+  .sys-loader .spin {
+    width: 14px; height: 14px;
+    border-radius: 9999px;
+    border: 2px solid #dadce0;
+    border-top-color: #1a73e8;
+    animation: afspin 0.9s linear infinite;
+    flex-shrink: 0;
+  }
+  .sys-loader .row.done .spin {
+    border: none;
+    background: #0f9d58;
+    animation: none;
+    position: relative;
+  }
+  .sys-loader .row.done .spin::after {
+    content: "✓";
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    color: #ffffff;
+    font-size: 10px; font-weight: 700;
+  }
+  @keyframes afspin { to { transform: rotate(360deg); } }
+  .sys-loader .row .name { flex: 1; }
+  .sys-loader .row .id {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 11px;
+    color: #5f6368;
+  }
+
+  /* ===== Step 12 — done summary ===== */
+  .done-card {
+    align-self: stretch;
+    width: 100%;
+    background: #e6f4ea;
+    border: 1px solid #b7e1c2;
+    border-left: 3px solid #0f9d58;
+    border-radius: 12px;
+    padding: 16px 18px;
+  }
+  .done-card .head {
+    display: flex; align-items: center; gap: 12px;
+    margin-bottom: 14px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #b7e1c2;
+  }
+  .done-card .head .check {
+    width: 32px; height: 32px;
+    border-radius: 9999px;
+    background: #0f9d58;
+    color: #ffffff;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700;
+  }
+  .done-card .head .title {
+    font-size: 12px; font-weight: 500;
+    letter-spacing: 0; text-transform: none;
+    color: #137333;
+  }
+  .done-card .head .sub {
+    font-size: 13.5px;
+    color: #202124;
+    margin-top: 2px;
+    font-weight: 500;
+  }
+  .done-row {
+    display: flex; align-items: center;
+    gap: 10px;
+    padding: 8px 0;
+    border-top: 1px solid rgba(15,157,88,0.15);
+    font-size: 13px;
+    color: #1f1f1f;
+  }
+  .done-row:first-of-type { border-top: none; }
+  .done-row b { color: #202124; font-weight: 600; }
+  .done-row .tick {
+    width: 18px; height: 18px;
+    border-radius: 9999px;
+    background: #ffffff;
+    color: #0f9d58;
+    border: 1px solid #b7e1c2;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 700;
+    flex-shrink: 0;
+  }
+  .done-row .meta {
+    color: #5f6368;
+    font-size: 11px;
+    margin-left: auto;
+    font-weight: 500;
+    letter-spacing: 0;
+    text-transform: none;
+  }
+</style>
+</head>
+<body>
+
+<div class="glow"></div>
+
+<div class="hint">
+  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <path d="M4.037 4.688a.495.495 0 0 1 .651-.651l16 6.5a.5.5 0 0 1-.063.947l-6.124 1.58a2 2 0 0 0-1.438 1.435l-1.579 6.126a.5.5 0 0 1-.947.063z"/>
+  </svg>
+  Click anywhere to advance
+</div>
+
+<div class="stage">
+  <div class="frame" id="frame"></div>
+</div>
+
+<div class="progress" id="progress"></div>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <linearGradient id="wa-grad" x1="0" y1="0" x2="100" y2="100" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#00a1e0"/>
+      <stop offset="0.5" stop-color="#7c3aed"/>
+      <stop offset="1" stop-color="#ec4899"/>
+    </linearGradient>
+  </defs>
+</svg>
+
+<script>
+  // ---------- Icon helpers ----------
+  const iconGoogleG = (size = 24) => `
+    <svg viewBox="0 0 24 24" width="${size}" height="${size}" aria-hidden="true">
+      <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+      <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+      <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/>
+      <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.66l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+    </svg>`;
+
+  const iconPlus = (size = 22) => `
+    <svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M5 12h14"/><path d="M12 5v14"/>
+    </svg>`;
+
+  const iconSend = (size = 24) => `
+    <svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z"/>
+      <path d="m21.854 2.147-10.94 10.939"/>
+    </svg>`;
+
+  // Google Calendar (simplified)
+  const iconGCal = (size = 14) => `
+    <svg viewBox="0 0 24 24" width="${size}" height="${size}" fill="currentColor" aria-hidden="true">
+      <rect x="3" y="4" width="18" height="17" rx="2" fill="none" stroke="currentColor" stroke-width="1.6"/>
+      <path d="M3 8h18" stroke="currentColor" stroke-width="1.6" fill="none"/>
+      <path d="M8 2v4M16 2v4" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+      <text x="12" y="17" text-anchor="middle" font-size="7" font-weight="800" fill="currentColor" font-family="-apple-system,sans-serif">31</text>
+    </svg>`;
+
+  // Google "people" icon for attendees
+  const iconGPeople = (size = 14) => `
+    <svg viewBox="0 0 24 24" width="${size}" height="${size}" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <circle cx="9" cy="8" r="3"/>
+      <path d="M3 20a6 6 0 0 1 12 0"/>
+      <circle cx="17" cy="9" r="2.4"/>
+      <path d="M15 20a5 5 0 0 1 7-4.6"/>
+    </svg>`;
+
+  // Google rooms icon (door / building)
+  const iconGRooms = (size = 14) => `
+    <svg viewBox="0 0 24 24" width="${size}" height="${size}" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <rect x="4" y="3" width="16" height="18" rx="1.5"/>
+      <path d="M9 3v18M15 3v18"/>
+      <circle cx="11.5" cy="12" r="0.8" fill="currentColor"/>
+    </svg>`;
+
+  // Salesforce cloud
+  const iconSalesforce = (size = 14) => `
+    <svg viewBox="0 0 24 24" width="${size}" height="${size}" fill="currentColor" aria-hidden="true">
+      <path d="M14 6.5a4.5 4.5 0 0 0-8.3-2.4A3.5 3.5 0 0 0 1 7.5a3.5 3.5 0 0 0 1.5 2.9A3 3 0 0 0 5 16h13.5A4.5 4.5 0 0 0 23 11.5a4.5 4.5 0 0 0-4.6-4.5A4.5 4.5 0 0 0 14 6.5z"/>
+    </svg>`;
+
+  // Google KB / Drive doc
+  const iconGKB = (size = 14) => `
+    <svg viewBox="0 0 24 24" width="${size}" height="${size}" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/>
+      <path d="M14 3v5h5"/>
+      <path d="M9 13h6M9 17h4"/>
+    </svg>`;
+
+  // Data 360 graph mark
+  const iconD360 = (size = 14) => `
+    <svg viewBox="0 0 24 24" width="${size}" height="${size}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <circle cx="12" cy="12" r="9"/>
+      <circle cx="6" cy="12" r="2.4" fill="currentColor"/>
+      <circle cx="18" cy="12" r="2.4" fill="currentColor"/>
+      <circle cx="12" cy="6" r="2.4" fill="currentColor"/>
+      <circle cx="12" cy="18" r="2.4" fill="currentColor"/>
+      <path d="M6 12h12M12 6v12"/>
+    </svg>`;
+
+  // ---------- State ----------
+  const TOTAL_STEPS = 13;
+  const PROMPT_TEXT = "My printer's jammed and I've got a board readout in 20 min — also can you check my PTO, want to take Friday off.";
+  let stepIndex = 0;
+  let typed = "";
+  let typingTimer = null;
+  let animating = false;
+  let chatMounted = false;
+  let entrySeq = 0;
+  let chatLog = [];
+
+  // ---------- Render ----------
+  const frame = document.getElementById("frame");
+  const progress = document.getElementById("progress");
+
+  for (let i = 0; i < TOTAL_STEPS; i++) {
+    const d = document.createElement("div");
+    d.className = "seg";
+    progress.appendChild(d);
+  }
+  function renderProgress() {
+    [...progress.children].forEach((el, i) => {
+      el.classList.toggle("active", i <= stepIndex);
+    });
+  }
+
+  function escapeHtml(s) {
+    return s.replace(/[&<>"']/g, c => ({
+      "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+    }[c]));
+  }
+
+  function renderHome() {
+    if (stepIndex === 1) {
+      renderAgentSurface();
+      return;
+    }
+    frame.innerHTML = `
+      <div class="as-home">
+        <div class="as-topbar">
+          <div class="brand">
+            ${iconGoogleG(28)}
+            <span class="word">Agentspace</span>
+          </div>
+          <div class="search">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+            <span class="ph">Search across your work</span>
+          </div>
+          <div class="acct">
+            <span class="name">Priya Singh</span>
+            <div class="ava">PS</div>
+          </div>
+        </div>
+
+        <div class="as-rail">
+          <div class="group-label">Agentspace</div>
+          <div class="item active">
+            <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3"/><path d="M5 21a7 7 0 0 1 14 0"/></svg>
+            <span>Agents</span>
+          </div>
+          <div class="item">
+            <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h12l4 4v12a2 2 0 0 1-2 2H4z"/><path d="M16 4v4h4"/></svg>
+            <span>Notebooks</span>
+          </div>
+          <div class="item">
+            <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+            <span>History</span>
+          </div>
+
+          <div class="group-label" style="margin-top:8px;">Pinned agents</div>
+          <div class="pinned-list">
+            <div class="item"><span class="dot" style="background:#1a73e8"></span><span>HR Helpdesk</span></div>
+            <div class="item"><span class="dot" style="background:#5f6368"></span><span>IT Support</span></div>
+            <div class="item"><span class="dot" style="background:#f9ab00"></span><span>Travel</span></div>
+            <div class="item"><span class="dot" style="background:#0f9d58"></span><span>Sales Research</span></div>
+            <div class="item"><span class="dot" style="background:#d93025"></span><span>Procurement</span></div>
+            <div class="item"><span class="dot" style="background:#9334e6"></span><span>Notebook</span></div>
+          </div>
+        </div>
+
+        <div class="as-main">
+          <div class="as-hero">
+            <h1>Hi Priya, <span class="grad">what can your agents do?</span></h1>
+            <div class="as-search-big">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#5f6368" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+              <span class="ph">Search across your work or ask an agent…</span>
+              <span class="icbtn">${iconSend(20)}</span>
+            </div>
+            <div class="as-quickchips">
+              <span class="chip">My agents</span>
+              <span class="chip">What's new</span>
+              <span class="chip">Recent files</span>
+            </div>
+          </div>
+
+          <div class="as-section-title">
+            <span>Pinned for you</span>
+            <span class="more">View all agents</span>
+          </div>
+          <div class="as-gallery">
+            <div class="agent-tile featured" id="hrTile">
+              <span class="pinned-flag">Pinned</span>
+              <div class="head">
+                <div class="icon hr">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.2"/><path d="M5 21a7 7 0 0 1 14 0"/></svg>
+                </div>
+                <div>
+                  <div class="name">HR Helpdesk</div>
+                  <div class="owner">People Ops · Agentforce</div>
+                </div>
+              </div>
+              <div class="desc">Ask anything HR — leave, benefits, facilities, room moves. Reasons over Workday, Service Cloud and Data 360.</div>
+              <div class="systems">
+                <span class="sys-chip">Service Cloud</span>
+                <span class="sys-chip">Workday</span>
+                <span class="sys-chip">SuccessFactors</span>
+                <span class="sys-chip">Google KB</span>
+                <span class="sys-chip">Data 360</span>
+              </div>
+            </div>
+
+            <div class="agent-tile">
+              <div class="head">
+                <div class="icon it">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></svg>
+                </div>
+                <div>
+                  <div class="name">IT Support</div>
+                  <div class="owner">IT · Agentforce</div>
+                </div>
+              </div>
+              <div class="desc">Device, access, and software support. Triages and resolves common IT requests.</div>
+              <div class="systems">
+                <span class="sys-chip">ServiceNow</span>
+                <span class="sys-chip">Okta</span>
+              </div>
+            </div>
+
+            <div class="agent-tile">
+              <div class="head">
+                <div class="icon travel">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 16l20-7-9 13-2-6z"/></svg>
+                </div>
+                <div>
+                  <div class="name">Travel</div>
+                  <div class="owner">T&amp;E · Agentspace</div>
+                </div>
+              </div>
+              <div class="desc">Book flights, hotels, and itineraries against policy.</div>
+              <div class="systems">
+                <span class="sys-chip">Concur</span>
+                <span class="sys-chip">Amex GBT</span>
+              </div>
+            </div>
+
+            <div class="agent-tile">
+              <div class="head">
+                <div class="icon sales">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M14 7h7v7"/></svg>
+                </div>
+                <div>
+                  <div class="name">Sales Research</div>
+                  <div class="owner">Revenue · Agentspace</div>
+                </div>
+              </div>
+              <div class="desc">Account briefs, competitive intel, and meeting prep across CRM + web.</div>
+              <div class="systems">
+                <span class="sys-chip">Salesforce</span>
+                <span class="sys-chip">LinkedIn</span>
+              </div>
+            </div>
+
+            <div class="agent-tile">
+              <div class="head">
+                <div class="icon proc">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h18l-2 12H5z"/><path d="M8 7V5a4 4 0 0 1 8 0v2"/></svg>
+                </div>
+                <div>
+                  <div class="name">Procurement</div>
+                  <div class="owner">Finance · Agentforce</div>
+                </div>
+              </div>
+              <div class="desc">PO creation, vendor lookup, and approvals across procurement systems.</div>
+              <div class="systems">
+                <span class="sys-chip">Coupa</span>
+                <span class="sys-chip">SAP</span>
+              </div>
+            </div>
+
+            <div class="agent-tile">
+              <div class="head">
+                <div class="icon notebook">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h11a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3z"/><path d="M5 4v13"/></svg>
+                </div>
+                <div>
+                  <div class="name">Notebook</div>
+                  <div class="owner">NotebookLM Enterprise</div>
+                </div>
+              </div>
+              <div class="desc">Grounded research notebooks with cited sources from your corpus.</div>
+              <div class="systems">
+                <span class="sys-chip">Drive</span>
+                <span class="sys-chip">Docs</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  function renderAgentSurface() {
+    const showSendArmed = typed.length > 0;
+    frame.innerHTML = `
+      <div class="as-home">
+        <div class="as-topbar">
+          <div class="brand">
+            ${iconGoogleG(28)}
+            <span class="word">Agentspace</span>
+          </div>
+          <div class="search">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+            <span class="ph">Search across your work</span>
+          </div>
+          <div class="acct">
+            <span class="name">Priya Singh</span>
+            <div class="ava">PS</div>
+          </div>
+        </div>
+
+        <div class="as-rail">
+          <div class="group-label">Agentspace</div>
+          <div class="item active">
+            <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3"/><path d="M5 21a7 7 0 0 1 14 0"/></svg>
+            <span>Agents</span>
+          </div>
+          <div class="item">
+            <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h12l4 4v12a2 2 0 0 1-2 2H4z"/><path d="M16 4v4h4"/></svg>
+            <span>Notebooks</span>
+          </div>
+          <div class="item">
+            <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+            <span>History</span>
+          </div>
+
+          <div class="group-label" style="margin-top:8px;">Pinned agents</div>
+          <div class="pinned-list">
+            <div class="item active"><span class="dot" style="background:#1a73e8"></span><span>HR Helpdesk</span></div>
+            <div class="item"><span class="dot" style="background:#5f6368"></span><span>IT Support</span></div>
+            <div class="item"><span class="dot" style="background:#f9ab00"></span><span>Travel</span></div>
+            <div class="item"><span class="dot" style="background:#0f9d58"></span><span>Sales Research</span></div>
+            <div class="item"><span class="dot" style="background:#d93025"></span><span>Procurement</span></div>
+            <div class="item"><span class="dot" style="background:#9334e6"></span><span>Notebook</span></div>
+          </div>
+        </div>
+
+        <div class="as-main">
+          <div class="as-agent-surface">
+            <div class="as-agent-head">
+              <div class="icon">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.2"/><path d="M5 21a7 7 0 0 1 14 0"/></svg>
+              </div>
+              <div class="meta">
+                <div class="name">HR Helpdesk Agent</div>
+                <div class="owner">People Ops · Agentforce · Pinned in Agentspace</div>
+              </div>
+              <div class="systems">
+                <span class="sys-chip">Service Cloud</span>
+                <span class="sys-chip">Workday</span>
+                <span class="sys-chip">SuccessFactors</span>
+                <span class="sys-chip">Google KB</span>
+                <span class="sys-chip">Data 360</span>
+              </div>
+            </div>
+            <div class="as-agent-body">
+              <div class="empty">
+                <div class="lbl">Ready when you are</div>
+                <div>Ask the HR Helpdesk Agent anything — leave, facilities, room moves, benefits.</div>
+              </div>
+            </div>
+            <div class="as-agent-foot">
+              <div class="as-prompt ${showSendArmed ? "armed" : ""}">
+                <span class="plus">${iconPlus(20)}</span>
+                <div class="input">
+                  ${typed.length === 0
+                    ? `<span class="ph">Ask the HR Helpdesk Agent…</span>`
+                    : `<span>${escapeHtml(typed)}</span>`}<span class="caret"></span>
+                </div>
+                <span class="send ${showSendArmed ? "armed" : ""}">${iconSend(20)}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  function mountChat() {
+    if (chatMounted) return;
+    frame.innerHTML = `
+      <div class="chat">
+        <div class="chat-left" id="chatLeft">
+          <div class="chat-header">
+            <div class="left">
+              <div class="agent-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.2"/><path d="M5 21a7 7 0 0 1 14 0"/></svg>
+              </div>
+              <div>
+                <div class="label">HR Helpdesk Agent</div>
+                <div class="sub">Agentforce · pinned in Agentspace</div>
+              </div>
+            </div>
+            <div class="right">
+              ${iconGoogleG(20)}
+              <div class="ava">PS</div>
+            </div>
+          </div>
+          <div class="chat-scroll" id="chatScroll"></div>
+          <div class="chat-footer">
+            <div class="as-prompt">
+              <span class="plus">${iconPlus(18)}</span>
+              <div class="input"><span class="ph">Ask the HR Helpdesk Agent…</span></div>
+              <span class="send">${iconSend(20)}</span>
+            </div>
+          </div>
+        </div>
+      </div>`;
+    chatMounted = true;
+    chatLog.forEach(e => mountEntry(e));
+    scrollChatToEnd();
+  }
+
+  function scrollChatToEnd() {
+    const scroll = document.getElementById("chatScroll");
+    if (scroll) scroll.scrollTop = scroll.scrollHeight;
+  }
+
+  function appendEntry(entry) {
+    entry.id = entry.id || `e${++entrySeq}`;
+    chatLog.push(entry);
+    mountEntry(entry);
+    scrollChatToEnd();
+    return entry;
+  }
+
+  function mountEntry(e) {
+    const scroll = document.getElementById("chatScroll");
+    if (!scroll) return;
+    const wrap = document.createElement("div");
+    wrap.innerHTML = entryHtml(e);
+    const child = wrap.firstElementChild;
+    if (child) {
+      child.id = e.id;
+      scroll.appendChild(child);
+    }
+  }
+
+  function entryHtml(e) {
+    if (e.kind === "user") return `<div class="bubble-user">${escapeHtml(e.text)}</div>`;
+    if (e.kind === "ai") {
+      const cites = e.citations ? `<div class="citations">${e.citations.map(c => `<span class="citation"><span class="cdot" style="background:${c.color}"></span>${escapeHtml(c.label)}</span>`).join("")}</div>` : "";
+      return `<div class="bubble-ai">
+        <span class="agent-mark"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.2"/><path d="M5 21a7 7 0 0 1 14 0"/></svg></span>
+        <div class="body">${e.html}${cites}</div>
+      </div>`;
+    }
+    if (e.kind === "tools") {
+      const inner = e.items.map(t => toolHtml(t)).join("");
+      return `<div class="tools" data-id="${e.id}">${inner}</div>`;
+    }
+    if (e.kind === "tile") return e.html;
+    return "<div></div>";
+  }
+
+  function toolHtml(t) {
+    const map = {
+      gcal: { svg: iconGCal(14), cls: "gcal" },
+      gpeople: { svg: iconGPeople(14), cls: "gpeople" },
+      grooms: { svg: iconGRooms(14), cls: "grooms" },
+      salesforce: { svg: iconSalesforce(14), cls: "sf" },
+      gkb: { svg: iconGKB(14), cls: "gkb" },
+      data360: { svg: iconD360(14), cls: "d360" }
+    };
+    const sysIcon = map[t.system] || { svg: "", cls: "" };
+    const statusLabel = t.status === "done" ? "Done" : "Running";
+    const heroCls = t.hero ? ` ${t.hero}` : "";
+    return `
+      <div class="tool ${t.status}${heroCls}" data-tool-id="${t.id}">
+        <div class="badge ${sysIcon.cls}">${sysIcon.svg}</div>
+        <div class="body">
+          <div class="name">${escapeHtml(t.name)}</div>
+          <div class="text">${t.text}</div>
+        </div>
+        <div class="status">
+          <span class="dot"></span>
+          <span class="lbl">${statusLabel}</span>
+        </div>
+      </div>`;
+  }
+
+  function updateToolStatus(toolsEntry, toolId, newStatus) {
+    const item = toolsEntry.items.find(t => t.id === toolId);
+    if (item) item.status = newStatus;
+    const el = document.querySelector(`[data-tool-id="${toolId}"]`);
+    if (el) {
+      el.classList.remove("running", "done");
+      el.classList.add(newStatus);
+      const lbl = el.querySelector(".status .lbl");
+      if (lbl) lbl.textContent = newStatus === "done" ? "Done" : "Running";
+    }
+  }
+
+  function appendTool(toolsEntry, tool) {
+    tool.id = tool.id || `t${++entrySeq}`;
+    toolsEntry.items.push(tool);
+    const container = document.querySelector(`.tools[data-id="${toolsEntry.id}"]`);
+    if (container) {
+      const wrap = document.createElement("div");
+      wrap.innerHTML = toolHtml(tool);
+      container.appendChild(wrap.firstElementChild);
+      scrollChatToEnd();
+    }
+  }
+
+  // ---------- Step 2: Google-side Gemini context lookups ----------
+  function runStep2() {
+    animating = true;
+    appendEntry({ kind: "user", text: PROMPT_TEXT });
+    appendEntry({
+      kind: "ai",
+      html: `<p>Got it — three things going on. Let me start by checking your calendar and what room options you have.</p>`
+    });
+
+    const tools = appendEntry({ kind: "tools", items: [] });
+    const t1 = { id: `t${++entrySeq}`, system: "gcal", name: "Google Calendar", text: "Searching your next meeting…", status: "running" };
+    appendTool(tools, t1);
+
+    setTimeout(() => {
+      updateToolStatus(tools, t1.id, "done");
+      const item = tools.items.find(x => x.id === t1.id);
+      if (item) {
+        const el = document.querySelector(`[data-tool-id="${t1.id}"] .text`);
+        if (el) el.innerHTML = `<b>Board readout</b> · 10:30am · Boardroom L7 · in 18 min`;
+      }
+      const t2 = { id: `t${++entrySeq}`, system: "gpeople", name: "Google Calendar · Attendees", text: "Resolving attendees…", status: "running" };
+      appendTool(tools, t2);
+
+      setTimeout(() => {
+        updateToolStatus(tools, t2.id, "done");
+        const el2 = document.querySelector(`[data-tool-id="${t2.id}"] .text`);
+        if (el2) el2.innerHTML = `<b>6 invitees</b> · 4 internal · 2 external (auditors)`;
+        const t3 = { id: `t${++entrySeq}`, system: "grooms", name: "Google Workspace · Rooms", text: "Querying room directory for alternates near L7 with print + AV…", status: "running" };
+        appendTool(tools, t3);
+
+        setTimeout(() => {
+          updateToolStatus(tools, t3.id, "done");
+          const el3 = document.querySelector(`[data-tool-id="${t3.id}"] .text`);
+          if (el3) el3.innerHTML = `<b>Boardroom L6-A</b> available 10:30 · print + AV confirmed`;
+          appendEntry({
+            kind: "ai",
+            html: `<p>Calendar, attendees, and room availability are all sorted on the Google side. Now let me check Service Cloud for what we know about that printer.</p>`,
+            citations: [
+              { label: "Google Calendar", color: "#1a73e8" },
+              { label: "Google Workspace · Rooms", color: "#f9ab00" }
+            ]
+          });
+          animating = false;
+        }, 1400);
+      }, 1300);
+    }, 1300);
+  }
+
+  // ---------- Step 3: KB + Case Fusion ----------
+  function runStep3() {
+    animating = true;
+
+    const tools = appendEntry({ kind: "tools", items: [] });
+    const t1 = {
+      id: `t${++entrySeq}`,
+      system: "salesforce",
+      name: "Agentforce HR Agent · Knowledge + Case Fusion",
+      text: "Fetching <b>Google KB</b> article + Salesforce case history for asset PRN-L7-04…",
+      status: "running",
+      hero: "fusion"
+    };
+    appendTool(tools, t1);
+
+    setTimeout(() => {
+      updateToolStatus(tools, t1.id, "done");
+
+      appendEntry({
+        kind: "tile",
+        html: `
+          <div class="fusion-tile">
+            <div class="fusion-head">
+              <div class="l">
+                <div class="badge sf" style="width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;background:rgba(0,161,224,0.15);color:#4ec5ee">${iconSalesforce(16)}</div>
+                <div>
+                  <div class="name">Knowledge + Case Fusion</div>
+                  <div class="sub">Agentforce HR Agent · 1 reasoning call across Google KB + Service Cloud cases</div>
+                </div>
+              </div>
+              <div class="fusion-pill">Agentforce</div>
+            </div>
+            <div class="fusion-grid">
+              <div class="fusion-col">
+                <div class="col-head">
+                  <div class="src-logo kb">${iconGKB(12)}</div>
+                  <div class="src">Google KB · Article</div>
+                </div>
+                <div class="kb-card">
+                  <div class="id">KB-PRN-203 · Updated 6 weeks ago</div>
+                  <div class="title">Clear printer jam — multifunction device</div>
+                  <ol class="steps">
+                    <li><span class="step-n">1.</span> Open the front cover and clear any visible jammed paper from the rollers.</li>
+                    <li><span class="step-n">2.</span> Power-cycle the device and let it run a self-diagnostic.</li>
+                    <li><span class="step-n">3.</span> Reseat the toner cartridge if the error persists.</li>
+                  </ol>
+                  <div class="meta-line">If the issue recurs within 24h, log a facilities case.</div>
+                </div>
+              </div>
+              <div class="fusion-col">
+                <div class="col-head">
+                  <div class="src-logo sf">${iconSalesforce(12)}</div>
+                  <div class="src">Salesforce · Case History (Asset PRN-L7-04)</div>
+                </div>
+                <div class="case-list">
+                  <div class="case-row">
+                    <span class="cnum">#00045108</span>
+                    <span class="cwhat">Toner replaced · 18 days ago</span>
+                    <span class="cstatus reopened">Reopened 2d</span>
+                  </div>
+                  <div class="case-row">
+                    <span class="cnum">#00045156</span>
+                    <span class="cwhat">Standard troubleshooting applied · 11 days ago</span>
+                    <span class="cstatus reopened">Reopened 1d</span>
+                  </div>
+                  <div class="case-row">
+                    <span class="cnum">#00045201</span>
+                    <span class="cwhat">Toner replaced again · 4 days ago</span>
+                    <span class="cstatus reopened">Reopened today</span>
+                  </div>
+                </div>
+                <div class="pattern-callout">
+                  <b>3 cases in 18 days</b> — KB-PRN-203 fix has been applied each time and reopened within 48h. Standard remediation isn't holding.
+                </div>
+              </div>
+            </div>
+          </div>`
+      });
+
+      animating = false;
+    }, 1700);
+  }
+
+  // ---------- Step 4: Hero MCP — Data 360 Employee Panoramic ----------
+  function runStep4() {
+    animating = true;
+
+    appendEntry({
+      kind: "ai",
+      html: `<p>Before I act, let me pull <b>Priya's panoramic from Data 360</b> — one call to Data 360's Unified Employee Graph that gives me her structured employee record across Workday, SuccessFactors, and aggregated case history.</p>`,
+      citations: [
+        { label: "Data 360", color: "#7c3aed" },
+        { label: "Workday", color: "#f38b00" },
+        { label: "SuccessFactors", color: "#0faaff" }
+      ]
+    });
+
+    const tools = appendEntry({ kind: "tools", items: [] });
+    const t1 = {
+      id: `t${++entrySeq}`,
+      system: "data360",
+      name: "Data 360 MCP · Employee Panoramic",
+      text: "Querying Unified Employee Graph…",
+      status: "running",
+      hero: "d360-hero"
+    };
+    appendTool(tools, t1);
+
+    appendEntry({
+      kind: "tile",
+      html: `
+        <div class="filter-chip">
+          <div class="label">Salesforce Data 360 MCP · 1 call · zero-copy in Google<span class="src-tag">Source: Data 360</span></div>
+          <div><span class="k">employee</span> <span class="v">= "priya.singh@company.com"</span></div>
+          <div><span class="k">return</span> <span class="v">workday.profile, successfactors.policy, sfcase.aggregates</span></div>
+          <div><span class="k">aggregate</span> <span class="v">cases.by_floor(window=90d), cases.by_employee(window=90d)</span></div>
+        </div>`
+    });
+
+    setTimeout(() => {
+      updateToolStatus(tools, t1.id, "done");
+      animating = false;
+    }, 2000);
+  }
+
+  // ---------- Step 5: Panoramic result ----------
+  function runStep5() {
+    animating = true;
+
+    appendEntry({
+      kind: "tile",
+      html: `
+        <div class="pano-wrap">
+          <div class="pano-card">
+            <div class="pano-banner-inline">
+              <span class="pulse"></span>
+              <span>Employee Panoramic · Data 360</span>
+            </div>
+            <div class="pano-head">
+              <div class="ava">PS</div>
+              <div class="who">
+                <div class="name">Priya Singh</div>
+                <div class="role">Senior Manager, Risk &amp; Compliance · Head Office Sydney</div>
+              </div>
+              <div class="live"><span class="dot"></span><span>Unified</span></div>
+            </div>
+
+            <div class="pano-grid">
+
+              <div class="pano-facet">
+                <div class="src">
+                  <div class="lg workday">W</div>
+                  <div>
+                    <div class="name">Workday</div>
+                    <div class="stack">Employee record</div>
+                  </div>
+                </div>
+                <div class="field">
+                  <div class="k">Tenure</div>
+                  <div class="v"><b>4y 2mo</b> · L4 band</div>
+                </div>
+                <div class="field">
+                  <div class="k">Org chain</div>
+                  <div class="v chain">
+                    <span>Priya</span><span class="arr">→</span><span>Daniel R</span><span class="arr">→</span><span>Maria K (VP)</span><span class="arr">→</span><span>Exec</span>
+                  </div>
+                </div>
+                <div class="field">
+                  <div class="k">Role flags</div>
+                  <div class="v warn">Exec-facing meeting today (Board readout 10:30)</div>
+                </div>
+              </div>
+
+              <div class="pano-facet">
+                <div class="src">
+                  <div class="lg sap">S</div>
+                  <div>
+                    <div class="name">SuccessFactors</div>
+                    <div class="stack">Policy + entitlements</div>
+                  </div>
+                </div>
+                <div class="field">
+                  <div class="k">Leave policy</div>
+                  <div class="v"><b>AU-Office</b> · no blackout this week</div>
+                </div>
+                <div class="field">
+                  <div class="k">Training / compliance</div>
+                  <div class="v">Current · no flags</div>
+                </div>
+                <div class="field">
+                  <div class="k">Approver</div>
+                  <div class="v">Daniel R · auto-route enabled</div>
+                </div>
+              </div>
+
+              <div class="pano-facet">
+                <div class="src">
+                  <div class="lg sfcase">${iconSalesforce(11)}</div>
+                  <div>
+                    <div class="name">SF Case History · Aggregated</div>
+                    <div class="stack">90-day window</div>
+                  </div>
+                </div>
+                <div class="field">
+                  <div class="k">Priya's facilities cases (this Q)</div>
+                  <div class="v warn"><b>3 cases</b> · all on Level 7</div>
+                </div>
+                <div class="field">
+                  <div class="k">Floor-wide pattern (Level 7)</div>
+                  <div class="v danger"><b>12 printer cases / 90 days</b></div>
+                  <div class="agg-bar"><div class="fill" style="width:88%"></div></div>
+                </div>
+                <div class="field">
+                  <div class="k">Standard fix outcome</div>
+                  <div class="v danger">KB-PRN-203 applied 9× · reopened 8×</div>
+                </div>
+              </div>
+
+            </div>
+
+            <div class="pano-foot">
+              <b>Why this matters</b> — D360 unifies <b>structured employee data</b> across HRIS systems plus <b>aggregated case patterns</b>. The agent now has the context to reason about whether the standard fix will hold — not just regurgitate the KB.
+            </div>
+          </div>
+        </div>`
+    });
+
+    setTimeout(() => { animating = false; }, 400);
+  }
+
+  // ---------- Step 6: agent reasoning + 4 recommended actions ----------
+  function runStep6() {
+    animating = true;
+
+    appendEntry({
+      kind: "tile",
+      html: `
+        <div class="reasoning">
+          <div class="head">
+            <div class="icon">⚡</div>
+            <span class="label">Agent reasoning</span>
+          </div>
+          <div class="body">
+            KB-PRN-203 walks through the usual printer troubleshooting (clear the jam, power-cycle, reseat the toner) — but Level 7 has had <b>12 printer cases in 90 days</b> and that standard fix has been applied <b>9 times and reopened 8 times</b>. Priya is exec-facing in 18 minutes, with two external auditors in the room.
+            <span class="conclude">→ Escalating to the L7 Facilities Manager rather than logging another routine case. Re-routing the meeting to L6-A so the readout isn't blocked.</span>
+          </div>
+        </div>`
+    });
+
+    appendEntry({
+      kind: "ai",
+      html: `<p>Here's what I'd like to do — three orchestrated actions plus a quick heads-up to your EA:</p>`
+    });
+
+    const runnerLabel = { wa: 'Gemini in Agentspace', agentforce: 'Agentforce', gemini: 'Gemini in Agentspace' };
+    const mkRow = (n, what, who, runner, flag) => `
+      <div class="action-row">
+        <div class="num">${n}</div>
+        <div class="body">
+          <div class="what">${what}${flag ? `<span class="escalate-flag">${flag}</span>` : ""}</div>
+          <div class="who">${who}</div>
+        </div>
+        <span class="runner ${runner}">${runnerLabel[runner]}</span>
+      </div>`;
+
+    appendEntry({
+      kind: "tile",
+      html: `
+        <div class="actions-tile">
+          <div class="actions-head">
+            <span class="title">Recommended Actions</span>
+            <span class="meta">4 actions · approve to run</span>
+          </div>
+          ${mkRow(1, '<b>Escalate facilities case</b> to the Level 7 Facilities Manager', 'Salesforce Service Cloud · Priority High · routed past tier-1 queue', 'agentforce', 'Escalate')}
+          ${mkRow(2, '<b>Move meeting</b> to Boardroom L6-A &amp; update invite', 'Google Calendar · cancel L7 booking · notify all 6 attendees', 'gemini')}
+          ${mkRow(3, '<b>Submit Friday PTO</b> to Workday', 'Workday request · auto-route to Daniel R for approval', 'agentforce')}
+          ${mkRow(4, 'Send <b>heads-up to your EA</b> in Google Chat', "Quick note about the room move — no orchestration needed", 'gemini')}
+        </div>`
+    });
+
+    appendEntry({
+      kind: "ai",
+      html: `<p>Want me to run all four?</p>`
+    });
+
+    setTimeout(() => { animating = false; }, 350);
+  }
+
+  // ---------- Step 7: user confirms ----------
+  function runStep7() {
+    animating = true;
+    appendEntry({ kind: "user", text: "Yes, do it." });
+    setTimeout(() => { animating = false; }, 350);
+  }
+
+  // Google Chat icon — chat bubble in Google green
+  const iconGChat = (size = 14) => `
+    <svg viewBox="0 0 24 24" width="${size}" height="${size}" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M21 12.5a8 8 0 0 1-11.6 7.1L4 21l1.4-5.4A8 8 0 1 1 21 12.5z"/>
+      <path d="M9 11h6M9 14h4"/>
+    </svg>`;
+
+  // Workday badge
+  const iconWorkday = (size = 14) => `
+    <svg viewBox="0 0 24 24" width="${size}" height="${size}" aria-hidden="true">
+      <rect width="24" height="24" rx="4" fill="#f38b00"/>
+      <text x="12" y="17" text-anchor="middle" font-size="13" font-weight="800" fill="#fff" font-family="-apple-system,sans-serif">W</text>
+    </svg>`;
+
+  // ---------- Step 8: Gemini runs the two direct actions ----------
+  function runStep8() {
+    animating = true;
+    const tools = appendEntry({ kind: "tools", items: [] });
+
+    const t1 = { id: `t${++entrySeq}`, system: "gcal", name: "Google Calendar · Gemini in Agentspace", text: "Cancelling Boardroom L7 booking and rebooking L6-A · updating invite for 6 attendees…", status: "running" };
+    appendTool(tools, t1);
+
+    setTimeout(() => {
+      updateToolStatus(tools, t1.id, "done");
+      const t2 = { id: `t${++entrySeq}`, system: "gchat", name: "Google Chat · Gemini in Agentspace", text: "Sending heads-up to your EA: \"Board readout moved to L6-A — printer issue on L7.\"", status: "running" };
+      // Add Google Chat to badge map fallback
+      const wrap = document.querySelector(`.tools[data-id="${tools.id}"]`);
+      if (wrap) {
+        tools.items.push(t2);
+        const node = document.createElement("div");
+        // reuse toolHtml but override badge class via inline class swap
+        node.innerHTML = `
+          <div class="tool running" data-tool-id="${t2.id}">
+            <div class="badge gchat">${iconGChat(14)}</div>
+            <div class="body">
+              <div class="name">${escapeHtml(t2.name)}</div>
+              <div class="text">${t2.text}</div>
+            </div>
+            <div class="status"><span class="dot"></span><span class="lbl">Running</span></div>
+          </div>`;
+        wrap.appendChild(node.firstElementChild);
+        scrollChatToEnd();
+      }
+
+      setTimeout(() => {
+        updateToolStatus(tools, t2.id, "done");
+        appendEntry({
+          kind: "ai",
+          html: `<p>Room moved and your EA is across it. Now handing off the case escalation and Workday PTO to Agentforce — those touch Service Cloud, the L7 Facilities Manager queue, and Workday approval routing, so they need orchestration.</p>`
+        });
+        animating = false;
+      }, 1400);
+    }, 1500);
+  }
+
+  // ---------- Step 9: A2A delegation to Agentforce ----------
+  let a2aTools = null;
+  function runStep9() {
+    animating = true;
+    const tools = appendEntry({ kind: "tools", items: [] });
+    a2aTools = tools;
+
+    const t1 = {
+      id: `t${++entrySeq}`,
+      system: "salesforce",
+      name: "A2A · Agentforce HR Helpdesk Agent",
+      text: "Delegating to Agentforce…",
+      status: "running"
+    };
+    appendTool(tools, t1);
+
+    setTimeout(() => {
+      updateToolStatus(tools, t1.id, "done");
+      const t2 = {
+        id: `t${++entrySeq}`,
+        system: "salesforce",
+        name: "A2A · Agentforce HR Helpdesk Agent",
+        text: "Awaiting A2A Result…",
+        status: "running"
+      };
+      appendTool(tools, t2);
+      tools._waitingId = t2.id;
+      animating = false;
+    }, 1500);
+  }
+
+  // ---------- Step 10: Agentforce orchestrated Resolution Plan ----------
+  function runStep10() {
+    animating = true;
+
+    if (a2aTools && a2aTools._waitingId) {
+      updateToolStatus(a2aTools, a2aTools._waitingId, "done");
+    }
+
+    const chatLeft = document.getElementById("chatLeft");
+    const chat = document.querySelector(".chat");
+    if (chatLeft) chatLeft.classList.add("shrunk");
+
+    const right = document.createElement("div");
+    right.className = "chat-right";
+    right.id = "rpRight";
+    right.innerHTML = `
+      <div class="rp-panel">
+        <div class="rp-head">
+          <div class="l">
+            <div style="width:32px;height:32px;border-radius:9px;display:flex;align-items:center;justify-content:center;background:#e1f5fe;color:#0277bd;">${iconSalesforce(18)}</div>
+            <div>
+              <div class="title">Resolution Plan</div>
+              <div class="sub">Agentforce HR Helpdesk Agent · A2A result</div>
+            </div>
+          </div>
+          <span class="rp-pill">Draft (A2A Synced)</span>
+        </div>
+
+        <div class="rp-body">
+
+          <div class="rp-block escalated">
+            <div class="head">
+              <div class="check">✓</div>
+              <div class="title">Case #00045231 — Printer PRN-L7-04</div>
+              <span class="badge esc">Escalated</span>
+            </div>
+            <div class="meta-line">
+              Asset <b>PRN-L7-04</b> · Priority <b>High</b> · routed past tier-1 to the <b>L7 Facilities Manager</b>.
+            </div>
+            <div class="rationale">
+              <b>Escalation rationale attached:</b> 12 cases on Level 7 in 90 days · KB-PRN-203 applied 9× / reopened 8× · standard remediation isn't holding.
+            </div>
+            <div class="systems">
+              <span class="sys-chip">Service Cloud</span>
+              <span class="sys-chip">Google KB</span>
+              <span class="sys-chip">Data 360</span>
+            </div>
+          </div>
+
+          <div class="rp-block">
+            <div class="head">
+              <div class="check">✓</div>
+              <div class="title">PTO submitted — Friday 22 May</div>
+            </div>
+            <div class="meta-line">
+              Workday request <b>#WD-88412</b> · auto-routed to <b>Daniel R</b> for approval · leave policy AU-Office, no blackout, balance 14.5d.
+            </div>
+            <div class="systems">
+              <span class="sys-chip">Workday</span>
+              <span class="sys-chip">SuccessFactors</span>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="rp-foot">
+          <span><span class="arch">Orchestrated by Agentforce</span> · Reasoned over Google KB + SF Cases + Data 360</span>
+          <span>2 systems writes · 0 conflicts</span>
+        </div>
+      </div>`;
+
+    if (chat && !document.getElementById("rpRight")) {
+      chat.appendChild(right);
+    }
+
+    appendEntry({
+      kind: "ai",
+      html: `<p>Agentforce is back. The case is in with the L7 Facilities Manager (escalation rationale attached) and your Friday PTO is sitting with Daniel R for approval. Review on the right and confirm to wrap this up.</p>`
+    });
+
+    setTimeout(() => { animating = false; }, 400);
+  }
+
+  // ---------- Step 11: user confirms send → animated system check-ins ----------
+  let step11LoaderDone = false;
+  function runStep11() {
+    animating = true;
+    step11LoaderDone = false;
+
+    appendEntry({ kind: "user", text: "Looks good — confirm." });
+
+    const right = document.getElementById("rpRight");
+    if (!right) { animating = false; step11LoaderDone = true; return; }
+
+    right.innerHTML = `
+      <div class="rp-panel">
+        <div class="rp-head">
+          <div class="l">
+            <div style="width:32px;height:32px;border-radius:9px;display:flex;align-items:center;justify-content:center;background:#f3e8fd;color:#7c3aed;">${iconSalesforce(18)}</div>
+            <div>
+              <div class="title">Committing Plan</div>
+              <div class="sub">Writing across each system and verifying receipt</div>
+            </div>
+          </div>
+          <span class="rp-pill">Working…</span>
+        </div>
+
+        <div class="rp-body">
+          <div class="sys-loader" id="sysLoader">
+            <div class="lh">System Check-ins</div>
+            <div class="row" data-i="0"><span class="spin"></span><span class="name">Salesforce Service Cloud</span><span class="id">Case #00045231</span></div>
+            <div class="row" data-i="1"><span class="spin"></span><span class="name">Workday</span><span class="id">PTO #WD-88412</span></div>
+            <div class="row" data-i="2"><span class="spin"></span><span class="name">Google Calendar</span><span class="id">Invite v2 sent</span></div>
+            <div class="row" data-i="3"><span class="spin"></span><span class="name">Google Chat</span><span class="id">EA notified</span></div>
+          </div>
+        </div>
+
+        <div class="rp-foot">
+          <span><span class="arch">Agentforce + Gemini in Agentspace</span> · 4 systems · 2-phase commit</span>
+          <span id="sysFootHint">Verifying…</span>
+        </div>
+      </div>`;
+
+    const rows = right.querySelectorAll(".sys-loader .row");
+    [0,1,2,3].forEach(i => setTimeout(() => rows[i] && rows[i].classList.add("in"), i * 100));
+    [600, 950, 1300, 1650].forEach((t, i) => setTimeout(() => rows[i] && rows[i].classList.add("done"), t));
+
+    setTimeout(() => {
+      const hint = document.getElementById("sysFootHint");
+      if (hint) hint.innerHTML = `<span style="color:#0f9d58;font-weight:500;letter-spacing:0;">All systems confirmed · click to finish →</span>`;
+      step11LoaderDone = true;
+      animating = false;
+    }, 2000);
+  }
+
+  // ---------- Step 12: done summary ----------
+  function runStep12() {
+    animating = true;
+
+    const right = document.getElementById("rpRight");
+    if (right) {
+      right.innerHTML = `
+        <div class="rp-panel">
+          <div class="rp-head">
+            <div class="l">
+              <div style="width:32px;height:32px;border-radius:9px;display:flex;align-items:center;justify-content:center;background:#0f9d58;color:#ffffff;font-weight:700;">✓</div>
+              <div>
+                <div class="title" style="color:#137333;">All Done</div>
+                <div class="sub">4 of 4 actions complete</div>
+              </div>
+            </div>
+            <span class="rp-pill" style="background:#e6f4ea;color:#137333;border-color:#b7e1c2;">Resolved</span>
+          </div>
+
+          <div class="rp-body">
+            <div class="done-card">
+              <div class="head">
+                <div class="check">✓</div>
+                <div>
+                  <div class="title">Summary</div>
+                  <div class="sub">Priya is set for the 10:30 readout</div>
+                </div>
+              </div>
+              <div class="done-row"><span class="tick">✓</span><span><b>Case escalated</b> to L7 Facilities Manager · #00045231</span><span class="meta">Service Cloud</span></div>
+              <div class="done-row"><span class="tick">✓</span><span><b>Meeting moved</b> to Boardroom L6-A · 6 attendees notified</span><span class="meta">Google Calendar</span></div>
+              <div class="done-row"><span class="tick">✓</span><span><b>PTO submitted</b> for Friday 22 May · awaiting Daniel R approval</span><span class="meta">Workday</span></div>
+              <div class="done-row"><span class="tick">✓</span><span><b>EA notified</b> with the room change</span><span class="meta">Google Chat</span></div>
+            </div>
+
+            <div style="padding:14px 16px;border:1px solid #e1d2fa;border-radius:12px;background:#faf5ff;font-size:12.5px;color:#3c4043;line-height:1.6;">
+              <div style="font-size:11px;font-weight:500;letter-spacing:0;color:#5e35b1;margin-bottom:6px;">What just happened</div>
+              One conversation replaced <b>three legacy forms</b> (facilities case, room rebooking, PTO request).
+              The escalation decision was reasoned over the <b>Google KB</b>, <b>Service Cloud case history</b>, and Priya's <b>Data 360 panoramic</b> — context the legacy widget never had.
+            </div>
+          </div>
+
+          <div class="rp-foot">
+            <span><span class="arch">Agentspace + Agentforce</span> · Reasoned over Google KB + SF Cases + Data 360</span>
+            <span style="color:#0f9d58;font-weight:500;letter-spacing:0;">Click to restart</span>
+          </div>
+        </div>`;
+    }
+
+    appendEntry({
+      kind: "ai",
+      html: `<p>Done. Case escalated, room moved, PTO filed, EA looped in. Anything else?</p>`
+    });
+
+    setTimeout(() => { animating = false; }, 350);
+  }
+
+  function render() {
+    if (stepIndex <= 1) {
+      chatMounted = false;
+      renderHome();
+    } else {
+      mountChat();
+    }
+    renderProgress();
+  }
+
+  // ---------- Click-to-advance ----------
+  document.addEventListener("click", () => {
+    if (typingTimer || animating) return;
+
+    if (stepIndex === 0) {
+      // First click: transition home → agent surface (open the HR Helpdesk Agent),
+      // then type the prompt into the agent's input.
+      stepIndex = 1;
+      renderProgress();
+      renderAgentSurface();
+      const inputEl = document.querySelector(".as-prompt .input");
+      const sendEl = document.querySelector(".as-prompt .send");
+      const wrapEl = document.querySelector(".as-prompt");
+      let i = 0;
+      // small delay so the surface transition is perceptible before typing starts
+      setTimeout(() => {
+        typingTimer = setInterval(() => {
+          i++;
+          typed = PROMPT_TEXT.slice(0, i);
+          if (inputEl) {
+            inputEl.innerHTML = `<span>${escapeHtml(typed)}</span><span class="caret"></span>`;
+          }
+          if (i === PROMPT_TEXT.length) {
+            clearInterval(typingTimer);
+            typingTimer = null;
+            if (sendEl) sendEl.classList.add("armed");
+            if (wrapEl) wrapEl.classList.add("armed");
+          }
+        }, 18);
+      }, 350);
+      return;
+    }
+
+    if (stepIndex === 1) {
+      if (typingTimer) return;
+      if (typed.length < PROMPT_TEXT.length) return;
+      stepIndex = 2;
+      mountChat();
+      renderProgress();
+      runStep2();
+      return;
+    }
+
+    if (stepIndex === 2) {
+      stepIndex = 3;
+      renderProgress();
+      runStep3();
+      return;
+    }
+
+    if (stepIndex === 3) {
+      stepIndex = 4;
+      renderProgress();
+      runStep4();
+      return;
+    }
+
+    if (stepIndex === 4) {
+      stepIndex = 5;
+      renderProgress();
+      runStep5();
+      return;
+    }
+
+    if (stepIndex === 5) {
+      stepIndex = 6;
+      renderProgress();
+      runStep6();
+      return;
+    }
+
+    if (stepIndex === 6) {
+      stepIndex = 7;
+      renderProgress();
+      runStep7();
+      return;
+    }
+
+    if (stepIndex === 7) {
+      stepIndex = 8;
+      renderProgress();
+      runStep8();
+      return;
+    }
+
+    if (stepIndex === 8) {
+      stepIndex = 9;
+      renderProgress();
+      runStep9();
+      return;
+    }
+
+    if (stepIndex === 9) {
+      stepIndex = 10;
+      renderProgress();
+      runStep10();
+      return;
+    }
+
+    if (stepIndex === 10) {
+      stepIndex = 11;
+      renderProgress();
+      runStep11();
+      return;
+    }
+
+    if (stepIndex === 11) {
+      if (!step11LoaderDone) return; // click-gate while loader animates
+      stepIndex = 12;
+      renderProgress();
+      runStep12();
+      return;
+    }
+
+    // step 12 → loop back
+    if (stepIndex >= 12) {
+      stepIndex = 0;
+      typed = "";
+      chatLog = [];
+      chatMounted = false;
+      a2aTools = null;
+      step11LoaderDone = false;
+      const right = document.getElementById("rpRight");
+      if (right) right.remove();
+      const left = document.getElementById("chatLeft");
+      if (left) left.classList.remove("shrunk");
+      render();
+    }
+  });
+
+  render();
+</script>
+
+</body>
+</html>
